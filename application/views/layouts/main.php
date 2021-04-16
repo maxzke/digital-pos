@@ -103,7 +103,8 @@
         <!-- End Custom template -->
     </div><!-- /wrapper -->
     <!--   Core JS Files   -->
-    <script src="<?php echo base_url(); ?>assets/js/core/jquery.3.2.1.min.js"></script>
+    <!-- <script src="<?php echo base_url(); ?>assets/js/core/jquery.3.2.1.min.js"></script> -->
+    <script src="<?php echo base_url(); ?>assets/js//jquery.min_2.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/core/popper.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/core/bootstrap.min.js"></script>
 
@@ -144,22 +145,16 @@
     <!-- Bootstrap Notify -->
     <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
 
-    <!-- jQuery Vector Maps -->
-    <script src="<?php echo base_url(); ?>assets/js/plugin/jqvmap/jquery.vmap.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/js/plugin/jqvmap/maps/jquery.vmap.world.js"></script>
 
     <!-- Sweet Alert -->
     <script src="<?php echo base_url(); ?>assets/js/plugin/sweetalert/sweetalert.min.js"></script>
 
-    <!-- Atlantis JS -->
-    <script src="<?php echo base_url(); ?>assets/js/atlantis.min.js"></script>
 
     <!-- Data Tables Personalizadas -->
     <script src="<?php echo base_url(); ?>assets/js/draggable.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/tablas.js"></script>
-    <script src="<?php echo base_url(); ?>assets/js/app.js"></script>
-    <!-- ALERTAS COCINA -->
-    <script src="<?php echo base_url(); ?>assets/js/alertas_cocina.js"></script>
+    <!-- NOTA VENTA -->
+    <script src="<?php echo base_url(); ?>assets/js/sisadmin_notas.js"></script>
 </body>
 
 </html>
