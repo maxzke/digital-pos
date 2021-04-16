@@ -1,0 +1,26 @@
+No conectar la impresora hasta instalar el driver Xprinter
+
+Ejecutar Driver Driver Xprinter-XP-58IIH/Driver/Windows Driver/POS Printer Driver Setup V7.17
+
+conectar la impresora termica Xprinter cuando la instalacion pregunte
+sobre el sistema operativo y el tipo de conexion WINDOWS 7/8/10 - USB
+conectar.
+
+Seleccionar POS 58
+
+y siguiente.
+
+al finalizar la instalacion hay que COMPARTIR la impresora POS 58 con el mismo nombre. 
+
+LISTO
+
+usar el archivo:
+CONTROLLERS:
+ventas.php
+La Funcion: printTicket
+
+archivos necesarios para funcionamiento:
+Dentro de la carpeta CONTROLLERS de CodeIgniter
+ventas.php
+carpeta src
+autoload.php
