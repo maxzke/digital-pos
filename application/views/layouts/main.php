@@ -26,6 +26,8 @@
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/alertify.core.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/alertify.default.css">
     
 
     
@@ -33,31 +35,28 @@
 
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Digital Estudio</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+        <div class="navbar-brand">Digital Estudio</div>
       
         <div class="collapse navbar-collapse" id="navbarColor02">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="#">Terminal
+              <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> POS
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Ventas
+              <a class="nav-link" href="#"><i class="fas fa-file-alt"></i> Ventas
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Historial</a>
+              <a class="nav-link" href="#"><i class="fas fa-hand-holding-usd"></i> Pagos</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Creditos</a>
+              <a class="nav-link" href="#"><i class="fab fa-cc-visa"></i> Tarjeta</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Corte</a>
+              <a class="nav-link" href="#"><i class="fas fa-chart-line"></i> Corte</a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="{{ url('configuracion') }}">Configuracion</a>
             </li>
             <li class="nav-item dropdown">
@@ -69,7 +68,7 @@
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">Separated link</a>
               </div>
-            </li>
+            </li> -->
           </ul>
           <ul class="navbar-nav ml-auto">
             <li class="nav-link text-capitalize">
@@ -103,56 +102,10 @@
         <!-- End Custom template -->
     </div><!-- /wrapper -->
     <!--   Core JS Files   -->
-    <!-- <script src="<?php echo base_url(); ?>assets/js/core/jquery.3.2.1.min.js"></script> -->
-    <script src="<?php echo base_url(); ?>assets/js//jquery.min_2.js"></script>
-    <script src="<?php echo base_url(); ?>assets/js/core/popper.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/js/core/bootstrap.min.js"></script>
-
-    <!-- jQuery UI -->
-    <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
-
-    <!-- jQuery Scrollbar -->
-    <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/alertify.min.js"></script>
 
 
-    <!-- Chart JS -->
-    <script src="<?php echo base_url(); ?>assets/js/plugin/chart.js/chart.min.js"></script>
-
-    <!-- jQuery Sparkline -->
-    <script src="<?php echo base_url(); ?>assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
-
-    <!-- Chart Circle -->
-    <script src="<?php echo base_url(); ?>assets/js/plugin/chart-circle/circles.min.js"></script>
-
-    <!-- Datatables -->
-    <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/datatables.min.js"></script>
-    <!-- DataTables Responsivo-Botones Export-   -->
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/JSZip-2.5.0/jszip.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/pdfmake-0.1.32/pdfmake.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/pdfmake-0.1.32/vfs_fonts.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/DataTables-1.10.16/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/Buttons-1.5.1/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/Buttons-1.5.1/js/buttons.bootstrap4.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/Buttons-1.5.1/js/buttons.colVis.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/Buttons-1.5.1/js/buttons.flash.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/Buttons-1.5.1/js/buttons.html5.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/Buttons-1.5.1/js/buttons.print.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url()?>assets/js/plugin/datatables/datatables/Responsive-2.2.1/js/responsive.bootstrap4.min.js"></script>
-
-    <!-- Bootstrap Notify -->
-    <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
-
-
-    <!-- Sweet Alert -->
-    <script src="<?php echo base_url(); ?>assets/js/plugin/sweetalert/sweetalert.min.js"></script>
-
-
-    <!-- Data Tables Personalizadas -->
-    <script src="<?php echo base_url(); ?>assets/js/draggable.js"></script>
-    <script src="<?php echo base_url(); ?>assets/js/tablas.js"></script>
     <!-- NOTA VENTA -->
     <script src="<?php echo base_url(); ?>assets/js/sisadmin_notas.js"></script>
 </body>

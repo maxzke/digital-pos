@@ -6,6 +6,7 @@ $(document).ready(function() {
                 var subtotal_articuls = 0;
                 var subtotal_articuls2 = 0;
                 var cotizacion=0;
+                var facturacion = 0;
                 
 
                  //uso DOCUMENT porque el div lo estoy cargando en LOAD dentro de otro div de lo contrario usaria
@@ -55,12 +56,27 @@ $(document).ready(function() {
                 
                 $(".chkCotizacion").on( 'change', function() {
                   if( $(this).is(':checked') ) {
-                    cotizacion=1;                    
+                    cotizacion=1;  
+                    alertify.error("cotiza 1");                  
                   }else{
-                    cotizacion=0;                    
+                    cotizacion=0;  
+                    alertify.error("cotiza 0");                  
                   }
 
                 });
+
+                $(".select_facturar").on( 'change', function() {
+                  if( $(this).is(':checked') ) {
+                    facturacion=1;  
+                    alertify.error("facturacion 1");                  
+                  }else{
+                    facturacion=0;  
+                    alertify.error("facturacion 0");                  
+                  }
+
+                });
+
+                
 
                 
 
@@ -72,18 +88,18 @@ $(document).ready(function() {
                       alertify.error("Nombre del Cliente");
                       return;
                     }
-                    if ($('#txt_direccion').val().trim() === '') {
-                      procedeNota=0;
-                      $('#txt_direccion').focus();
-                      alertify.error("Direccion del Cliente");
-                      return;
-                    }
-                    if ($('#txt_telefono').val().trim() === '') {
-                      procedeNota=0;
-                      $('#txt_telefono').focus();
-                      alertify.error("Telefono del Cliente");
-                      return;
-                    }
+                    // if ($('#txt_direccion').val().trim() === '') {
+                    //   procedeNota=0;
+                    //   $('#txt_direccion').focus();
+                    //   alertify.error("Direccion del Cliente");
+                    //   return;
+                    // }
+                    // if ($('#txt_telefono').val().trim() === '') {
+                    //   procedeNota=0;
+                    //   $('#txt_telefono').focus();
+                    //   alertify.error("Telefono del Cliente");
+                    //   return;
+                    // }
                       var elementos = $('.total_hidden');
                       var size = elementos.size();
                       hay_articulo = size;
@@ -135,7 +151,7 @@ $(document).ready(function() {
                                                                       direccion: $("#txt_direccion").val(), 
                                                                       telefono: $("#txt_telefono").val(), 
                                                                       folio: foliop, 
-                                                                      facturar: $("#select_facturar").val(),
+                                                                      facturar: facturacion,
                                                                       id_user: $("#txt_idUser").val()});                            
 
                           if (AbonoNota>0){
@@ -188,7 +204,7 @@ $(document).ready(function() {
                       //cuenta elementos de la clase
                       //Si no hay no se manda el POST                      
                       var elementos = $('.total_hidden');
-                      var size = elementos.size();
+                      var size = elementos.length;
                       hay_articulo = size; 
                       var AbonoNota=parseFloat($("#txt_abono").val());
                           var foliop=$("#txt_folio").val();
@@ -260,7 +276,7 @@ $(document).ready(function() {
                                        //cuenta elementos de la clase
                                           subtotal_articuls2=0;
                                           var elementos = $('.total_hidden');
-                                          var size = elementos.size();
+                                          var size = elementos.length;
                                           hay_articulo = size;
                                           var arrayID = [];                      
                                           $.each( elementos, function(i, val){
@@ -336,7 +352,7 @@ $(document).ready(function() {
                           };
                           //cuenta elementos de la clase
                           var elementos = $('.total_hidden');
-                          var size = elementos.size();
+                          var size = elementos.length;
                           var arrayID = [];
                            
                           $.each( elementos, function(i, val){

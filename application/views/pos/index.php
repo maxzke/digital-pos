@@ -8,30 +8,30 @@
                     <h4>Nota de Venta</h4>                    
                     </div>
                 </div>
-                <div class="row fondo-menu py-2">
+                <div class="row fondo-menu py-1">
                     <div class="col-md-4">  
-                        <div class="row mt-1">
+                        <div class="row mt-2">
                             <div class="col-md-4 text-right"><strong>Cliente </strong><i class="fas fa-user"></i></div>
                             <div class="col-md-8"> 
-                                <input type="text" class="form-control form-control-sm text-capitalize" placeholder="Nombre">
+                                <input type="text" id="txt_cliente" class="form-control form-control-sm text-capitalize" placeholder="Nombre">
                             </div>
                         </div>    
                         <div class="row mt-1">
                             <div class="col-md-4 text-right"><strong>Dirección </strong><i class="fas fa-map-marker-alt"></i></div>
                             <div class="col-md-8"> 
-                                <input type="text" class="form-control form-control-sm text-capitalize" placeholder="Lugar, calle">
+                                <input type="text" id="txt_direccion" class="form-control form-control-sm text-capitalize" placeholder="Lugar, calle">
                             </div>
                         </div>    
                         <div class="row mt-1">
                             <div class="col-md-4 text-right"><strong>Telefono </strong><i class="fas fa-mobile-alt"></i></div>
                             <div class="col-md-8"> 
-                                <input type="text" class="form-control form-control-sm" placeholder="10 digitos">
+                                <input type="text" id="txt_telefono" class="form-control form-control-sm" placeholder="10 digitos">
                             </div>
                         </div>    
                         <div class="row mt-1">
                             <div class="col-md-4 text-right"><strong>Empresa </strong><i class="fas fa-building"></i></div>
                             <div class="col-md-8"> 
-                                <input type="text" class="form-control form-control-sm text-capitalize" placeholder="Nombre">
+                                <input type="text" id="txt_empresa" class="form-control form-control-sm text-capitalize" placeholder="Nombre">
                             </div>
                         </div>                                            
                     </div>
@@ -48,14 +48,14 @@
                         </div>    
                         <div class="row mt-1"><div class="col-md-12"> 
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                    <input type="checkbox" class="custom-control-input select_facturar" id="customSwitch1">
                                     <label class="custom-control-label" for="customSwitch1"><strong>Facturar</strong></label>
                                 </div>
                             </div>
                         </div>    
                         <div class="row mt-1"><div class="col-md-12"> 
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch2">
+                                    <input type="checkbox" class="custom-control-input chkCotizacion" id="customSwitch2">
                                     <label class="custom-control-label" for="customSwitch2"><strong>Guardar Cotización</strong></label>
                                 </div>
                             </div>
@@ -64,32 +64,32 @@
                     <div class="col-md-4">                    
                         <div class="row">
                             <div class="col-md-4 text-right"><strong>Subtotal </strong></div>
-                            <div class="col-md-8"> 
-                                <input type="text" id="txt_subtotal" value="0" size="5" disabled="">
+                            <div class="col-md-3"> 
+                                <input type="text" id="txt_subtotal" value="0" size="5" class="form-control form-control-sm" disabled="">
                             </div>
                         </div>    
                         <div class="row">
                             <div class="col-md-4 text-right"><strong>Iva </strong></div>
-                            <div class="col-md-8"> 
-                                <input type="text" id="txt_iva" size="5" disabled="" value="0">
+                            <div class="col-md-3"> 
+                                <input type="text" id="txt_iva" size="5" class="form-control form-control-sm" disabled="" value="0">
                             </div>
                         </div>    
                         <div class="row">
                             <div class="col-md-4 text-right"><strong>Total </strong></div>
-                            <div class="col-md-8"> 
-                                <input type="text" id="txt_total" size="5" disabled="" value="0">
+                            <div class="col-md-3"> 
+                                <input type="text" id="txt_total" size="5" class="form-control form-control-sm" disabled="" value="0">
                             </div>
                         </div>    
                         <div class="row">
                             <div class="col-md-4 text-right"><strong>Abono </strong></div>
-                            <div class="col-md-4"> 
-                                <input type="text" id="txt_abono" size="5" value="0" autocomplete="off">
+                            <div class="col-md-3"> 
+                                <input type="text" id="txt_abono" size="5" class="form-control form-control-sm" value="0" autocomplete="off">
                             </div>
                         </div> 
                         <div class="row">
                             <div class="col-md-4 text-right"><strong>Restante </strong></div>
-                            <div class="col-md-4"> 
-                                <input type="text" id="txt_resta" size="5" disabled="" value="0">
+                            <div class="col-md-3"> 
+                                <input type="text" id="txt_resta" size="5" class="form-control form-control-sm" disabled="" value="0">
                             </div>
                         </div>                   
                     </div>
@@ -134,7 +134,7 @@
                                 <button type="button" id="add" class="btn btn-sm btn-info mt-1"><i class="fas fa-plus"></i> Producto</button>
                             </div>
                             <div class="col-md-1">
-                                <button type="button" class="btn btn-sm btn-success btn-block mt-1">Cobrar</button>
+                                <button type="button" class="btn btn-sm btn-success btn-block mt-1" id="cobrarNota">Cobrar</button>
                             </div>
                         </div>
                     </div>
