@@ -1,63 +1,61 @@
 <?php
 
-class Ventas_model extends CI_Model{
+class Ventas_model extends CI_Model
+{
     function __construct()
     {
         parent::__construct();
     }
-
-    function insert_datos_nota($params){
+    
+    /*
+     * Get venta by id
+     */
+    function get_venta($id)
+    {
+        return $this->db->get_where('ventas',array('id'=>$id))->row_array();
+    }
+        
+    /*
+     * Get all ventas
+     */
+    function get_all_ventas()
+    {
+        $this->db->order_by('id', 'desc');
+        return $this->db->get('ventas')->result_array();
+    }
+        
+    /*
+     * function to add new venta
+     */
+    function add_venta($params)
+    {
         $this->db->insert('ventas',$params);
         return $this->db->insert_id();
     }
-
-    function insert_datos_detalle($params){
-        $this->db->insert_batch('detalles',$params);        
+    
+    /*
+     * function to update venta
+     */
+    function update_venta($id,$params)
+    {
+        $this->db->where('id',$id);
+        return $this->db->update('ventas',$params);
     }
-
-    function insert_datos_abono($params){
-        $this->db->insert_batch('pagos',$params);   
-    }
-    function insert_abono_diferido($params){
-        $this->db->insert('pagos',$params);
-    }
-
-    function abonosNota($folio){
-        $this->db->select_sum('importe');
-        $this->db->where('id_venta',$folio);
-        return $this->db->get('pagos')->result_array();
-    }
-
-    function importeTotalNota($folio){
-        $this->db->select_sum('importe');
-        $this->db->where('id_venta',$folio);
-        return $this->db->get('detalles')->result_array();
-    }
-
-    function updateStatus($folio,$status){
-        $this->db->where('id', $folio);
-        $this->db->update('ventas',array('pagada' => $status));
-    }
-
-    function delete_carrito_mesa($id){
-        return $this->db->delete('carrito',array('id_mesa'=>$id));
-    }
-
-    function registrar_venta_a_credito($params){
-        $this->db->insert('ventas_a_credito',$params);
-    }
-    function elimina_venta_a_credito($params){
-        $this->db->delete('ventas_a_credito',$params);
+    
+    /*
+     * function to delete venta
+     */
+    function delete_venta($id)
+    {
+        return $this->db->delete('ventas',array('id'=>$id));
     }
 
     function get_clientes_deben(){
-        $sql="SELECT ventas_a_credito.id,ventas_a_credito.id_venta,clientes.nombre,clientes.id as id_cliente
+        $sql="SELECT ventas_a_credito.id,ventas_a_credito.id_venta,ventas.facturar,ventas.cliente as cliente,DATE_FORMAT(ventas.fecha,'%d/%m/%Y') AS fecha
                 FROM ventas_a_credito 
                 JOIN ventas
                 ON ventas.id = ventas_a_credito.id_venta
-                JOIN clientes
-                ON ventas.id_cliente = clientes.id
-                GROUP BY clientes.nombre";
+                AND ventas.cotizar = false";
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -72,53 +70,15 @@ class Ventas_model extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
-    function getTicket($id){
-        $this->db->select('producto,cantidad,precio,importe');        
-        $this->db->where('id_venta',$id);
+    function importeTotalNota($folio){
+        $this->db->select_sum('importe');
+        $this->db->where('id_venta',$folio);
         return $this->db->get('detalles')->result_array();
     }
-    function getTotalTicket($id){
-        $this->db->select_sum('importe');       
-        $this->db->where('id_venta',$id);
-        return $this->db->get('detalles')->result_array();
+    function abonosNota($folio){
+        $this->db->select_sum('importe');
+        $this->db->where('id_venta',$folio);
+        return $this->db->get('abonos')->result_array();
     }
-    function getAbonosByIdVenta($id){
-        $sql="SELECT metodos_pago.metodo,pagos.importe,DATE_FORMAT(pagos.fecha,'%d/%m/%Y') AS fecha 
-                FROM pagos 
-                JOIN metodos_pago
-                ON metodos_pago.id = pagos.id_metodo
-                WHERE pagos.id_venta =".$id;
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
-    function getCostoProductoByNombreProducto($name){
-        $this->db->select('costo');
-        $this->db->where('nombre',$name);
-        return $this->db->get('productos')->row_array();
-    }
-    
 
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}//End of Line
+}

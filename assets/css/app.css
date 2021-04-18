@@ -6,7 +6,10 @@
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
- .fondo-menu{
+ .fondo-theme{
+  background-color: #ffc412;
+}
+.fondo-menu{
   background-color: #f1f1f1;
 }
 .fonde-header-card{
@@ -20,17 +23,18 @@
   background-color: rgb(187, 187, 187) !important;
 }
 .cart{    
-  height: 150px;
+  height: 350px;
   width: auto;
   border: none;
   overflow-y: scroll;
-  font-size: 11px;
+  overflow-x: hidden;
+  font-size: 13px;
   color: #131416;
 }
 
 .row-hover:hover{
   /* color: #f2f4f6; */
-  background-color: #d4d4d4;
+  background-color: #f7ff85;
   cursor: default;
 }
  .pointer {

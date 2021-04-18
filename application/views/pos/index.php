@@ -3,7 +3,7 @@
         <div class="page-inner">
             <div class="container">
                 <!-- CONTENIDO -->
-                <div class="row my-2 fondo-accesorios pt-2">
+                <div class="row my-2 fonde-header-card pt-2">
                     <div class="col-md-12 text-center text-dark">                    
                     <h4>Nota de Venta</h4>                    
                     </div>
@@ -31,35 +31,39 @@
                         <div class="row mt-1">
                             <div class="col-md-4 text-right"><strong>Empresa </strong><i class="fas fa-building"></i></div>
                             <div class="col-md-8"> 
-                                <input type="text" id="txt_empresa" class="form-control form-control-sm text-capitalize" placeholder="Nombre">
+                                <input type="text" id="txt_empresa" class="form-control form-control-sm text-capitalize" placeholder="Razón social">
                             </div>
                         </div>                                            
                     </div>
-                    <div class="col-md-3 offset-1">                    
-                        <div class="row mt-1">
-                            <div class="col-md-12"> 
-                                <strong> Folio: 0001</strong>
-                            </div>
-                        </div>    
-                        <div class="row mt-1">
-                            <div class="col-md-12"> 
-                                <strong>Fecha: </strong><strong>16/04/2021</strong>
-                            </div>
-                        </div>    
-                        <div class="row mt-1"><div class="col-md-12"> 
+                    <div class="col-md-3 offset-1">      
+                        <div class="row mt-2"><div class="col-md-12"> 
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" class="custom-control-input select_facturar" id="customSwitch1">
                                     <label class="custom-control-label" for="customSwitch1"><strong>Facturar</strong></label>
                                 </div>
                             </div>
                         </div>    
-                        <div class="row mt-1"><div class="col-md-12"> 
+                        <div class="row mt-3">
+                            <div class="col-md-12"> 
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" class="custom-control-input chkCotizacion" id="customSwitch2">
                                     <label class="custom-control-label" for="customSwitch2"><strong>Guardar Cotización</strong></label>
                                 </div>
                             </div>
-                        </div>                    
+                        </div>                   
+                        <div class="row mt-3">
+                            <div class="col-md-5"> 
+                                <select class="custom-select custom-select-sm" id="metodoPago">
+                                    <option value="Efectivo" selected>Efectivo</option>
+                                    <option value="Transferencia">Tarjeta</option>
+                                    <option value="Tarjeta">Transferencia</option>
+                                    <option value="Cheque">Cheque</option>
+                                </select>
+                            </div>
+                            <div class="col-md-7">
+                                <strong>Metodo Pago</strong>
+                            </div>
+                        </div>                 
                     </div>
                     <div class="col-md-4">                    
                         <div class="row">
@@ -109,19 +113,19 @@
                             <div class="card-body bg-white" id="buildyourform">
                             <div class="row">
                                       <div class="col-md-1">
-                                        <input type="text" autocomplete="off" size="5" value="0" class="form-control form-control-sm fieldname" id="txtcantidad1" name="1" required="">
+                                        <input type="text" autocomplete="off" data-regex="si" size="5" value="0" class="form-control form-control-sm fieldname" id="txtcantidad1" name="1" required="">
                                       </div>                                  
                                       <div class="col-md-7">
-                                        <input type="text" size="55" class="form-control form-control-sm fieldname text-uppercase" autocomplete="off" id="txtdescripcion1" required="">
+                                        <input type="text" name="txt_descripcion1" data-regex="no" size="55" class="form-control form-control-sm fieldname text-uppercase" autocomplete="off" id="txtdescripcion1" required="">
                                       </div>
                                       <div class="col-md-1">
-                                        <input type="text" size="5" value="0" autocomplete="off" class="form-control form-control-sm fieldname" id="txtpunit1" name="1" required="">
+                                        <input type="text" size="5" value="0" autocomplete="off" data-regex="si" class="form-control form-control-sm fieldname" id="txtpunit1" name="1" required="">
                                       </div>
                                       <div class="col-md-1">
                                         <input type="text" class="form-control form-control-sm fieldname" size="5" value="0" id="txttotal1" disabled="">
                                       </div>
                                       <div class="col-md-1">
-                                        <input type="text" class="form-control form-control-sm fieldname" size="5" value="0" id="txtdescuento1" name="1">
+                                        <input type="text" class="form-control form-control-sm fieldname" data-regex="si" size="5" value="0" id="txtdescuento1" name="1">
                                       </div>
                                       <div class="col-md-1">
                                         <input type="hidden" value="0" class="total_hidden" id="txttotal_hidden1">

@@ -26,9 +26,11 @@
 
     <!-- CSS Files -->
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"> -->
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css">
+    
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/alertify.core.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/alertify.default.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/sweetalert2.min.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css">
     
 
     
@@ -37,7 +39,7 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="navbar-brand">Digital Estudio</div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -46,11 +48,11 @@
         <div class="collapse navbar-collapse" id="navbarColor02">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> POS
+              <a class="nav-link" href="<?php echo site_url("pos"); ?>"><i class="fas fa-shopping-cart"></i> POS
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#"><i class="fas fa-file-alt"></i> Ventas
+              <a class="nav-link" href="<?php echo site_url("ventas"); ?>"><i class="far fa-file-alt"></i> Ventas
               </a>
             </li>
             <li class="nav-item">
@@ -62,7 +64,7 @@
             <li class="nav-item">
               <a class="nav-link" href="#"><i class="fas fa-chart-line"></i> Corte</a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="{{ url('configuracion') }}">Configuracion</a>
             </li>
             <li class="nav-item dropdown">
@@ -74,12 +76,13 @@
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">Separated link</a>
               </div>
-            </li>
+            </li> -->
           </ul>
           <ul class="navbar-nav ml-auto">
             <li class="nav-link text-capitalize">
               <i class="fas fa-user text-success"></i>
               <?php echo $auth_username; ?>
+              <input type="hidden" id="txt_idUser" value="<?php echo $auth_username; ?>">
             </li>
             <li class="nav-item dropdown">              
                 <a class="nav-link dropdown-toggle" 
@@ -109,11 +112,14 @@
     </div><!-- /wrapper -->
     <!--   Core JS Files   -->
     <script src="<?php echo base_url(); ?>assets/js/alertify.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="<?php echo base_url(); ?>assets/js/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
-    <!-- NOTA VENTA -->
+<!-- SWEET ALERT2-->
+<script src="<?php echo base_url(); ?>assets/js/sweetalert2.all.min.js"></script>    
+<!-- NOTA VENTA -->
     <script src="<?php echo base_url(); ?>assets/js/sisadmin_notas.js"></script>
 </body>
 
 </html>
+
