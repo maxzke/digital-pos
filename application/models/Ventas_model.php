@@ -80,5 +80,8 @@ class Ventas_model extends CI_Model
         $this->db->where('id_venta',$folio);
         return $this->db->get('abonos')->result_array();
     }
+    function insert_abono($params){
+        $this->db->insert('abonos',$params);   
+    }
 
 }

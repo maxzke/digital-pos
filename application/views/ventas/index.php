@@ -70,7 +70,7 @@
                                                     <?php echo $cliente['fecha']; ?>
                                                 </div>
                                                 <div class="col-md-1 text-center">
-                                                    <i class="fas fa-plus-circle incrementa" onclick="abonar(<?php echo $cliente['folio']; ?>);"></i>
+                                                     <i class="fas fa-plus-circle incrementa" onclick="abonar(<?php echo $cliente['folio']; ?>);"></i> 
                                                 </div>
                                             </div>
                                             <hr>
@@ -81,18 +81,39 @@
                                 <div class="modal fade" id="abonarModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                        <div class="modal-header bg-warning">
+                                            <h5 class="modal-title" id="tituloModalAbonar"></h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            ...
+                                            <div class="row mt-3">
+                                                <div class="col-md-4 text-center">
+                                                    <strong>Metodo Pago</strong>
+                                                </div>
+                                                <div class="col-md-4"> 
+                                                    <select class="custom-select custom-select-sm" id="metodoPago">
+                                                        <option value="Efectivo" selected>Efectivo</option>
+                                                        <option value="Transferencia">Transferencia</option>
+                                                        <option value="Tarjeta">Tarjeta</option>
+                                                        <option value="Cheque">Cheque</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-4 text-center">
+                                                    <strong>Importe Abono</strong>
+                                                </div>
+                                                <div class="col-md-4"> 
+                                                    <input type="text" name="importe" id="importeAbono" class="form-control form-control-sm fieldname">
+                                                </div>
+                                            </div> 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                                            <input type="hidden" id="idVentaHide" value="">
+                                            <button type="button" class="btn btn-success" onclick="store_abono();">Guardar</button>
                                         </div>
                                         </div>
                                     </div>

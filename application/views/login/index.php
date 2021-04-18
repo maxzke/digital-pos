@@ -135,8 +135,7 @@ margin-left: 4px;
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="fas fa-user"></i></span>
 							</div>
-							<input type="text" class="form-control" placeholder="Usuario" name="login_string" id="login_string" required/>
-							
+							<input type="text" class="form-control" placeholder="Usuario" name="login_string" id="login_string" autocomplete="off" required/>							
 						</div>
 						<div class="input-group form-group">
 							<div class="input-group-prepend">

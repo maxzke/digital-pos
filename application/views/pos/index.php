@@ -55,8 +55,8 @@
                             <div class="col-md-5"> 
                                 <select class="custom-select custom-select-sm" id="metodoPago">
                                     <option value="Efectivo" selected>Efectivo</option>
-                                    <option value="Transferencia">Tarjeta</option>
-                                    <option value="Tarjeta">Transferencia</option>
+                                    <option value="Transferencia">Transferencia</option>
+                                    <option value="Tarjeta">Tarjeta</option>
                                     <option value="Cheque">Cheque</option>
                                 </select>
                             </div>

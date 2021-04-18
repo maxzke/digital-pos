@@ -38,10 +38,24 @@ class Ventas extends REST_Controller {
     }
 
     /**
-     * Obtiene ventas pendientes de pago
+     * Guarda Abono fetch
      */
-    private function pendientes(){
-
+    public function abonar_post(){
+        $parametros = $this->input->post('params');
+        $this->store_abono($parametros['folio'],$parametros['metodo'],$parametros['importe']);
+        $respuesta = array(
+            'success' => true,
+            'data' => $parametros
+        );
+        $this->response($respuesta,200);
+    }
+    private function store_abono($id_venta,$metodo,$importe){
+        $params = array(
+            'id_venta' => $id_venta,
+            'metodo' => $metodo,
+            'importe' => $importe
+        );
+        $this->ventas_model->insert_abono($params);
     }
 
     /**
@@ -97,3 +111,5 @@ class Ventas extends REST_Controller {
 
 
 }//End Of Line
+
+

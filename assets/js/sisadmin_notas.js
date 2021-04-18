@@ -434,38 +434,30 @@ async function cobrarNotaPost(){
   * SECCION VENTAS
   */              
   function abonar(id_venta){
-    Swal.fire({
-    title: 'Abonar la venta'+id_venta,
-    input: 'text',
-    inputAttributes: {
-      autocapitalize: 'off'
-    },
-    showCancelButton: true,
-    confirmButtonText: 'Look up',
-    showLoaderOnConfirm: true,
-    preConfirm: (login) => {
-      return fetch(`//api.github.com/users/${login}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(response.statusText)
-          }
-          return response.json()
-        })
-        .catch(error => {
-          Swal.showValidationMessage(
-            `Request failed: ${error}`
-          )
-        })
-    },
-    allowOutsideClick: () => !Swal.isLoading()
-  }).then((result) => {
-    if (result.isConfirmed) {
-      Swal.fire({
-        title: `${result.value.login}'s avatar`,
-        imageUrl: result.value.avatar_url
-      })
-    }
-  })
+    $('#tituloModalAbonar').text('Abonar Folio: '+id_venta);
+    $('#abonarModal').modal('show');
+    $('#idVentaHide').val(id_venta);
   }
+  async function store_abono(){
+    let parametros = {
+      'metodo': $('#metodoPago').val(),
+      'importe': $('#importeAbono').val(),
+      'folio': $('#idVentaHide').val()
+    }
+    //alertify.success("metodo "+params.metodo+" importe "+params.importe+"Folio "+params.folio);
+     const respAsyncDetalles = await postData(parametros,'http://digital-pos.test/index.php/ventas/abonar');
+      if (respAsyncDetalles.success) {
+        console.log(respAsyncDetalles);
+      }
+  }
+
+  $('#importeAbono').on('keyup',function(){
+    const floatRegex = '[-+]?([0-9]*.[0-9]+|[0-9]+)';                            
+      if (!$('#importeAbono').val().match(floatRegex)) {
+        $(this).val(0);
+          alertify.error("Abono Debe ser Número");
+        return                           
+      }
+  })
 
 //});
