@@ -68,7 +68,7 @@ class Pos extends REST_Controller{
             $parametros['datos']['user']
         );
 
-        $this->registrar_detalle($id_venta,$parametros['carrito']);
+        $this->registrar_detalle($id_venta,$parametros['carrito']);        
 
         $this->registrar_abono(
             $id_venta,
@@ -76,9 +76,27 @@ class Pos extends REST_Controller{
             $parametros['datos']['abono']
         );
 
+        $rest = 0;
         if (floatval($parametros['datos']['abono']) < floatval($parametros['datos']['total']) ) {
             $this->registrar_credito($id_venta);
+            $rest = floatval($parametros['datos']['total']) - floatval($parametros['datos']['abono']);
+        }else{
+            $rest = floatval($parametros['datos']['abono']) - floatval($parametros['datos']['total']);
         }
+
+        $this->email(
+            $id_venta,
+            $parametros['datos']['cliente'],
+            $parametros['datos']['direccion'],
+            $parametros['datos']['telefono'],
+            $parametros['datos']['empresa'],
+            $parametros['datos']['facturar'],
+            $parametros['datos']['total'],
+            $parametros['datos']['abono'],
+            $parametros['datos']['metodo_pago'],
+            $rest,
+            $parametros['carrito']
+        );
                 
         $this->response($respuesta,200);
     }
@@ -135,8 +153,67 @@ class Pos extends REST_Controller{
         );
         $this->pos_model->insert_credito($params);
     }
+    // public function send_email_get(){
+    //     $this->email("david","guanajuato","21150","unpa","si","55","25","efectivo","25","cart");
+    // }
+
+    private function email($folio,$cliente,$direccion,$telefono,$empresa,$factura,$total,$abono,$metodo,$restante,$cart){
+        $to = "digital-estudio@live.com.mx,ramzdav@hotmail.com";
+        $subject = "Nota de Venta ".$folio;
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";   
+        if ($factura == 1) {
+            $facturar = "Si";
+        }else{
+            $facturar = "No";
+        }
+        $message = "
+            <html>
+            <head>
+            <title>HTML</title>
+            </head>
+            <body style='background-color: rgb(231, 231, 231); padding-left: 20px; padding-top: 10px; padding-bottom: 20px;'>
+            <h1>Digital Estudio</h1>
+            <h2>Nota de Venta Folio: {$folio} </h2>
+            <span><strong>Cliente: </strong> {$cliente}</span><br>
+            <span><strong>Dirección : </strong> {$direccion} </span><br>
+            <span><strong>Telefono : </strong> {$telefono} </span><br>
+            <span><strong>Empresa : </strong> {$empresa} </span><br>
+            <span><strong>Facturar : </strong> {$facturar} </span><br>
+            <span><strong>Total : </strong> {$total} </span><br>
+            <span><strong>Abono : </strong> {$abono} <strong>Metodo Pago : </strong> {$metodo}</span><br>
+            <span><strong>Restante : </strong> {$restante} </span><br><br>
+            <table style='border: 1px solid black;'>
+                <thead style='background-color: black; color: white;'>
+                    <tr>
+                        <td>Cantidad</td>
+                        <td>Descripcion</td>
+                        <td>Precio</td>
+                        <td>Total</td>
+                    </tr>
+                </thead>
+                <tbody>";
+                foreach ($cart as $key=>$item): 
+                    $message .= "<tr>
+                        <td>".$item['cantidad']."</td>
+                        <td>".$item['producto']."</td>
+                        <td>".$item['precio']."</td>
+                        <td>".number_format($item['importe'],2,".",",")."</td>
+                    </tr>";
+                endforeach; 
+                $message .= "</tbody>
+            </table>
+            </body>
+            </html>";
+        
+        mail($to, $subject, $message, $headers);
+    }
     
 
 
     
 }
+
+
+
+

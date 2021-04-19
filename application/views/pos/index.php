@@ -87,7 +87,7 @@
                         <div class="row">
                             <div class="col-md-4 text-right"><strong>Abono </strong></div>
                             <div class="col-md-3"> 
-                                <input type="text" id="txt_abono" size="5" class="form-control form-control-sm" value="0" autocomplete="off">
+                                <input type="number" id="txt_abono" size="5" class="form-control form-control-sm" value="0" autocomplete="off">
                             </div>
                         </div> 
                         <div class="row">
@@ -113,13 +113,13 @@
                             <div class="card-body bg-white" id="buildyourform">
                             <div class="row">
                                       <div class="col-md-1">
-                                        <input type="text" autocomplete="off" data-regex="si" size="5" value="0" class="form-control form-control-sm fieldname" id="txtcantidad1" name="1" required="">
+                                        <input type="number" autocomplete="off" data-regex="si" size="5" value="0" class="form-control form-control-sm fieldname" id="txtcantidad1" name="1" required="">
                                       </div>                                  
                                       <div class="col-md-7">
                                         <input type="text" name="txt_descripcion1" data-regex="no" size="55" class="form-control form-control-sm fieldname text-capitalize" autocomplete="off" id="txtdescripcion1" required="">
                                       </div>
                                       <div class="col-md-1">
-                                        <input type="text" size="5" value="0" autocomplete="off" data-regex="si" class="form-control form-control-sm fieldname" id="txtpunit1" name="1" required="">
+                                        <input type="number" size="5" value="0" autocomplete="off" data-regex="si" class="form-control form-control-sm fieldname" id="txtpunit1" name="1" required="">
                                       </div>
                                       <div class="col-md-1">
                                         <input type="text" class="form-control form-control-sm fieldname" size="5" value="0" id="txttotal1" disabled="">
@@ -148,3 +148,4 @@
         </div>
     </div>
 </div>
+
