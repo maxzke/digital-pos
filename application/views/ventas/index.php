@@ -49,32 +49,35 @@
                                 <!-- content-row -->
                                 <div class="row cart bg-white mt-1">
                                     <div class="col-md-12 ml-2">
-                                        <?php foreach ($clientes as $cliente): ?>
-                                            <div class="row row-hover">
-                                                <div class="col-md-1">
-                                                    <?php echo $cliente['folio']; ?>
+                                        <?php 
+                                        if ($clientes) :                                        
+                                            foreach ($clientes as $cliente): ?>
+                                                <div class="row row-hover">
+                                                    <div class="col-md-1">
+                                                        <?php echo $cliente['folio']; ?>
+                                                    </div>
+                                                    <div class="col-md-6 text-capitalize">
+                                                        <?php echo $cliente['cliente']; ?>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        $ <?php echo number_format($cliente['total'][0]['importe']+$cliente['iva'],1,'.',','); ?>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        $ <?php echo number_format($cliente['abonos'][0]['importe'],1,'.',','); ?>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        $ <?php echo number_format($cliente['resta'],1,'.',','); ?>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <?php echo $cliente['fecha']; ?>
+                                                    </div>
+                                                    <div class="col-md-1 text-center">
+                                                        <i class="fas fa-plus-circle incrementa" onclick="abonar(<?php echo $cliente['folio']; ?>);"></i> 
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6 text-capitalize">
-                                                    <?php echo $cliente['cliente']; ?>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    $ <?php echo number_format($cliente['total'][0]['importe'],1,'.',','); ?>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    $ <?php echo number_format($cliente['abonos'][0]['importe'],1,'.',','); ?>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    $ <?php echo number_format($cliente['resta'],1,'.',','); ?>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <?php echo $cliente['fecha']; ?>
-                                                </div>
-                                                <div class="col-md-1 text-center">
-                                                     <i class="fas fa-plus-circle incrementa" onclick="abonar(<?php echo $cliente['folio']; ?>);"></i> 
-                                                </div>
-                                            </div>
-                                            <hr>
-                                        <?php endforeach; ?>                                        
+                                                <hr>
+                                            <?php endforeach; 
+                                        endif;?>                                        
                                     </div>
                                 </div>
                                 <!-- Modal Abonar -->
@@ -106,7 +109,7 @@
                                                     <strong>Importe Abono</strong>
                                                 </div>
                                                 <div class="col-md-4"> 
-                                                    <input type="text" name="importe" id="importeAbono" class="form-control form-control-sm fieldname">
+                                                    <input type="text" name="importe" id="importeAbono" class="form-control form-control-sm fieldname" autocomplete="off">
                                                 </div>
                                             </div> 
                                         </div>

@@ -42,13 +42,10 @@ class Pos extends REST_Controller{
         $this->load->model('pos_model');      
     } 
 
-    function index_get(){  
-        if( $this->is_role('admin') or $this->is_role('mesero') ){  
-            $data['_view'] = 'pos/index';
-            $this->load->view('layouts/main',$data);
-        }else{
-            redirect('Cocina');
-        }
+    function index_get(){   
+        $data['_view'] = 'pos/index';
+        $data['active'] = 'pos';
+        $this->load->view('layouts/main',$data);
     }
 
     /**

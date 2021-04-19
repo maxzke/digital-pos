@@ -58,11 +58,9 @@
                 
                 $(".chkCotizacion").on( 'change', function() {
                   if( $(this).is(':checked') ) {
-                    opcion_cotizar=1;  
-                    alertify.error("cotiza 1");                  
+                    opcion_cotizar=1;                  
                   }else{
-                    opcion_cotizar=0;  
-                    alertify.error("cotiza 0");                  
+                    opcion_cotizar=0;                   
                   }
 
                 });
@@ -198,9 +196,11 @@ async function cobrarNotaPost(){
     'datos': datosNota,
     'carrito': cart
   }
-  const respAsyncDetalles = await postData(parametros,'http://digital-pos.test/index.php/pos/store');
+  const respAsyncDetalles = await postData(parametros,'https://digital-pos.digitalestudio.com.mx/index.php/pos/store');
   if (respAsyncDetalles.success) {
-    console.log(respAsyncDetalles);
+    alertify.success("Venta Guardar !");
+  }else{
+    alertify.error("Hubo un error, intente de nuevo.");
   }
                  
 }
@@ -268,7 +268,7 @@ async function cobrarNotaPost(){
                                                                    
                   var fieldtable1 = $("<div class='row mt-1'>");                                                                  
                   var fcantidad = $("<div class='col-md-1'><input type=\"text\" autocomplete=\"off\" size=\"5\" value=\"0\" class=\"form-control form-control-sm fieldname\" id=\"txtcantidad" + contador + "\" name=\""+contador+"\" required/></div>");
-                  var fdescripcion = $("<div class='col-md-7'><input type=\"text\" size='55' class=\"form-control form-control-sm fieldname text-uppercase\" autocomplete=\"off\" id=\"txtdescripcion" + contador + "\" name=\"txt_descripcion" + contador + "\" required/></div>");
+                  var fdescripcion = $("<div class='col-md-7'><input type=\"text\" size='55' class=\"form-control form-control-sm fieldname text-capitalize\" autocomplete=\"off\" id=\"txtdescripcion" + contador + "\" name=\"txt_descripcion" + contador + "\" required/></div>");
                   var fpreciounitario = $("<div class='col-md-1'><input type=\"text\" size=\"5\" value=\"0\" autocomplete=\"off\" class=\"form-control form-control-sm fieldname\" id=\"txtpunit" + contador + "\" name=\"" + contador + "\" required/></div>");
                   var fTotal = $("<div class='col-md-1'><input type=\"text\" class=\"form-control form-control-sm fieldname\" size=\"5\" value=\"0\" id=\"txttotal" + contador + "\" disabled/></div>");                  
                   var fDescuento = $("<div class='col-md-1'><input type=\"text\" class=\"form-control form-control-sm fieldname\" size=\"5\" value=\"0\" id=\"txtdescuento" + contador + "\" name=\""+contador+"\"/></div>");                  
@@ -400,11 +400,11 @@ async function cobrarNotaPost(){
                   var global_factura = facturacion;                    
                   var global_iva=0;
                   var global_total=0;
-                  if(global_factura==0){
+                  if(opcion_facturar==0){
                     global_total = global_subtotal;
                     //alert("sin iva"+global_total);
                   }
-                  if(global_factura==1){
+                  if(opcion_facturar==1){
                     global_iva=(global_subtotal)*(0.16);
                     global_total =global_subtotal+eval(global_iva);
                   }
@@ -444,11 +444,15 @@ async function cobrarNotaPost(){
       'importe': $('#importeAbono').val(),
       'folio': $('#idVentaHide').val()
     }
-    //alertify.success("metodo "+params.metodo+" importe "+params.importe+"Folio "+params.folio);
-     const respAsyncDetalles = await postData(parametros,'http://digital-pos.test/index.php/ventas/abonar');
-      if (respAsyncDetalles.success) {
-        console.log(respAsyncDetalles);
-      }
+    
+    const respAsyncDetalles = await postData(parametros,'https://digital-pos.digitalestudio.com.mx/index.php/ventas/abonar');
+    if (respAsyncDetalles.success) {
+      alertify.success(respAsyncDetalles.msg);
+      $('#importeAbono').val(0);
+      $('#abonarModal').modal('hide')
+    }else{
+      alertify.error(respAsyncDetalles.msg);
+    }
   }
 
   $('#importeAbono').on('keyup',function(){

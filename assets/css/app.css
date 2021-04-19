@@ -4409,7 +4409,7 @@ input[type="button"].btn-block {
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
   color: #fff;
-  background-color: #272b30;
+  background-color: #2f3027;
   border-color: rgba(0, 0, 0, 0.6);
 }
 
@@ -10468,8 +10468,10 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .navbar .nav-item.active .nav-link {
-  background-color: rgba(0, 0, 0, 0.7);
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: rgb(2, 2, 2);
+  border-color: #ffe600;
+  /* border-left: 1px solid rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(0, 0, 0, 0.2); */
 }
 
 .navbar-nav .nav-item + .nav-item {

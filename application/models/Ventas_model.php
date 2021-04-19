@@ -49,6 +49,10 @@ class Ventas_model extends CI_Model
     {
         return $this->db->delete('ventas',array('id'=>$id));
     }
+    function delete_venta_credito($id)
+    {
+        return $this->db->delete('ventas_a_credito',array('id_venta'=>$id));
+    }
 
     function get_clientes_deben(){
         $sql="SELECT ventas_a_credito.id,ventas_a_credito.id_venta,ventas.facturar,ventas.cliente as cliente,DATE_FORMAT(ventas.fecha,'%d/%m/%Y') AS fecha
@@ -82,6 +86,11 @@ class Ventas_model extends CI_Model
     }
     function insert_abono($params){
         $this->db->insert('abonos',$params);   
+    }
+    function ifFacturarNota($folio){
+        $this->db->select('facturar');
+        $this->db->where('id',$folio);
+        return $this->db->get('ventas')->result_array();
     }
 
 }

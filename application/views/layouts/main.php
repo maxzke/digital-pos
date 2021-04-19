@@ -47,21 +47,21 @@
       
         <div class="collapse navbar-collapse" id="navbarColor02">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
+            <li class="nav-item <?php echo $active == "pos" ? "active" : "" ; ?>">
               <a class="nav-link" href="<?php echo site_url("pos"); ?>"><i class="fas fa-shopping-cart"></i> POS
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <?php echo $active == "ventas" ? "active" : "" ; ?>">
               <a class="nav-link" href="<?php echo site_url("ventas"); ?>"><i class="far fa-file-alt"></i> Ventas
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <?php echo $active == "pagos" ? "active" : "" ; ?>">
               <a class="nav-link" href="#"><i class="fas fa-hand-holding-usd"></i> Pagos</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <?php echo $active == "tarjeta" ? "active" : "" ; ?>">
               <a class="nav-link" href="#"><i class="fab fa-cc-visa"></i> Tarjeta</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <?php echo $active == "corte" ? "active" : "" ; ?>">
               <a class="nav-link" href="#"><i class="fas fa-chart-line"></i> Corte</a>
             </li>
             <!-- <li class="nav-item">

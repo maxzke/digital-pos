@@ -12,7 +12,7 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 /**
  * PRINT TICKET POS
  */
-require __DIR__ . '../autoload.php';
+//require __DIR__ . '../autoload.php';
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
@@ -31,6 +31,7 @@ class Ventas extends REST_Controller {
     public function index_get(){
         $data['clientes'] = $this->creditos();
         $data['_view'] = 'ventas/index';
+        $data['active'] = 'ventas';
         $this->load->view('layouts/main',$data);
     }
     public function index_post(){
@@ -42,11 +43,31 @@ class Ventas extends REST_Controller {
      */
     public function abonar_post(){
         $parametros = $this->input->post('params');
-        $this->store_abono($parametros['folio'],$parametros['metodo'],$parametros['importe']);
-        $respuesta = array(
-            'success' => true,
-            'data' => $parametros
-        );
+        $abono = $parametros['importe'];
+
+        if ($parametros['importe'] <= 0) {
+            $respuesta = array(
+                'success' => false,
+                'msg' => "Importe no válido!"
+            );
+        }else{
+            $saldo = $this->getSaldoNota($parametros['folio']);
+            if ($abono > $saldo) {                
+                $cambio = ($abono) - ($saldo);
+                $abono = $saldo;
+                $respuesta = array(
+                    'success' => true,
+                    'msg' => "Abono Guardado !. Cambio ".$cambio
+                );
+            }else{
+                $respuesta = array(
+                    'success' => true,
+                    'msg' => "Abono Guardado !"
+                );
+            }
+            
+            $this->store_abono($parametros['folio'],$parametros['metodo'],$abono);
+        }                
         $this->response($respuesta,200);
     }
     private function store_abono($id_venta,$metodo,$importe){
@@ -63,23 +84,35 @@ class Ventas extends REST_Controller {
      */
     private function creditos(){
         $data['clientes'] = $this->ventas_model->get_clientes_deben();
-        foreach ($data['clientes'] as $key) {
-            //$this->getSaldoNota($key['id_venta']);
-            $params[] = array(
-                'folio' => $key['id_venta'],
-                'cliente' => $key['cliente'],
-                'total' => $this->getImporteNota($key['id_venta']),
-                'abonos' => $this->getAbonosNota($key['id_venta']),
-                'resta' => $this->getSaldoNota($key['id_venta']),
-                'fecha' => $key['fecha']
-            );
+        if ($data['clientes']) {
+            foreach ($data['clientes'] as $key) {
+                /**
+                 * revisa si saldo == 0
+                 * si : borra venta de tabla creditos
+                 */
+                if ($this->getSaldoNota($key['id_venta']) == 0) {
+                    $this->eliminaVentaCredito($key['id_venta']);
+                }
+                $iva = $this->getIva($key['id_venta']);
+                $totalNota = $this->getImporteNota($key['id_venta']);
+                $params[] = array(
+                    'folio' => $key['id_venta'],
+                    'cliente' => $key['cliente'],
+                    'total' => $totalNota,
+                    'iva' => $iva,
+                    'abonos' => $this->getAbonosNota($key['id_venta']),
+                    'resta' => $this->getSaldoNota($key['id_venta']),
+                    'fecha' => $key['fecha']
+                );
+            }
+            return $params;
         }
-        return $params;
+        
     }
     private function getSaldoNota($id){
         $total = $this->getImporteNota($id);
         $abonos = $this->getAbonosNota($id);
-        $resta = $total[0]['importe'] - $abonos[0]['importe'];
+        $resta = $total[0]['importe'] - $abonos[0]['importe'] + $this->getIva($id);
         return $resta;
     }
     private function getAbonosNota($folio){
@@ -88,6 +121,21 @@ class Ventas extends REST_Controller {
     }
     private function getImporteNota($folio){
         return $this->ventas_model->importeTotalNota($folio);
+    }
+    private function getIva($id){
+        $facturar = $this->getFacturarNota($id);
+        $subtotal = $this->getImporteNota($id);
+        $iva = 0;
+        if ($facturar[0]['facturar']) {
+            $iva = (0.16)*($subtotal[0]['importe']);
+        }
+        return $iva;
+    }
+    private function getFacturarNota($folio){
+        return $this->ventas_model->ifFacturarNota($folio);
+    }
+    private function eliminaVentaCredito($id_venta){
+        $this->ventas_model->delete_venta_credito($id_venta);
     }
 
     
