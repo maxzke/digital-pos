@@ -205,6 +205,7 @@ async function cobrarNotaPost(){
     alertify.success("Venta Guardar !");
     $('#cobrarNota').prop( "disabled", false );
     $('#spinner_loading').css('display', 'none'); 
+    $('#formVenta')[0].reset();    
   }else{
     alertify.error("Hubo un error, intente de nuevo.");
     $('#cobrarNota').prop( "disabled", false );
