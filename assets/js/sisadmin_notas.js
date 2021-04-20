@@ -33,7 +33,10 @@
                     alertify.confirm("Guardar Venta", function (e) {
                         if (e) {
                             // user clicked "ok"
-                            //se guarda la nota                    
+                            //se guarda la nota   
+                            $('#cobrarNota').prop( "disabled", true );  
+                            $('#spinner_loading').css('display', 'inherit');  
+                                           
                             cobrarNotaPost();
                             // window.open('bar_progresspdf.php?folio='+Ffolio+'&bit=1','_blank',''); 
                             // window.open('bar_progressGuardandoNota.php','_self','');  
@@ -191,8 +194,8 @@ async function cobrarNotaPost(){
       cart.push(arregloArticulos);                           
     }                                                                               
   }
-  console.log(datosNota); 
-  console.log(cart);
+  // console.log(datosNota); 
+  // console.log(cart);
   parametros = {
     'datos': datosNota,
     'carrito': cart
@@ -200,8 +203,12 @@ async function cobrarNotaPost(){
   const respAsyncDetalles = await postData(parametros,url+'/pos/store');
   if (respAsyncDetalles.success) {
     alertify.success("Venta Guardar !");
+    $('#cobrarNota').prop( "disabled", false );
+    $('#spinner_loading').css('display', 'none'); 
   }else{
     alertify.error("Hubo un error, intente de nuevo.");
+    $('#cobrarNota').prop( "disabled", false );
+    $('#spinner_loading').css('display', 'none');
   }
                  
 }
@@ -268,11 +275,11 @@ async function cobrarNotaPost(){
                   //var fieldWrapper = $("<div class=\"fieldwrapper\" id=\"field" + intId + "\"/>");                  
                                                                    
                   var fieldtable1 = $("<div class='row mt-1'>");                                                                  
-                  var fcantidad = $("<div class='col-md-1'><input type=\"number\" autocomplete=\"off\" size=\"5\" value=\"0\" class=\"form-control form-control-sm fieldname\" id=\"txtcantidad" + contador + "\" name=\""+contador+"\" required/></div>");
+                  var fcantidad = $("<div class='col-md-1'><input type=\"number\" onclick=\"this.select()\" autocomplete=\"off\" size=\"5\" value=\"0\" class=\"form-control form-control-sm fieldname\" id=\"txtcantidad" + contador + "\" name=\""+contador+"\" required/></div>");
                   var fdescripcion = $("<div class='col-md-7'><input type=\"text\" size='55' class=\"form-control form-control-sm fieldname text-capitalize\" autocomplete=\"off\" id=\"txtdescripcion" + contador + "\" name=\"txt_descripcion" + contador + "\" required/></div>");
-                  var fpreciounitario = $("<div class='col-md-1'><input type=\"number\" size=\"5\" value=\"0\" autocomplete=\"off\" class=\"form-control form-control-sm fieldname\" id=\"txtpunit" + contador + "\" name=\"" + contador + "\" required/></div>");
+                  var fpreciounitario = $("<div class='col-md-1'><input type=\"number\" size=\"5\" onclick=\"this.select()\" value=\"0\" autocomplete=\"off\" class=\"form-control form-control-sm fieldname\" id=\"txtpunit" + contador + "\" name=\"" + contador + "\" required/></div>");
                   var fTotal = $("<div class='col-md-1'><input type=\"text\" class=\"form-control form-control-sm fieldname\" size=\"5\" value=\"0\" id=\"txttotal" + contador + "\" disabled/></div>");                  
-                  var fDescuento = $("<div class='col-md-1'><input type=\"number\" class=\"form-control form-control-sm fieldname\" size=\"5\" value=\"0\" id=\"txtdescuento" + contador + "\" name=\""+contador+"\"/></div>");                  
+                  var fDescuento = $("<div class='col-md-1'><input type=\"number\" onclick=\"this.select()\" class=\"form-control form-control-sm fieldname\" size=\"5\" value=\"0\" id=\"txtdescuento" + contador + "\" name=\""+contador+"\"/></div>");                  
                   var removeButton = $("<div class='col-md-1'><i class=\"fas fa-times text-danger\"></i></div></div>");                                                            
                   var fTotalhidden = $("<div class='col-md-1'><input type=\"hidden\" value=\"0\" class=\"total_hidden\" id=\"txttotal_hidden" + contador + "\" /></div>");                  
                       removeButton.click(function() {
