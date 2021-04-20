@@ -5,25 +5,44 @@
                 <!-- CONTENIDO -->
                 <div class="row fonde-header-card pt-2 my-2">
                     <div class="col-md-12 text-center">
-                        <h4>Registro de Ventas</h4>
+                        <h4>Pagos</h4>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4 offset-8">
-                        <ul class="nav nav-pills">
-                            <li class="nav-item mr-1">
-                                <a class="btn btn-sm btn-warning" data-toggle="tab" href="#pendientes_tab">Pendientes</a>
-                            </li>
-                            <li class="nav-item mr-1">
-                                <a class="btn btn-sm btn-success" data-toggle="tab" href="#pagados_tab">Pagados</a>
-                            </li>
-                            <li class="nav-item mr-1">
-                                <a class="btn btn-sm btn-danger" data-toggle="tab" href="#cancelados_tab">Cancelados</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn btn-sm btn-primary" data-toggle="tab" href="#todos_tab">Todos</a>
-                            </li>
-                        </ul>
+                
+                <div class="row fondo-menu py-1">
+                    <div class="col-md-4 offset-2">  
+                        <div class="row mt-2">
+                            <div class="col-md-4 text-right"><strong>Proveedor </strong><i class="fas fa-user"></i></div>
+                            <div class="col-md-8"> 
+                                <input type="text" id="txt_cliente" class="form-control form-control-sm text-capitalize" placeholder="Nombre">
+                            </div>
+                        </div>    
+                        <div class="row mt-1">
+                            <div class="col-md-4 text-right"><strong>Folio </strong><i class="fas fa-file-invoice"></i></div>
+                            <div class="col-md-8"> 
+                                <input type="text" id="txt_direccion" class="form-control form-control-sm text-capitalize" placeholder="Lugar, calle">
+                            </div>
+                        </div>    
+                        <div class="row mt-1">
+                            <div class="col-md-4 text-right"><strong>Importe </strong><i class="fas fa-dollar-sign"></i></div>
+                            <div class="col-md-8"> 
+                                <input type="text" id="txt_telefono" class="form-control form-control-sm" placeholder="10 digitos">
+                            </div>
+                        </div>                                               
+                    </div>
+                    <div class="col-md-3 offset-1">      
+                        <div class="row mt-2"><div class="col-md-12"> 
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input select_facturar" id="customSwitch1">
+                                    <label class="custom-control-label" for="customSwitch1"><strong>Facturado</strong></label>
+                                </div>
+                            </div>
+                        </div>    
+                        <div class="row mt-3">
+                            <div class="col-md-12"> 
+                                <button type="button" class="btn btn-sm btn-success">Guardar</button>
+                            </div>
+                        </div>                     
                     </div>
                 </div>
                 
@@ -32,20 +51,6 @@
                         <!-- pendientes-tab -->
                         <div class="row">
                             <div class="col-md-10 offset-1">
-                                <hr class="bg-warning mt-2 mb-2">
-                                <div class="row mt-1">                                    
-                                    <div class="col-md-1">
-                                        <input type="text" name="folio" id="idFolio" class="form-control form-control-sm" placeholder="#Folio">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="text" name="cliente" id="idCliente" class="form-control form-control-sm text-capitalize" placeholder="Nombre de cliente">
-                                    </div>
-                                    <div class="col-md-1"><strong>Total</strong></div>
-                                    <div class="col-md-1"><strong>Abono</strong></div>
-                                    <div class="col-md-1"><strong>Resta</strong></div>
-                                    <div class="col-md-1"><strong>Fecha</strong></div>
-                                    <div class="col-md-1"><strong>Abonar</strong></div>
-                                </div>
                                 <!-- content-row -->
                                 <div class="row cart bg-white mt-1">
                                     <div class="col-md-12 ml-2">

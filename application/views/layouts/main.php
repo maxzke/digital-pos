@@ -41,6 +41,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="navbar-brand">Digital Estudio</div>
+        <input type="hidden" id="url_base" value="<?php echo site_url(); ?>">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -56,10 +57,7 @@
               </a>
             </li>
             <li class="nav-item <?php echo $active == "pagos" ? "active" : "" ; ?>">
-              <a class="nav-link" href="#"><i class="fas fa-hand-holding-usd"></i> Pagos</a>
-            </li>
-            <li class="nav-item <?php echo $active == "tarjeta" ? "active" : "" ; ?>">
-              <a class="nav-link" href="#"><i class="fab fa-cc-visa"></i> Tarjeta</a>
+              <a class="nav-link" href="<?php echo site_url("pagos"); ?>"><i class="fas fa-hand-holding-usd"></i> Pagos</a>
             </li>
             <li class="nav-item <?php echo $active == "corte" ? "active" : "" ; ?>">
               <a class="nav-link" href="#"><i class="fas fa-chart-line"></i> Corte</a>

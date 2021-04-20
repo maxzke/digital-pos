@@ -57,12 +57,12 @@ class Ventas extends REST_Controller {
                 $abono = $saldo;
                 $respuesta = array(
                     'success' => true,
-                    'msg' => "Abono Guardado !. Cambio ".$cambio
+                    'msg' => "Su Cambio $".$cambio
                 );
             }else{
                 $respuesta = array(
                     'success' => true,
-                    'msg' => "Abono Guardado !"
+                    'msg' => ""
                 );
             }
             

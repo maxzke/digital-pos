@@ -125,7 +125,7 @@
                                         <input type="text" class="form-control form-control-sm fieldname" size="5" value="0" id="txttotal1" disabled="">
                                       </div>
                                       <div class="col-md-1">
-                                        <input type="text" class="form-control form-control-sm fieldname" data-regex="si" size="5" value="0" id="txtdescuento1" name="1">
+                                        <input type="number" class="form-control form-control-sm fieldname" data-regex="si" size="5" value="0" id="txtdescuento1" name="1">
                                       </div>
                                       <div class="col-md-1">
                                         <input type="hidden" value="0" class="total_hidden" id="txttotal_hidden1">

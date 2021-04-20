@@ -9,6 +9,7 @@
                 var facturacion = 0;
                 let opcion_facturar = 0;
                 let opcion_cotizar = 0;
+                const url = $('#url_base').val();
                 
 
                  //uso DOCUMENT porque el div lo estoy cargando en LOAD dentro de otro div de lo contrario usaria
@@ -68,10 +69,10 @@
                 $(".select_facturar").on( 'change', function() {
                   if( $(this).is(':checked') ) {
                     opcion_facturar=1;  
-                    alertify.error("facturacion 1");                  
+                    //alertify.error("facturacion 1");                  
                   }else{
                     opcion_facturar=0;  
-                    alertify.error("facturacion 0");                  
+                    //alertify.error("facturacion 0");                  
                   }
                   calculaCuentas();
 
@@ -196,7 +197,7 @@ async function cobrarNotaPost(){
     'datos': datosNota,
     'carrito': cart
   }
-  const respAsyncDetalles = await postData(parametros,'https://digital-pos.digitalestudio.com.mx/index.php/pos/store');
+  const respAsyncDetalles = await postData(parametros,url+'/pos/store');
   if (respAsyncDetalles.success) {
     alertify.success("Venta Guardar !");
   }else{
@@ -267,11 +268,11 @@ async function cobrarNotaPost(){
                   //var fieldWrapper = $("<div class=\"fieldwrapper\" id=\"field" + intId + "\"/>");                  
                                                                    
                   var fieldtable1 = $("<div class='row mt-1'>");                                                                  
-                  var fcantidad = $("<div class='col-md-1'><input type=\"text\" autocomplete=\"off\" size=\"5\" value=\"0\" class=\"form-control form-control-sm fieldname\" id=\"txtcantidad" + contador + "\" name=\""+contador+"\" required/></div>");
+                  var fcantidad = $("<div class='col-md-1'><input type=\"number\" autocomplete=\"off\" size=\"5\" value=\"0\" class=\"form-control form-control-sm fieldname\" id=\"txtcantidad" + contador + "\" name=\""+contador+"\" required/></div>");
                   var fdescripcion = $("<div class='col-md-7'><input type=\"text\" size='55' class=\"form-control form-control-sm fieldname text-capitalize\" autocomplete=\"off\" id=\"txtdescripcion" + contador + "\" name=\"txt_descripcion" + contador + "\" required/></div>");
-                  var fpreciounitario = $("<div class='col-md-1'><input type=\"text\" size=\"5\" value=\"0\" autocomplete=\"off\" class=\"form-control form-control-sm fieldname\" id=\"txtpunit" + contador + "\" name=\"" + contador + "\" required/></div>");
+                  var fpreciounitario = $("<div class='col-md-1'><input type=\"number\" size=\"5\" value=\"0\" autocomplete=\"off\" class=\"form-control form-control-sm fieldname\" id=\"txtpunit" + contador + "\" name=\"" + contador + "\" required/></div>");
                   var fTotal = $("<div class='col-md-1'><input type=\"text\" class=\"form-control form-control-sm fieldname\" size=\"5\" value=\"0\" id=\"txttotal" + contador + "\" disabled/></div>");                  
-                  var fDescuento = $("<div class='col-md-1'><input type=\"text\" class=\"form-control form-control-sm fieldname\" size=\"5\" value=\"0\" id=\"txtdescuento" + contador + "\" name=\""+contador+"\"/></div>");                  
+                  var fDescuento = $("<div class='col-md-1'><input type=\"number\" class=\"form-control form-control-sm fieldname\" size=\"5\" value=\"0\" id=\"txtdescuento" + contador + "\" name=\""+contador+"\"/></div>");                  
                   var removeButton = $("<div class='col-md-1'><i class=\"fas fa-times text-danger\"></i></div></div>");                                                            
                   var fTotalhidden = $("<div class='col-md-1'><input type=\"hidden\" value=\"0\" class=\"total_hidden\" id=\"txttotal_hidden" + contador + "\" /></div>");                  
                       removeButton.click(function() {
@@ -433,8 +434,9 @@ async function cobrarNotaPost(){
   /*
   * SECCION VENTAS
   */              
-  function abonar(id_venta){
+  function abonar(id_venta,saldo){
     $('#tituloModalAbonar').text('Abonar Folio: '+id_venta);
+    $('#saldor_restante').text('$ '+saldo);
     $('#abonarModal').modal('show');
     $('#idVentaHide').val(id_venta);
   }
@@ -445,9 +447,42 @@ async function cobrarNotaPost(){
       'folio': $('#idVentaHide').val()
     }
     
-    const respAsyncDetalles = await postData(parametros,'https://digital-pos.digitalestudio.com.mx/index.php/ventas/abonar');
+    const respAsyncDetalles = await postData(parametros,url+'/ventas/abonar');
     if (respAsyncDetalles.success) {
-      alertify.success(respAsyncDetalles.msg);
+      //alertify.success(respAsyncDetalles.msg);
+      // --------------------------------------------
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+      })
+
+      swalWithBootstrapButtons.fire({
+        title: "Abono Guardado !",
+        text: respAsyncDetalles.msg,
+        icon: 'success',
+        showCancelButton: false,
+        confirmButtonText: 'Aceptar!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true,
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          location.reload();
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire(
+            'Cancelled',
+            'Your imaginary file is safe :)',
+            'error'
+          )
+        }
+      })
+      // --------------------------------------------
       $('#importeAbono').val(0);
       $('#abonarModal').modal('hide')
     }else{
