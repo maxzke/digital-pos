@@ -454,7 +454,7 @@ class CI_Pagination {
 			// the base_url, but without the page item.
 			if ($first_url === '')
 			{
-				$first_url = $base_url;
+				$first_url = $base_url."?per_page=0";
 
 				// If we saved any GET items earlier, make sure they're appended.
 				if ( ! empty($get))
@@ -570,7 +570,7 @@ class CI_Pagination {
 			$attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, 1);
 
 			$output .= $this->first_tag_open.'<a href="'.$first_url.'"'.$attributes.$this->_attr_rel('start').'>'
-				.$this->first_link.'</a>'.$this->first_tag_close;
+				.$this->first_link.'xp</a>'.$this->first_tag_close;
 		}
 
 		// Render the "Previous" link.

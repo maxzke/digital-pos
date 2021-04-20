@@ -50,14 +50,16 @@
                                 <div class="row cart bg-white mt-1">
                                     <div class="col-md-12 ml-2">
                                         <?php 
-                                        if ($clientes) :                                        
-                                            foreach ($clientes as $cliente): ?>
+                                        if (isset($clientes) && !empty($clientes)) : 
+                                            $contador = 0;                                      
+                                            foreach ($clientes as $key=>$cliente): $contador++;?>
+                                            
                                                 <div class="row row-hover">
                                                     <div class="col-md-1">
                                                         <?php echo $cliente['folio']; ?>
                                                     </div>
                                                     <div class="col-md-6 text-capitalize">
-                                                        <?php echo $cliente['cliente']; ?>
+                                                        <?php echo $cliente['cliente']."zke"; ?>
                                                     </div>
                                                     <div class="col-md-1">
                                                         $ <?php echo number_format($cliente['total'][0]['importe']+$cliente['iva'],1,'.',','); ?>
@@ -79,6 +81,9 @@
                                             <?php endforeach; 
                                         endif;?>                                        
                                     </div>
+                                </div>
+                                <div class="row">
+                                    <?php echo "CONT_>".$contador.$this->pagination->create_links(); ?>   
                                 </div>
                                 <!-- Modal Abonar -->
                                 <div class="modal fade" id="abonarModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -136,7 +141,7 @@
                     </div>
                     <div class="tab-pane fade" id="pagados_tab">
                         <!-- pagados-tab -->
-                        <?php echo var_dump($clientes) ?>
+                        
                         <!-- /pagados-tab -->
                     </div>
                     <div class="tab-pane fade" id="cancelados_tab">

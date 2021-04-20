@@ -29,7 +29,18 @@ class Ventas extends REST_Controller {
     }
 
     public function index_get(){
-        $data['clientes'] = $this->creditos();
+        $this->load->library('pagination');
+        $config['base_url'] = site_url('ventas?');
+        $limit = RECORDS_PER_PAGE;
+        $offset = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;        
+        $config = $this->config->item('pagination');
+        
+        $config['total_rows'] = $this->ventas_model->get_all_ventas_a_credito_count();
+        $this->pagination->initialize($config);
+
+        //$data['users'] = $this->User_model->get_all_users($params);
+        $temp = $this->creditos($limit,$offset);
+        $data['clientes'] = $temp;
         $data['_view'] = 'ventas/index';
         $data['active'] = 'ventas';
         $this->load->view('layouts/main',$data);
@@ -82,10 +93,10 @@ class Ventas extends REST_Controller {
     /**
      * CARGA LISTADO DE CLIENTES CON CREDITOS A PAGAR
      */
-    private function creditos(){
-        $data['clientes'] = $this->ventas_model->get_clientes_deben();
-        if ($data['clientes']) {
-            foreach ($data['clientes'] as $key) {
+    private function creditos($limit,$offset){
+        $data['client'] = $this->ventas_model->get_clientes_deben($limit,$offset);
+        if ($data['client']) {
+            foreach ($data['client'] as $key) {
                 /**
                  * revisa si saldo == 0
                  * si : borra venta de tabla creditos

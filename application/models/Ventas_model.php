@@ -6,6 +6,15 @@ class Ventas_model extends CI_Model
     {
         parent::__construct();
     }
+
+    /*
+     * Get all ventas a credito count
+     */
+    function get_all_ventas_a_credito_count()
+    {
+        $this->db->from('ventas_a_credito');
+        return $this->db->count_all_results();
+    }
     
     /*
      * Get venta by id
@@ -54,14 +63,37 @@ class Ventas_model extends CI_Model
         return $this->db->delete('ventas_a_credito',array('id_venta'=>$id));
     }
 
-    function get_clientes_deben(){
-        $sql="SELECT ventas_a_credito.id,ventas_a_credito.id_venta,ventas.facturar,ventas.cliente as cliente,DATE_FORMAT(ventas.fecha,'%d/%m/%Y') AS fecha
-                FROM ventas_a_credito 
-                JOIN ventas
-                ON ventas.id = ventas_a_credito.id_venta
-                AND ventas.cotizar = false";
-        $query = $this->db->query($sql);
+    function get_clientes_deben($limit,$offset){
+        
+        if(isset($offset) && !empty($offset))
+        {
+            $this->db->select('ventas_a_credito.id, ventas_a_credito.id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+            $this->db->from('ventas_a_credito');
+            $this->db->join('ventas', 'ventas.id = ventas_a_credito.id_venta');
+            $this->db->where('ventas.cotizar', 0);
+            $this->db->order_by('ventas_a_credito.id', 'desc');
+            $this->db->limit($limit, $offset);
+        }else{
+            $this->db->select('ventas_a_credito.id, ventas_a_credito.id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+            $this->db->from('ventas_a_credito');
+            $this->db->join('ventas', 'ventas.id = ventas_a_credito.id_venta');
+            $this->db->where('ventas.cotizar', 0);
+            $this->db->order_by('ventas_a_credito.id', 'desc');
+            $this->db->limit($limit, 0);
+        }
+        $query = $this->db->get();
         return $query->result_array();
+        
+        
+        
+        //------------------
+        // $sql="SELECT ventas_a_credito.id,ventas_a_credito.id_venta,ventas.facturar,ventas.cliente as cliente,DATE_FORMAT(ventas.fecha,'%d/%m/%Y') AS fecha
+        //         FROM ventas_a_credito 
+        //         JOIN ventas
+        //         ON ventas.id = ventas_a_credito.id_venta
+        //         AND ventas.cotizar = false";
+        // $query = $this->db->query($sql);
+        // return $query->result_array();
     }
     function get_ventas_clientes_deben($id_cliente){
         $sql="SELECT ventas_a_credito.id_venta, DATE_FORMAT(ventas.fecha,'%d/%m/%Y') AS niceDate
