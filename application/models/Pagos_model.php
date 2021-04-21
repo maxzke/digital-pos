@@ -70,6 +70,10 @@ class Pagos_model extends CI_Model
     function insert_datos_detalle($params){
         $this->db->insert_batch('pagos_detalles',$params);        
     }
+    function update_status_facturado($id,$params){
+        $this->db->where('folio',$id);
+        return $this->db->update('pagos',$params);
+    }
 
 
 }

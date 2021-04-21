@@ -119,6 +119,20 @@ class Pagos extends REST_Controller{
         $this->pagos_model->insert_datos_detalle($params);
     }
 
+    public function updateFacturado_post(){
+        $parametros = $this->input->post('params');
+        $id = $parametros['folio'];
+        $params = array(
+            'facturado' => 1
+        );
+        $this->pagos_model->update_status_facturado($id,$params);
+        $respuesta = array(
+            'success' => true,
+            'params' => $parametros,
+        );
+        $this->response($respuesta,200);
+    }
+
 
 
 

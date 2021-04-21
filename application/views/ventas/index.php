@@ -58,7 +58,7 @@
                                                         <?php echo $cliente['folio']; ?>
                                                     </div>
                                                     <div class="col-md-6 text-capitalize">
-                                                        <?php echo $cliente['cliente']."zke"; ?>
+                                                        <?php echo $cliente['cliente']; ?>
                                                     </div>
                                                     <div class="col-md-1 text-right">
                                                         $ <?php echo number_format($cliente['total'][0]['importe']+$cliente['iva'],1,'.',','); ?>

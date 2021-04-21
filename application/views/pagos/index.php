@@ -139,16 +139,16 @@
                                 <div class="col-md-10 offset-1">
                                     <hr class="bg-warning mt-2 mb-2">
                                     <div class="row mt-1">                                    
-                                        <div class="col-md-1">
+                                        <div class="col-md-2">
                                             <input type="text" name="folio" id="idFolio" class="form-control form-control-sm" placeholder="#Folio">
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-5">
                                             <input type="text" name="cliente" id="idCliente" class="form-control form-control-sm text-capitalize" placeholder="Nombre de cliente">
                                         </div>
                                         <div class="col-md-1"><strong>Metodo</strong></div>
                                         <div class="col-md-1"><strong>Facturado</strong></div>
                                         <div class="col-md-1"><strong>Subtotal</strong></div>
-                                        <div class="col-md-1"><strong>Iva</strong></div>
+                                        <div class="col-md-1 text-center"><strong>Iva</strong></div>
                                         <div class="col-md-1"><strong>Total</strong></div>
                                     </div>
                                     <!-- content-row -->
@@ -159,22 +159,26 @@
                                                 foreach ($pagos as $key=>$pago): ?>
                                                 
                                                     <div class="row row-hover">
-                                                        <div class="col-md-1 text-right">
+                                                        <div class="col-md-2 text-right">
                                                             <?php echo $pago['folio']; ?>
                                                         </div>
-                                                        <div class="col-md-6 text-capitalize">
+                                                        <div class="col-md-5 text-capitalize">
                                                             <?php echo $pago['proveedor']; ?>
                                                         </div>
                                                         <div class="col-md-1 text-right">
                                                             <?php echo $pago['metodo']; ?>
                                                         </div>
                                                         <div class="col-md-1 text-right">
-                                                            <?php echo $pago['facturado']; ?>
+                                                            <?php if ($pago['facturado']) : ?>
+                                                                <i class="fas fa-toggle-on text-success"></i>
+                                                            <?php else: ?>
+                                                                <i class="fas fa-toggle-off text-danger decrementa" onclick="cambiaaFacturado('<?php echo $pago['folio']; ?>')"></i>
+                                                            <?php endif; ?>
                                                         </div>
                                                         <div class="col-md-1 text-right">
                                                         <?php echo $pago['subtotal']; ?>
                                                         </div>
-                                                        <div class="col-md-1">
+                                                        <div class="col-md-1 text-right">
                                                             <?php echo $pago['iva']; ?>
                                                         </div>
                                                         <div class="col-md-1 text-center">

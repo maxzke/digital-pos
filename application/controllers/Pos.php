@@ -91,6 +91,8 @@ class Pos extends REST_Controller{
             $parametros['datos']['telefono'],
             $parametros['datos']['empresa'],
             $parametros['datos']['facturar'],
+            $parametros['datos']['subtotal'],
+            $parametros['datos']['iva'],
             $parametros['datos']['total'],
             $parametros['datos']['abono'],
             $parametros['datos']['metodo_pago'],
@@ -157,7 +159,7 @@ class Pos extends REST_Controller{
     //     $this->email("david","guanajuato","21150","unpa","si","55","25","efectivo","25","cart");
     // }
 
-    private function email($folio,$cliente,$direccion,$telefono,$empresa,$factura,$total,$abono,$metodo,$restante,$cart){
+    private function email($folio,$cliente,$direccion,$telefono,$empresa,$factura,$subtotal,$iva,$total,$abono,$metodo,$restante,$cart){
         $to = "digital-estudio@live.com.mx,ramzdav@hotmail.com";
         $subject = "Nota de Venta ".$folio;
         $headers = "MIME-Version: 1.0" . "\r\n";
@@ -180,6 +182,8 @@ class Pos extends REST_Controller{
             <span><strong>Telefono : </strong> {$telefono} </span><br>
             <span><strong>Empresa : </strong> {$empresa} </span><br>
             <span><strong>Facturar : </strong> {$facturar} </span><br>
+            <span><strong>SubTotal : </strong> {$subtotal} </span><br>
+            <span><strong>Iva : </strong> {$iva} </span><br>
             <span><strong>Total : </strong> {$total} </span><br>
             <span><strong>Abono : </strong> {$abono} <strong>Metodo Pago : </strong> {$metodo}</span><br>
             <span><strong>Restante : </strong> {$restante} </span><br><br>
@@ -189,7 +193,7 @@ class Pos extends REST_Controller{
                         <td>Cantidad</td>
                         <td>Descripcion</td>
                         <td>Precio</td>
-                        <td>Total</td>
+                        <td>SubTotal</td>
                     </tr>
                 </thead>
                 <tbody>";

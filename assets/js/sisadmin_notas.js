@@ -204,7 +204,7 @@ async function cobrarNotaPost(){
   var AbonoNota=parseFloat($("#txt_abono").val());   
   let datosNota = {
     'subtotal': $("#txt_subtotal").val(), 
-    'currentIva':$("#txt_iva").val(),
+    'iva':$("#txt_iva").val(),
     'total': $("#txt_total").val(), 
     'abono': $("#txt_abono").val(), 
     'metodo_pago': $("#metodoPago").val(),
@@ -723,5 +723,36 @@ async function guardarPagoPost(){
         return                           
       }
   })
+
+  
+  function cambiaaFacturado(folio){
+    Swal.fire({
+      title: 'Marcar como Facturado',
+      text: "FOLIO: "+folio,
+      icon: 'question',
+      allowOutsideClick:false,
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Guardar!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let parametros = {
+          'folio': folio,
+        }
+        postStatus(parametros);              
+      }
+    })
+  }
+
+
+  async function postStatus(parametros){
+    const respAsyncDetalles = await postData(parametros,url+'/pagos/updateFacturado');
+    if (respAsyncDetalles.success) {
+      location.reload();  
+    }else{
+      alertify.error("Hubo un error, intente de nuevo.");          
+    } 
+  }
 
 //});
