@@ -8,6 +8,9 @@
                 var cotizacion=0;
                 var facturacion = 0;
                 let opcion_facturar = 0;
+                //en secciona pagos, todo es con iva incluido
+                const opcion_facturar_pago = 1;
+                let opcion_pago_facturado = 0;
                 let opcion_cotizar = 0;
                 const url = $('#url_base').val();
                 
@@ -59,6 +62,33 @@
                                 
                 });
 
+                $(document).on("click", "#guardarPago", function() {
+
+                  var confirmaNota = validaCamposVAcios();
+                  var Ffolio=$("#txt_folio").val();
+
+                  if(confirmaNota==1 && cotizacion==0){
+                    alertify.confirm("Guardar Venta", function (e) {
+                        if (e) {
+                            // user clicked "ok"
+                            //se guarda la nota   
+                            $('#guardarPago').prop( "disabled", true );  
+                            $('#spinner_loading').css('display', 'inherit');  
+                                           
+                            guardarPagoPost();
+
+                        } else {
+                            // user clicked "cancel"
+                            return
+                        }
+                    });
+
+                    
+
+                  } 
+                                
+                });
+
                 
                 $(".chkCotizacion").on( 'change', function() {
                   if( $(this).is(':checked') ) {
@@ -78,7 +108,17 @@
                     //alertify.error("facturacion 0");                  
                   }
                   calculaCuentas();
+                });
 
+                $("#customSwitchPagos").on( 'change', function() {
+                  if( $(this).is(':checked') ) {
+                    opcion_pago_facturado=1;  
+                    //alertify.error("facturacion 1");                  
+                  }else{
+                    opcion_pago_facturado=0;  
+                    //alertify.error("facturacion 0");                  
+                  }
+                  //calculaCuentas();
                 });
 
                 
@@ -153,7 +193,8 @@ async function postData(arraydatos,url){
   });
   const data = await response;
   return data;
-}                 
+} 
+
 async function cobrarNotaPost(){
   //cuenta elementos de la clase
   //Si no hay no se manda el POST                      
@@ -209,6 +250,67 @@ async function cobrarNotaPost(){
   }else{
     alertify.error("Hubo un error, intente de nuevo.");
     $('#cobrarNota').prop( "disabled", false );
+    $('#spinner_loading').css('display', 'none');
+  }
+                 
+}
+
+async function guardarPagoPost(){
+  //cuenta elementos de la clase
+  //Si no hay no se manda el POST                      
+  var elementos = $('.total_hidden');
+  var size = elementos.length;
+  hay_articulo = size; 
+  var AbonoNota=parseFloat($("#txt_abono").val());   
+  let datosNota = {
+    'subtotal': $("#txt_subtotal").val(), 
+    'iva':$("#txt_iva").val(),
+    'total': $("#txt_total").val(), 
+    //'abono': $("#txt_abono").val(), 
+    'metodo': $("#metodoPago").val(),
+    'proveedor': $("#txt_cliente").val(), 
+    'folio': $("#txt_direccion").val(), 
+    //'telefono': $("#txt_telefono").val(), 
+    //'empresa': $("#txt_empresa").val(), 
+    'facturado': opcion_pago_facturado,
+    //'cotizar' : opcion_cotizar,
+    'usuario': $("#txt_idUser").val()
+  }                 
+  //Arreglo de Objetos
+  var cart=[];
+  for(var i=1;i<=contador;i++){
+    var cant=$('#'+"txtcantidad"+i).val();
+    var deskrip=$('#'+"txtdescripcion"+i).val();
+    var punit=$('#'+"txtpunit"+i).val();
+    var tot=$('#'+"txttotal"+i).val(); 
+    //Arreglo con datos de articulos
+    var arregloArticulos={};
+    if (cant) {
+      //Si existe "cant" se hace ya que segeneran varios txtDinamicos pero solo se guardan los que estan llenos
+      arregloArticulos.cantidad=cant;
+      arregloArticulos.producto= deskrip;
+      arregloArticulos.precio= punit;
+      arregloArticulos.importe= tot;  
+      //Meto arreglos al Arreglo de objetos
+      cart.push(arregloArticulos);                           
+    }                                                                               
+  }
+  // console.log(datosNota); 
+  // console.log(cart);
+  parametros = {
+    'datos': datosNota,
+    'carrito': cart
+  }
+  const respAsyncDetalles = await postData(parametros,url+'/pagos/store');
+  if (respAsyncDetalles.success) {
+    console.log(respAsyncDetalles);
+    alertify.success("Pago success !");
+    $('#guardarPago').prop( "disabled", false );
+    $('#spinner_loading').css('display', 'none'); 
+    $('#formPago')[0].reset();    
+  }else{
+    alertify.error("Hubo un error, intente de nuevo.");
+    $('#guardarPago').prop( "disabled", false );
     $('#spinner_loading').css('display', 'none');
   }
                  
@@ -314,75 +416,192 @@ async function cobrarNotaPost(){
                   $("#buildyourform").append(fieldtable1);
                 });
 
+                $("#addPago").click(function() {
+                  contador=contador+1;
+                  var intId = $("#buildyourform div").length + 1;
+                  //var fieldWrapper = $("<div class=\"fieldwrapper\" id=\"field" + intId + "\"/>");                  
+                                                                   
+                  var fieldtable1 = $("<div class='row mt-1'>");                                                                  
+                  var fcantidad = $("<div class='col-md-1 offset-1'><input type=\"number\" onclick=\"this.select()\" autocomplete=\"off\" size=\"5\" value=\"0\" class=\"form-control form-control-sm fieldnamePago\" id=\"txtcantidad" + contador + "\" name=\""+contador+"\" required/></div>");
+                  var fdescripcion = $("<div class='col-md-7'><input type=\"text\" size='55' class=\"form-control form-control-sm fieldnamePago text-capitalize\" autocomplete=\"off\" id=\"txtdescripcion" + contador + "\" name=\"txt_descripcion" + contador + "\" required/></div>");
+                  var fpreciounitario = $("<div class='col-md-1'><input type=\"number\" size=\"5\" onclick=\"this.select()\" value=\"0\" autocomplete=\"off\" class=\"form-control form-control-sm fieldnamePago\" id=\"txtpunit" + contador + "\" name=\"" + contador + "\" required/></div>");
+                  var fTotal = $("<div class='col-md-1'><input type=\"text\" class=\"form-control form-control-sm fieldnamePago\" size=\"5\" value=\"0\" id=\"txttotal" + contador + "\" disabled/></div>");                  
+                  //var fDescuento = $("<div class='col-md-1'><input type=\"number\" onclick=\"this.select()\" class=\"form-control form-control-sm fieldnamePago\" size=\"5\" value=\"0\" id=\"txtdescuento" + contador + "\" name=\""+contador+"\"/></div>");                  
+                  var removeButton = $("<div class='col-md-1'><i class=\"fas fa-times text-danger\"></i></div></div>");                                                            
+                  var fTotalhidden = $("<div class='col-md-1'><input type=\"hidden\" value=\"0\" class=\"total_hidden\" id=\"txttotal_hidden" + contador + "\" /></div>");                  
+                      removeButton.click(function() {
+                              $(this).parent().remove();
+                                        //contador=contador-1;
+                                        //si se remueve un item se actualiza el Subtotal
+                                       //cuenta elementos de la clase
+                                          subtotal_articuls2=0;
+                                          var elementos = $('.total_hidden');
+                                          var size = elementos.length;
+                                          hay_articulo = size;
+                                          var arrayID = [];                      
+                                          $.each( elementos, function(i, val){
+                                            var v_hidden = parseFloat($(this).val());
+                                            subtotal_articuls2=subtotal_articuls2+v_hidden;
+                                              arrayID.push( $(val).parent().attr('id') );
+                                              
+                                          });//Fin cuenta elementos de la clase
+                                         // $("#txt_subtotal").val(subtotal_articuls);
+                                          $("#txt_subtotal").val(subtotal_articuls2.toFixed(2));
+                      });
+
+                  fieldtable1.append(fieldtable1);
+                  fieldtable1.append(fcantidad);
+                  fieldtable1.append(fdescripcion);
+                  fieldtable1.append(fpreciounitario);
+                  fieldtable1.append(fTotal);
+                  //fieldtable1.append(fDescuento);                  
+                  fieldtable1.append(removeButton);
+                  fieldtable1.append(fTotalhidden);                  
+                  $("#buildyourform").append(fieldtable1);
+                });
+
                 //selecciono el texto del input text clickeado                
                 $(document).on("click","input[type='text']", function() {
                   //$(this).select();
                   $(this).select();                  
-                });               
-                 //uso DOCUMENT porque son generado dinamicamente
-                  $(document).on("keyup", ".fieldname", function() {                       
-                      subtotal_articuls =0;                   
-                      subtotal_articuls2 =0;                   
-                       var p_id = $(this).attr("name"); 
-                       var v1 = $('#'+"txtcantidad"+p_id).val();
-                       var v2 = $('#'+"txtpunit"+p_id).val();
-                       var v3 = $('#'+"txtdescuento"+p_id).val();
-                       const floatRegex = '[-+]?([0-9]*.[0-9]+|[0-9]+)';
-                      let evaluar = $(this).data("regex");
-                      if (evaluar === "si") {
-                                              
-                        if (!v1.match(floatRegex)) {
-                              $(this).val(0);
-                              alertify.error("Ingrese una cantidad válida");
-                              return                           
-                            }
-                            
-                        if (!v2.match(floatRegex)) {
-                              $(this).val(0);
-                              alertify.error("Ingrese una cantidad válida");
-                              return
-                            }
-                        if (!v3.match(floatRegex)) {
-                              $(this).val(0);
-                              alertify.error("Ingrese una cantidad válida");
-                              return
-                            }
-                      }
+                });   
+
+                function calculaCuentasPagos(){                  
+                  var global_subtotal = parseFloat($("#txt_subtotal").val());
+                  var global_factura = facturacion;                    
+                  var global_iva=0;
+                  var global_total=0;
+                  if(opcion_facturar_pago==0){
+                    global_total = global_subtotal;
+                    //alert("sin iva"+global_total);
+                  }
+                  //siempre incluye iva por tanto opcion_facturar_pago==1
+                  if(opcion_facturar_pago==1){
+                    global_iva=(global_subtotal)*(0.16);
+                    global_total =global_subtotal+eval(global_iva);
+                  }
+                  $("#txt_iva").val(global_iva.toFixed(2));
+                  $("#txt_total").val(global_total.toFixed(2));
+                  var currentAbono = $("#txt_abono").val();
+                  var currentResta =(global_total.toFixed(2))-currentAbono;
+                  //verifico que abono no sea mayor a total
+                  if (currentResta<0) {
+                    alertify.error("Abono no puede ser mayor a total");
+                    $("#txt_abono").val(0);
+                    $("#txt_abono").select();
+                    $("#txt_resta").val($("#txt_total").val());                    
+                  }else{
+                    $("#txt_resta").val(currentResta.toFixed(2));
+                  }                  
+                }             
+                
+                //uso DOCUMENT porque son generado dinamicamente
+                $(document).on("keyup", ".fieldnamePago", function() {                       
+                    subtotal_articuls =0;                   
+                    subtotal_articuls2 =0;                   
+                      var p_id = $(this).attr("name"); 
+                      var v1 = $('#'+"txtcantidad"+p_id).val();
+                      var v2 = $('#'+"txtpunit"+p_id).val();
+                      //var v3 = $('#'+"txtdescuento"+p_id).val();
+                      const floatRegex = '[-+]?([0-9]*.[0-9]+|[0-9]+)';
+                    let evaluar = $(this).data("regex");
+                    if (evaluar === "si") {
+                                            
+                      if (!v1.match(floatRegex)) {
+                            $(this).val(0);
+                            alertify.error("Ingrese una cantidad válida");
+                            return                           
+                          }
                           
-                           
+                      if (!v2.match(floatRegex)) {
+                            $(this).val(0);
+                            alertify.error("Ingrese una cantidad válida");
+                            return
+                          }
+                    }
+                      var cantidad_product = parseFloat(v1);
+                      var precio_unitario = parseFloat(v2);
+                      //var descuento_producto = parseFloat(v3);
+                      if(v1 != '' && v2 != ''){
+                        var precioBruto=cantidad_product*precio_unitario;
+                        //var cantDescuento = (descuento_producto*precioBruto)/100;
+                        $('#'+"txttotal"+p_id).val(precioBruto);
+                        $('#'+"txttotal_hidden"+p_id).val(precioBruto);
+                        for (var i = 1; i <= contador; i++) {
+                          var v3 = parseFloat($('#'+"txttotal"+i).val());
+                          subtotal_articuls = subtotal_articuls + v3;;  
+                        };
+                        //cuenta elementos de la clase
+                        var elementos = $('.total_hidden');
+                        var size = elementos.length;
+                        var arrayID = [];
+                        $.each( elementos, function(i, val){
+                          var v_hidden = parseFloat($(this).val());
+                          subtotal_articuls2=subtotal_articuls2+v_hidden;
+                            arrayID.push( $(val).parent().attr('id') );                            
+                        });//Fin cuenta elementos de la clase
+                        // $("#txt_subtotal").val(subtotal_articuls);
+                        $("#txt_subtotal").val(subtotal_articuls2.toFixed(2));
+                      }                    
+                  calculaCuentasPagos();
+                });//Fin KEYUP
 
 
-                       var cantidad_product = parseFloat(v1);
-                       var precio_unitario = parseFloat(v2);
-                       var descuento_producto = parseFloat(v3);
+                //uso DOCUMENT porque son generado dinamicamente
+                $(document).on("keyup", ".fieldname", function() {                       
+                    subtotal_articuls =0;                   
+                    subtotal_articuls2 =0;                   
+                      var p_id = $(this).attr("name"); 
+                      var v1 = $('#'+"txtcantidad"+p_id).val();
+                      var v2 = $('#'+"txtpunit"+p_id).val();
+                      var v3 = $('#'+"txtdescuento"+p_id).val();
+                      const floatRegex = '[-+]?([0-9]*.[0-9]+|[0-9]+)';
+                    let evaluar = $(this).data("regex");
+                    if (evaluar === "si") {
+                                            
+                      if (!v1.match(floatRegex)) {
+                            $(this).val(0);
+                            alertify.error("Ingrese una cantidad válida");
+                            return                           
+                          }
+                          
+                      if (!v2.match(floatRegex)) {
+                            $(this).val(0);
+                            alertify.error("Ingrese una cantidad válida");
+                            return
+                          }
+                      if (!v3.match(floatRegex)) {
+                            $(this).val(0);
+                            alertify.error("Ingrese una cantidad válida");
+                            return
+                          }
+                    }                        
+                      var cantidad_product = parseFloat(v1);
+                      var precio_unitario = parseFloat(v2);
+                      var descuento_producto = parseFloat(v3);
 
-                       if(v1 != '' && v2 != ''){
-                          var precioBruto=cantidad_product*precio_unitario;
-                          var cantDescuento = (descuento_producto*precioBruto)/100;
-                          $('#'+"txttotal"+p_id).val(precioBruto-cantDescuento);
-                          $('#'+"txttotal_hidden"+p_id).val(precioBruto-cantDescuento);
-                          //$('#'+"txttotal_hidden"+p_id).val(cantidad_product*precio_unitario);
+                      if(v1 != '' && v2 != ''){
+                        var precioBruto=cantidad_product*precio_unitario;
+                        var cantDescuento = (descuento_producto*precioBruto)/100;
+                        $('#'+"txttotal"+p_id).val(precioBruto-cantDescuento);
+                        $('#'+"txttotal_hidden"+p_id).val(precioBruto-cantDescuento);
 
-                          for (var i = 1; i <= contador; i++) {
-                            var v3 = parseFloat($('#'+"txttotal"+i).val());
-                            subtotal_articuls = subtotal_articuls + v3;;  
-                          };
-                          //cuenta elementos de la clase
-                          var elementos = $('.total_hidden');
-                          var size = elementos.length;
-                          var arrayID = [];
-                           
-                          $.each( elementos, function(i, val){
-                            var v_hidden = parseFloat($(this).val());
-                            subtotal_articuls2=subtotal_articuls2+v_hidden;
-                              arrayID.push( $(val).parent().attr('id') );
-                              
-                          });//Fin cuenta elementos de la clase
-                         // $("#txt_subtotal").val(subtotal_articuls);
-                          $("#txt_subtotal").val(subtotal_articuls2.toFixed(2));
-                        }                    
-                    calculaCuentas();
-                    //CapitaliseAllText($(this).attr('id'));
+                        for (var i = 1; i <= contador; i++) {
+                          var v3 = parseFloat($('#'+"txttotal"+i).val());
+                          subtotal_articuls = subtotal_articuls + v3;;  
+                        };
+                        //cuenta elementos de la clase
+                        var elementos = $('.total_hidden');
+                        var size = elementos.length;
+                        var arrayID = [];                          
+                        $.each( elementos, function(i, val){
+                          var v_hidden = parseFloat($(this).val());
+                          subtotal_articuls2=subtotal_articuls2+v_hidden;
+                            arrayID.push( $(val).parent().attr('id') );                            
+                        });//Fin cuenta elementos de la clase
+                        $("#txt_subtotal").val(subtotal_articuls2.toFixed(2));
+                      }                    
+                  calculaCuentas();
                 });//Fin KEYUP
 
                 
@@ -403,8 +622,8 @@ async function cobrarNotaPost(){
                     }                                      
                   calculaCuentas();
                 });
-                function calculaCuentas(){
-                  
+
+                function calculaCuentas(){                  
                   var global_subtotal = parseFloat($("#txt_subtotal").val());
                   var global_factura = facturacion;                    
                   var global_iva=0;
@@ -426,12 +645,10 @@ async function cobrarNotaPost(){
                     alertify.error("Abono no puede ser mayor a total");
                     $("#txt_abono").val(0);
                     $("#txt_abono").select();
-                    $("#txt_resta").val($("#txt_total").val());
-                    
+                    $("#txt_resta").val($("#txt_total").val());                    
                   }else{
                     $("#txt_resta").val(currentResta.toFixed(2));
-                  }
-                  
+                  }                  
                 } 
 
                 function CapitaliseAllText(elemId) {

@@ -48,33 +48,32 @@
                                 </div>
                                 <!-- content-row -->
                                 <div class="row cart bg-white mt-1">
-                                    <div class="col-md-12 ml-2">
+                                    <div class="col-md-12 ml-2 fondo-tables py-1">
                                         <?php 
-                                        if (isset($clientes) && !empty($clientes)) : 
-                                            $contador = 0;                                      
-                                            foreach ($clientes as $key=>$cliente): $contador++;?>
+                                        if (isset($clientes) && !empty($clientes)) :                              
+                                            foreach ($clientes as $key=>$cliente): ?>
                                             
                                                 <div class="row row-hover">
-                                                    <div class="col-md-1">
+                                                    <div class="col-md-1 text-right">
                                                         <?php echo $cliente['folio']; ?>
                                                     </div>
                                                     <div class="col-md-6 text-capitalize">
                                                         <?php echo $cliente['cliente']."zke"; ?>
                                                     </div>
-                                                    <div class="col-md-1">
+                                                    <div class="col-md-1 text-right">
                                                         $ <?php echo number_format($cliente['total'][0]['importe']+$cliente['iva'],1,'.',','); ?>
                                                     </div>
-                                                    <div class="col-md-1">
+                                                    <div class="col-md-1 text-right">
                                                         $ <?php echo number_format($cliente['abonos'][0]['importe'],1,'.',','); ?>
                                                     </div>
-                                                    <div class="col-md-1">
+                                                    <div class="col-md-1 text-right">
                                                         $ <?php echo number_format($cliente['resta'],1,'.',','); ?>
                                                     </div>
                                                     <div class="col-md-1">
                                                         <?php echo $cliente['fecha']; ?>
                                                     </div>
                                                     <div class="col-md-1 text-center">
-                                                        <i class="fas fa-plus-circle incrementa" onclick="abonar(<?php echo $cliente['folio']; ?>,<?php echo number_format($cliente['resta'],1,'.',','); ?>);"></i> 
+                                                        <i class="fas fa-plus-circle incrementa" onclick="abonar(<?php echo $cliente['folio']; ?>,'<?php echo number_format($cliente['resta'],1,'.',','); ?>');"></i> 
                                                     </div>
                                                 </div>
                                                 <hr>
@@ -82,8 +81,10 @@
                                         endif;?>                                        
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <?php echo "CONT_>".$contador.$this->pagination->create_links(); ?>   
+                                <div class="row mt-2">
+                                    <div class="col-md-12 text-right">
+                                        <?php echo $this->pagination->create_links(); ?>
+                                    </div>   
                                 </div>
                                 <!-- Modal Abonar -->
                                 <div class="modal fade" id="abonarModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

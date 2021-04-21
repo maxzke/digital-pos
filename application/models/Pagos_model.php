@@ -14,14 +14,27 @@ class Pagos_model extends CI_Model
     {
         return $this->db->get_where('pagos',array('id'=>$id))->row_array();
     }
+
+    function pagos_count(){
+        $this->db->from('pagos');
+        return $this->db->count_all_results();
+    }
         
     /*
      * Get all pagos
      */
-    function get_all_pagos()
+    function get_all_pagos($limit,$offset)
     {
-        $this->db->order_by('id', 'desc');
-        return $this->db->get('pagos')->result_array();
+        if(isset($offset) && !empty($offset))
+        {
+            $this->db->order_by('id', 'desc');
+            $this->db->limit($limit, $offset);            
+        }else{
+            
+            $this->db->order_by('id', 'desc');
+            $this->db->limit($limit, 0);
+        }
+        return $this->db->get('pagos')->result_array();        
     }
         
     /*
@@ -49,4 +62,14 @@ class Pagos_model extends CI_Model
     {
         return $this->db->delete('pagos',array('id'=>$id));
     }
+
+    function insert_datos_pago($params){
+        $this->db->insert('pagos',$params);
+        return $this->db->insert_id();
+    }
+    function insert_datos_detalle($params){
+        $this->db->insert_batch('pagos_detalles',$params);        
+    }
+
+
 }
