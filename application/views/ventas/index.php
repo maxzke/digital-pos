@@ -31,7 +31,7 @@
                     <div class="tab-pane fade active show" id="pendientes_tab">
                         <!-- pendientes-tab -->
                         <div class="row">
-                            <div class="col-md-10 offset-1">
+                            <div class="col-md-12">
                                 <hr class="bg-warning mt-2 mb-2">
                                 <div class="row mt-1">                                    
                                     <div class="col-md-1">
@@ -40,9 +40,9 @@
                                     <div class="col-md-6">
                                         <input type="text" name="cliente" id="idCliente" class="form-control form-control-sm text-capitalize" placeholder="Nombre de cliente">
                                     </div>
-                                    <div class="col-md-1"><strong>Total</strong></div>
-                                    <div class="col-md-1"><strong>Abono</strong></div>
-                                    <div class="col-md-1"><strong>Resta</strong></div>
+                                    <div class="col-md-1 text-center"><strong>Total</strong></div>
+                                    <div class="col-md-1 text-center"><strong>Abono</strong></div>
+                                    <div class="col-md-1 text-center"><strong>Resta</strong></div>
                                     <div class="col-md-1"><strong>Fecha</strong></div>
                                     <div class="col-md-1"><strong>Abonar</strong></div>
                                 </div>

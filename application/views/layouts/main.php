@@ -33,16 +33,8 @@
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css">
     <style>
       @import url('<?php echo base_url('assets/css/fontcss.css?family=Numans')?>');
-      html,body{
-      font-family: 'Numans', sans-serif;
-      }
     </style>
-
-    
-
-    
 </head>
-
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="navbar-brand">Digital Estudio</div>
