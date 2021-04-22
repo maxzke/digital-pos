@@ -755,4 +755,17 @@ async function guardarPagoPost(){
     } 
   }
 
+  $(document).on("keyup", "#idFolio", function() {
+    let f = $('#idFolio').val();
+    search(f);
+  });                       
+  async function search(folio){
+    const respAsyncDetalles = await postData(folio,url+'/pagos/search');
+    if (respAsyncDetalles.success) {
+      console.log(respAsyncDetalles)  ;
+    }else{
+      alertify.error("Hubo un error, intente de nuevo.");          
+    }
+  }
+
 //});

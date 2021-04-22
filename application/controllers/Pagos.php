@@ -56,34 +56,16 @@ class Pagos extends REST_Controller{
         );
 
         $this->registrar_detalle($id_pago,$parametros['carrito']);        
-
-        // $this->registrar_abono(
-        //     $id_venta,
-        //     $parametros['datos']['metodo_pago'],
-        //     $parametros['datos']['abono']
-        // );
-
-        // $rest = 0;
-        // if (floatval($parametros['datos']['abono']) < floatval($parametros['datos']['total']) ) {
-        //     $this->registrar_credito($id_venta);
-        //     $rest = floatval($parametros['datos']['total']) - floatval($parametros['datos']['abono']);
-        // }else{
-        //     $rest = floatval($parametros['datos']['abono']) - floatval($parametros['datos']['total']);
-        // }
-
-        // $this->email(
-        //     $id_venta,
-        //     $parametros['datos']['cliente'],
-        //     $parametros['datos']['direccion'],
-        //     $parametros['datos']['telefono'],
-        //     $parametros['datos']['empresa'],
-        //     $parametros['datos']['facturar'],
-        //     $parametros['datos']['total'],
-        //     $parametros['datos']['abono'],
-        //     $parametros['datos']['metodo_pago'],
-        //     $rest,
-        //     $parametros['carrito']
-        // );
+        $this->email(
+            $parametros['datos']['folio'],
+            $parametros['datos']['proveedor'],
+            $parametros['datos']['facturado'],
+            $parametros['datos']['subtotal'],
+            $parametros['datos']['iva'],
+            $parametros['datos']['total'],
+            $parametros['datos']['metodo'],
+            $parametros['carrito']
+        );
                 
         $this->response($respuesta,200);
     }
@@ -131,6 +113,68 @@ class Pagos extends REST_Controller{
             'params' => $parametros,
         );
         $this->response($respuesta,200);
+    }
+
+    private function email($folio,$proveedor,$facturado,$subtotal,$iva,$total,$metodo,$cart){
+        $to = "digital-estudio@live.com.mx,ramzdav@hotmail.com";
+        $subject = "Pagos a Proveedores ".$folio;
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";   
+        if ($facturado == 1) {
+            $facturar = "Si";
+        }else{
+            $facturar = "No";
+        }
+        $message = "
+            <html>
+            <head>
+            <title>HTML</title>
+            </head>
+            <body style='background-color: rgb(231, 231, 231); padding-left: 20px; padding-top: 10px; padding-bottom: 20px;'>
+            <h1>Digital Estudio</h1>
+            <h2>Pago a Proveedor Folio: {$folio} </h2>
+            <span><strong>Proveedor: </strong> {$proveedor}</span><br>
+            <span><strong>Facturado : </strong> {$facturar} </span><br>
+            <span><strong>SubTotal : </strong> {$subtotal} </span><br>
+            <span><strong>Iva : </strong> {$iva} </span><br>
+            <span><strong>Total : </strong> {$total} </span><br>
+            <table style='border: 1px solid black;'>
+                <thead style='background-color: black; color: white;'>
+                    <tr>
+                        <td>Cantidad</td>
+                        <td>Descripcion</td>
+                        <td>Precio</td>
+                        <td>SubTotal</td>
+                    </tr>
+                </thead>
+                <tbody>";
+                foreach ($cart as $key=>$item): 
+                    $message .= "<tr>
+                        <td>".$item['cantidad']."</td>
+                        <td>".$item['producto']."</td>
+                        <td>".$item['precio']."</td>
+                        <td>".$item['importe']."</td>
+                    </tr>";
+                endforeach; 
+                $message .= "</tbody>
+            </table>
+            </body>
+            </html>";
+        
+        mail($to, $subject, $message, $headers);
+    }
+
+    public function search_post(){
+        $folio = $this->input->post('params');
+        $respuesta = array(
+            'success' => true,
+            'params' => $this->searh_by_folio($folio)
+        );
+        $this->response($respuesta,200);        
+    }
+
+    private function searh_by_folio($folio){
+        return $this->pagos_model->get_all_pagos_search_by_folio($folio);
     }
 
 

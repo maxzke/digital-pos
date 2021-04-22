@@ -31,7 +31,12 @@
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/alertify.default.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/sweetalert2.min.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css">
-    
+    <style>
+      @import url('<?php echo base_url('assets/css/fontcss.css?family=Numans')?>');
+      html,body{
+      font-family: 'Numans', sans-serif;
+      }
+    </style>
 
     
 
@@ -111,11 +116,12 @@
     <!--   Core JS Files   -->
     <script src="<?php echo base_url(); ?>assets/js/alertify.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/jquery-3.6.0.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
-<!-- SWEET ALERT2-->
-<script src="<?php echo base_url(); ?>assets/js/sweetalert2.all.min.js"></script>    
-<!-- NOTA VENTA -->
+    <!-- SWEET ALERT2-->
+    <script src="<?php echo base_url(); ?>assets/js/sweetalert2.all.min.js"></script>    
+    <!-- NOTA VENTA -->
     <script src="<?php echo base_url(); ?>assets/js/sisadmin_notas.js"></script>
 </body>
 
