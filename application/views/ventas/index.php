@@ -34,10 +34,10 @@
                             <div class="col-md-12">
                                 <hr class="bg-warning mt-2 mb-2">
                                 <div class="row mt-1">                                    
-                                    <div class="col-md-1">
+                                    <div class="col-md-2">
                                         <input type="text" name="folio" id="idFolio" class="form-control form-control-sm" placeholder="#Folio">
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <input type="text" name="cliente" id="idCliente" class="form-control form-control-sm text-capitalize" placeholder="Nombre de cliente">
                                     </div>
                                     <div class="col-md-1 text-center"><strong>Total</strong></div>
@@ -54,20 +54,20 @@
                                             foreach ($clientes as $key=>$cliente): ?>
                                             
                                                 <div class="row row-hover">
-                                                    <div class="col-md-1 text-right">
+                                                    <div class="col-md-2 text-right">
                                                         <?php echo $cliente['folio']; ?>
                                                     </div>
-                                                    <div class="col-md-6 text-capitalize">
+                                                    <div class="col-md-5 text-capitalize">
                                                         <?php echo $cliente['cliente']; ?>
                                                     </div>
                                                     <div class="col-md-1 text-right">
-                                                        $ <?php echo number_format($cliente['total'][0]['importe']+$cliente['iva'],1,'.',','); ?>
+                                                        <?php echo number_format($cliente['total'][0]['importe']+$cliente['iva'],1,'.',','); ?>
                                                     </div>
                                                     <div class="col-md-1 text-right">
-                                                        $ <?php echo number_format($cliente['abonos'][0]['importe'],1,'.',','); ?>
+                                                        <?php echo number_format($cliente['abonos'][0]['importe'],1,'.',','); ?>
                                                     </div>
                                                     <div class="col-md-1 text-right">
-                                                        $ <?php echo number_format($cliente['resta'],1,'.',','); ?>
+                                                        <?php echo number_format($cliente['resta'],1,'.',','); ?>
                                                     </div>
                                                     <div class="col-md-1">
                                                         <?php echo $cliente['fecha']; ?>

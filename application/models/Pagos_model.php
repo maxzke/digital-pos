@@ -34,7 +34,9 @@ class Pagos_model extends CI_Model
             $this->db->order_by('id', 'desc');
             $this->db->limit($limit, 0);
         }
-        return $this->db->get('pagos')->result_array();        
+        $query = $this->db->get('pagos');
+        return $query->result_array();
+        //return $this->db->get('pagos')->result_array();        
     }
 
     /*

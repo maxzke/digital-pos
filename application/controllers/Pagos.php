@@ -24,7 +24,8 @@ class Pagos extends REST_Controller{
         $config['base_url'] = site_url('pagos?');
         $limit = RECORDS_PER_PAGE;
         $offset = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;        
-        $config = $this->config->item('pagination');        
+        $config = $this->config->item('pagination'); 
+               
         $config['total_rows'] = $this->pagos_model->pagos_count();
         $this->pagination->initialize($config);
 

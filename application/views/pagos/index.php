@@ -136,9 +136,8 @@
                         <div class="tab-pane fade active show" id="pendientes_tab">
                             <!-- pendientes-tab -->
                             <div class="row">
-                                <div class="col-md-10 offset-1">
-                                    <hr class="bg-warning mt-2 mb-2">
-                                    <div class="row mt-1">                                    
+                                <div class="col-md-12">
+                                    <div class="row mt-2">                                    
                                         <div class="col-md-2">
                                             <input type="text" name="folio" id="idFolio" class="form-control form-control-sm" placeholder="#Folio">
                                         </div>
@@ -146,10 +145,10 @@
                                             <input type="text" name="cliente" id="idCliente" class="form-control form-control-sm text-capitalize" placeholder="Nombre de cliente">
                                         </div>
                                         <div class="col-md-1"><strong>Metodo</strong></div>
-                                        <div class="col-md-1"><strong>Facturado</strong></div>
-                                        <div class="col-md-1"><strong>Subtotal</strong></div>
-                                        <div class="col-md-1 text-center"><strong>Iva</strong></div>
-                                        <div class="col-md-1"><strong>Total</strong></div>
+                                        <div class="col-md-1 text-right"><strong>Facturado</strong></div>
+                                        <div class="col-md-1 text-right"><strong>Subtotal</strong></div>
+                                        <div class="col-md-1 text-right"><strong>Iva</strong></div>
+                                        <div class="col-md-1 text-center"><strong>Total</strong></div>
                                     </div>
                                     <!-- content-row -->
                                     <div class="row cart bg-white mt-1">
@@ -165,10 +164,10 @@
                                                         <div class="col-md-5 text-capitalize">
                                                             <?php echo $pago['proveedor']; ?>
                                                         </div>
-                                                        <div class="col-md-1 text-right">
+                                                        <div class="col-md-1">
                                                             <?php echo $pago['metodo']; ?>
                                                         </div>
-                                                        <div class="col-md-1 text-right">
+                                                        <div class="col-md-1 text-center">
                                                             <?php if ($pago['facturado']) : ?>
                                                                 <i class="fas fa-toggle-on text-success"></i>
                                                             <?php else: ?>
@@ -176,23 +175,23 @@
                                                             <?php endif; ?>
                                                         </div>
                                                         <div class="col-md-1 text-right">
-                                                        <?php echo $pago['subtotal']; ?>
+                                                        <?php echo number_format($pago['subtotal'],1,'.',','); ?>
                                                         </div>
                                                         <div class="col-md-1 text-right">
-                                                            <?php echo $pago['iva']; ?>
+                                                            <?php echo number_format($pago['iva'],1,'.',','); ?>
                                                         </div>
                                                         <div class="col-md-1 text-center">
-                                                        <?php echo $pago['total']; ?>
+                                                        <?php echo number_format($pago['total'],1,'.',','); ?>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                 <?php endforeach; 
                                             endif;?>                         
                                         </div>
-                                    </div>
+                                    </div>                                    
                                     <div class="row mt-2">
                                         <div class="col-md-12 text-right">
-                                           <?php echo $this->pagination->create_links(); ?>
+                                            <?php echo $this->pagination->create_links(); ?>
                                         </div>   
                                     </div>
                                     <!-- Modal Abonar -->
@@ -248,21 +247,6 @@
                                 </div>
                             </div>
                             <!-- /pendientes-tab -->
-                        </div>
-                        <div class="tab-pane fade" id="pagados_tab">
-                            <!-- pagados-tab -->
-                            <?php echo var_dump($clientes) ?>
-                            <!-- /pagados-tab -->
-                        </div>
-                        <div class="tab-pane fade" id="cancelados_tab">
-                            <!-- cancelados-tab -->
-                            
-                            <!-- /cancelados-tab -->
-                        </div>
-                        <div class="tab-pane fade" id="todos_tab">
-                            <!-- todos-tab -->
-                            
-                            <!-- /todos-tab -->
                         </div>
                     </div>
                 </form>
