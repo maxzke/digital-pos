@@ -4,12 +4,12 @@
             <div class="container">
                 <!-- CONTENIDO -->
                 <form id="formVenta">
-                    <div class="row my-2 fonde-header-card pt-2">
+                    <div class="row mt-2 fonde-header-card pt-2">
                         <div class="col-md-12 text-center text-dark">                    
                         <h4>Nota de Venta</h4>                    
                         </div>
                     </div>
-                    <div class="row fondo-menu py-1">
+                    <div class="row fondo-menu py-2">
                         <div class="col-md-4">  
                             <div class="row mt-2">
                                 <div class="col-md-4 text-right"><strong>Cliente </strong><i class="fas fa-user"></i></div>
@@ -100,7 +100,7 @@
                         </div>
                     </div>
                                     
-                    <div class="row mt-2">
+                    <div class="row">
                         <div class="col-md-6 offset-6 mb-2">
                             <div id="spinner_loading" class="spinner-border text-warning" role="status" style="display: none;">
                                 <span class="sr-only">Loading...</span>

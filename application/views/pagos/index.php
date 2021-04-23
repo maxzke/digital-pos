@@ -4,13 +4,12 @@
             <div class="container">
                 <!-- CONTENIDO -->
                 <form id="formPago">
-                    <div class="row fonde-header-card pt-2 my-2">
+                    <div class="row fonde-header-card pt-2 mt-2">
                         <div class="col-md-12 text-center">
                             <h4>Pagos</h4>
                         </div>
-                    </div>
-                    
-                    <div class="row fondo-menu py-1">
+                    </div>                    
+                    <div class="row fondo-menu pb-2">
                         <div class="col-md-4">  
                             <div class="row mt-3">
                                 <div class="col-md-4 text-right"><strong>Proveedor </strong><i class="fas fa-user"></i></div>
@@ -24,12 +23,6 @@
                                     <input type="text" id="txt_direccion" class="form-control form-control-sm text-capitalize" placeholder="Número">
                                 </div>
                             </div>    
-                            <!-- <div class="row mt-1">
-                                <div class="col-md-4 text-right"><strong>Importe </strong><i class="fas fa-dollar-sign"></i></div>
-                                <div class="col-md-8"> 
-                                    <input type="text" id="txt_telefono" class="form-control form-control-sm" placeholder="Neto pagado">
-                                </div>
-                            </div>                                                -->
                         </div>
                         <div class="col-md-3 offset-1">      
                             <div class="row mt-2">
@@ -77,8 +70,8 @@
                     </div>
 
 
-                    <div class="row mt-2">
-                        <div class="col-md-6 offset-6 mb-2">
+                    <div class="row mt-1">
+                        <div class="col-md-6 offset-6">
                             <div id="spinner_loading" class="spinner-border text-warning" role="status" style="display: none;">
                                 <span class="sr-only">Loading...</span>
                             </div>
