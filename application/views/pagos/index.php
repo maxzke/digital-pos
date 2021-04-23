@@ -36,7 +36,7 @@
                                 <div class="col-md-12"> 
                                     <div class="custom-control custom-switch">
                                         <input type="checkbox" class="custom-control-input" id="customSwitchPagos">
-                                        <label class="custom-control-label" for="customSwitchPagos"><strong>Facturado</strong></label>
+                                        <label class="custom-control-label" for="customSwitchPagos"><strong>Facturado?</strong></label>
                                     </div>
                                 </div>
                             </div>    
@@ -137,12 +137,12 @@
                             <!-- pendientes-tab -->
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="row mt-2">                                    
+                                    <div class="row fonde-header-card py-2 mt-2">                                    
                                         <div class="col-md-2">
                                             <input type="text" name="folio" id="idFolio" class="form-control form-control-sm" placeholder="#Folio">
                                         </div>
                                         <div class="col-md-5">
-                                            <input type="text" name="cliente" id="idCliente" class="form-control form-control-sm text-capitalize" placeholder="Nombre de cliente">
+                                            <input type="text" name="cliente" id="nombreProveedor" class="form-control form-control-sm text-capitalize" placeholder="Nombre de cliente" autocomplete="off">
                                         </div>
                                         <div class="col-md-1"><strong>Metodo</strong></div>
                                         <div class="col-md-1 text-right"><strong>Facturado</strong></div>
@@ -151,8 +151,8 @@
                                         <div class="col-md-1 text-center"><strong>Total</strong></div>
                                     </div>
                                     <!-- content-row -->
-                                    <div class="row cart bg-white mt-1">
-                                        <div class="col-md-12 ml-2 fondo-tables py-1">
+                                    <div class="row cart bg-white">
+                                        <div class="col-md-12 fondo-tables py-1" id="pintaPagos">
                                             <?php 
                                             if (isset($pagos) && !empty($pagos)) :                              
                                                 foreach ($pagos as $key=>$pago): ?>
@@ -164,7 +164,7 @@
                                                         <div class="col-md-5 text-capitalize">
                                                             <?php echo $pago['proveedor']; ?>
                                                         </div>
-                                                        <div class="col-md-1">
+                                                        <div class="col-md-1 text-capitalize">
                                                             <?php echo $pago['metodo']; ?>
                                                         </div>
                                                         <div class="col-md-1 text-center">
@@ -180,7 +180,7 @@
                                                         <div class="col-md-1 text-right">
                                                             <?php echo number_format($pago['iva'],1,'.',','); ?>
                                                         </div>
-                                                        <div class="col-md-1 text-center">
+                                                        <div class="col-md-1 text-right">
                                                         <?php echo number_format($pago['total'],1,'.',','); ?>
                                                         </div>
                                                     </div>
@@ -218,7 +218,7 @@
                                                         <strong>Metodo Pago</strong>
                                                     </div>
                                                     <div class="col-md-4"> 
-                                                        <select class="custom-select custom-select-sm" id="metodoPago">
+                                                        <select class="custom-select custom-select-sm" id="metodoPagoModal">
                                                             <option value="Efectivo" selected>Efectivo</option>
                                                             <option value="Transferencia">Transferencia</option>
                                                             <option value="Tarjeta">Tarjeta</option>

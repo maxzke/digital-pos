@@ -166,16 +166,29 @@ class Pagos extends REST_Controller{
     }
 
     public function search_post(){
-        $folio = $this->input->post('params');
-        $respuesta = array(
-            'success' => true,
-            'params' => $this->searh_by_folio($folio)
-        );
+        $info = $this->input->post('params');
+        $data['pagos'] = $this->searh_by_folio($info['tipo'],$info['param']);
+        if ($data['pagos']) {
+            $respuesta = array(
+                'success' => true,
+                'params' => $data['pagos']
+            );
+        }else{
+            $respuesta = array(
+                'success' => false
+            );
+        }        
         $this->response($respuesta,200);        
     }
 
-    private function searh_by_folio($folio){
-        return $this->pagos_model->get_all_pagos_search_by_folio($folio);
+    private function searh_by_folio($tipo,$param){
+        if ($tipo == 'folio') {
+            return $this->pagos_model->get_all_pagos_search_by_folio($param);
+        }
+        if ($tipo == 'proveedor') {
+            return $this->pagos_model->get_all_pagos_search_by_proveedor($param);
+        }
+        
     }
 
 

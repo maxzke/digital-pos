@@ -125,4 +125,51 @@ class Ventas_model extends CI_Model
         return $this->db->get('ventas')->result_array();
     }
 
+    function get_all_ventas_search_by_folio($tipo,$folio)
+    {                    
+        switch ($tipo) {
+            case 'pendientes':
+                $this->db->select('ventas_a_credito.id, ventas_a_credito.id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+                $this->db->from('ventas_a_credito');
+                $this->db->join('ventas', 'ventas.id = ventas_a_credito.id_venta');
+                $this->db->where('ventas.cotizar', 0);
+                $this->db->like('ventas.id',$folio);
+                $this->db->order_by('ventas_a_credito.id', 'desc');
+                $this->db->limit(RECORDS_PER_PAGE);
+                $query = $this->db->get();
+                return $query->result_array();
+                break;
+            
+            default:
+                # code...
+                break;
+        }  
+    }
+
+    function get_all_ventas_search_by_cliente($tipo,$cliente)
+    {                   
+        switch ($tipo) {
+            case 'pendientes':
+                $this->db->select('ventas_a_credito.id, ventas_a_credito.id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+                $this->db->from('ventas_a_credito');
+                $this->db->join('ventas', 'ventas.id = ventas_a_credito.id_venta');
+                $this->db->where('ventas.cotizar', 0);
+                $this->db->like('ventas.cliente',$cliente);
+                $this->db->order_by('ventas_a_credito.id', 'desc');
+                $this->db->limit(RECORDS_PER_PAGE);
+                $query = $this->db->get();
+                return $query->result_array();
+                break;
+            
+            default:
+                # code...
+                break;
+        }         
+    }
+
+
+
+
+
+
 }

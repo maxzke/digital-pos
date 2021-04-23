@@ -462,8 +462,7 @@ async function guardarPagoPost(){
 
                 //selecciono el texto del input text clickeado                
                 $(document).on("click","input[type='text']", function() {
-                  //$(this).select();
-                  $(this).select();                  
+                  //$(this).select();                  
                 });   
 
                 function calculaCuentasPagos(){                  
@@ -667,7 +666,7 @@ async function guardarPagoPost(){
   }
   async function store_abono(){
     let parametros = {
-      'metodo': $('#metodoPago').val(),
+      'metodo': $('#metodoPagoModal').val(),
       'importe': $('#importeAbono').val(),
       'folio': $('#idVentaHide').val()
     }
@@ -755,17 +754,147 @@ async function guardarPagoPost(){
     } 
   }
 
-  $(document).on("keyup", "#idFolio", function() {
-    let f = $('#idFolio').val();
-    search(f);
-  });                       
-  async function search(folio){
-    const respAsyncDetalles = await postData(folio,url+'/pagos/search');
+  // ------------ SEARCH VENTAS PENDIENTES--------------------------------------
+  $(document).on("keyup", "#folioPendiente", delay(function (e) {
+      let f = $('#folioPendiente').val();
+      searchVentas('folio',f,'pendientes');
+    }, 500));
+  $(document).on("keyup", "#clientePendiente", delay(function (e) {
+    let f = $('#clientePendiente').val();
+    searchVentas('proveedor',f,'pendientes');
+  },500)); 
+  async function searchVentas(tipo,parametro,section){
+    let param = {
+      'tipo':tipo,
+      'param':parametro,
+      'seccion':section
+    }
+    const respAsyncDetalles = await postData(param,url+'/ventas/search');
     if (respAsyncDetalles.success) {
-      console.log(respAsyncDetalles)  ;
+      pintaVentasHtml(respAsyncDetalles.params);
+      console.log(respAsyncDetalles);
     }else{
-      alertify.error("Hubo un error, intente de nuevo.");          
+      alertify.error("No encontrado");          
     }
   }
+  function pintaVentasHtml(arrayDatos){
+    let cadena = "";
+    arrayDatos.forEach(element => {
+      let subt = element.total[0].importe;
+      let iva = element.iva;
+      let totalItem = parseFloat(subt) + parseFloat(iva);
+
+      cadena += `<div class="row row-hover">
+          <div class="col-md-2 text-right">
+              ${element.folio}
+          </div>
+          <div class="col-md-5 text-capitalize">
+          ${element.cliente}
+          </div>
+          <div class="col-md-1">
+          ${formatMoney(totalItem,1,".",",")}
+          </div>
+          <div class="col-md-1 text-center">
+          ${formatMoney(element.abonos[0].importe,1,".",",")}
+          </div>
+          <div class="col-md-1 text-right">
+          ${ formatMoney(element.resta,1,".",",")}
+          </div>
+          <div class="col-md-1 text-right">
+          ${element.fecha}
+          </div>
+          <div class="col-md-1 text-right">
+          <i class="fas fa-plus-circle incrementa" onclick="abonar(${element.folio},'${formatMoney(element.resta,1,".",",")}');"></i> 
+          </div>
+      </div>
+      <hr>`;
+    });
+    $('#pintaVentas').html(cadena); 
+  }
+  // ------------/SEARCH VENTAS PENDIENTES--------------------------------------
+  //Search Pagos----------------------------------------------------------------
+  $(document).on("keyup", "#idFolio", delay(function (e) {
+    let f = $('#idFolio').val();
+    searchPagos('folio',f);
+  },500));  
+  $(document).on("keyup", "#nombreProveedor", delay(function (e) {
+    let f = $('#nombreProveedor').val();
+    searchPagos('proveedor',f);
+  },500)); 
+                       
+  async function searchPagos(tipo,parametro){
+    let param = {
+      'tipo':tipo,
+      'param':parametro
+    }
+    const respAsyncDetalles = await postData(param,url+'/pagos/search');
+    if (respAsyncDetalles.success) {
+      pintaPagosHtml(respAsyncDetalles.params);
+    }else{
+      alertify.error("No encontrado");          
+    }
+  }
+
+  function pintaPagosHtml(arrayDatos){
+    let cadena = "";
+    arrayDatos.forEach(element => {
+      cadena += `<div class="row row-hover">
+          <div class="col-md-2 text-right">
+              ${element.folio}
+          </div>
+          <div class="col-md-5 text-capitalize">
+          ${element.proveedor}
+          </div>
+          <div class="col-md-1">
+          ${element.metodo}
+          </div>
+          <div class="col-md-1 text-center">`;     
+              if (element.facturado == '1'){
+                  cadena += `<i class="fas fa-toggle-on text-success"></i>`;
+              }else{
+                cadena += `<i class="fas fa-toggle-off text-danger decrementa" onclick="cambiaaFacturado('${element.folio}')"></i>`;
+              }
+          cadena +=`</div>
+          <div class="col-md-1 text-right">
+            ${ formatMoney(element.subtotal,1,".",",") }
+          </div>
+          <div class="col-md-1 text-right">
+            ${ formatMoney(element.iva,1,".",",") }
+          </div>
+          <div class="col-md-1 text-right">
+            ${ formatMoney(element.total,1,".",",") }
+          </div>
+      </div>
+      <hr>`;
+    });
+    $('#pintaPagos').html(cadena); 
+  }
+// /Search Pagos----------------------------------------------------------------
+
+function formatMoney(number, decPlaces, decSep, thouSep) {
+  decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+  decSep = typeof decSep === "undefined" ? "." : decSep;
+  thouSep = typeof thouSep === "undefined" ? "," : thouSep;
+  var sign = number < 0 ? "-" : "";
+  var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+  var j = (j = i.length) > 3 ? j % 3 : 0;
+  
+  return sign +
+    (j ? i.substr(0, j) + thouSep : "") +
+    i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+    (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
+}
+
+//delay al dejar de esciribir para busqueda
+function delay(callback, ms) {
+  var timer = 0;
+  return function() {
+    var context = this, args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      callback.apply(context, args);
+    }, ms || 0);
+  };
+}
 
 //});

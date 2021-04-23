@@ -149,6 +149,53 @@ class Ventas extends REST_Controller {
         $this->ventas_model->delete_venta_credito($id_venta);
     }
 
+
+    public function search_post(){
+        $info = $this->input->post('params'); 
+        $data['client'] = $this->searh_by_folio($info['tipo'],$info['param'],$info['seccion']);
+        if ($data['client']) {
+            foreach ($data['client'] as $key) {
+                /**
+                 * revisa si saldo == 0
+                 * si : borra venta de tabla creditos
+                 */
+                if ($this->getSaldoNota($key['id_venta']) == 0) {
+                    $this->eliminaVentaCredito($key['id_venta']);
+                }
+                $iva = $this->getIva($key['id_venta']);
+                $totalNota = $this->getImporteNota($key['id_venta']);
+                $params[] = array(
+                    'folio' => $key['id_venta'],
+                    'cliente' => $key['cliente'],
+                    'total' => $totalNota,
+                    'iva' => $iva,
+                    'abonos' => $this->getAbonosNota($key['id_venta']),
+                    'resta' => $this->getSaldoNota($key['id_venta']),
+                    'fecha' => $key['fecha']
+                );
+            }
+            $respuesta = array(
+                'success' => true,
+                'params' => $params
+            );            
+        }else{
+            $respuesta = array(
+                'success' => false
+            );
+        }
+        $this->response($respuesta,200);
+    }
+
+    private function searh_by_folio($tipo,$param,$seccion){
+        if ($tipo == 'folio') {
+            return $this->ventas_model->get_all_ventas_search_by_folio($seccion,$param);
+        }
+        if ($tipo == 'proveedor') {
+            return $this->ventas_model->get_all_ventas_search_by_cliente($seccion,$param);
+        }
+        
+    }
+
     
     
     

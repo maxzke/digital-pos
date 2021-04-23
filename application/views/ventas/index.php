@@ -33,12 +33,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <hr class="bg-warning mt-2 mb-2">
-                                <div class="row mt-1">                                    
+                                <div class="row fonde-header-card py-2 mt-1">                                    
                                     <div class="col-md-2">
-                                        <input type="text" name="folio" id="idFolio" class="form-control form-control-sm" placeholder="#Folio">
+                                        <input type="text" name="folio" id="folioPendiente" class="form-control form-control-sm" placeholder="#Folio">
                                     </div>
                                     <div class="col-md-5">
-                                        <input type="text" name="cliente" id="idCliente" class="form-control form-control-sm text-capitalize" placeholder="Nombre de cliente">
+                                        <input type="text" name="cliente" id="clientePendiente" class="form-control form-control-sm text-capitalize" placeholder="Nombre de cliente">
                                     </div>
                                     <div class="col-md-1 text-center"><strong>Total</strong></div>
                                     <div class="col-md-1 text-center"><strong>Abono</strong></div>
@@ -47,8 +47,8 @@
                                     <div class="col-md-1"><strong>Abonar</strong></div>
                                 </div>
                                 <!-- content-row -->
-                                <div class="row cart bg-white mt-1">
-                                    <div class="col-md-12 ml-2 fondo-tables py-1">
+                                <div class="row cart bg-white">
+                                    <div class="col-md-12 fondo-tables py-1" id="pintaVentas">
                                         <?php 
                                         if (isset($clientes) && !empty($clientes)) :                              
                                             foreach ($clientes as $key=>$cliente): ?>

@@ -43,18 +43,18 @@ class Pagos_model extends CI_Model
      * Get all pagos
      */
     function get_all_pagos_search_by_folio($folio)
+    {                    
+        $this->db->order_by('id', 'desc');
+        $this->db->like('folio',$folio);
+        $this->db->limit(15);
+        return $this->db->get('pagos')->result_array();        
+    }
+
+    function get_all_pagos_search_by_proveedor($proveedor)
     {
-        if(isset($offset) && !empty($offset))
-        {
-            $this->db->order_by('id', 'desc');
-            $this->db->like('folio',$folio);
-            $this->db->limit(15);            
-        }else{
-            
-            $this->db->order_by('id', 'desc');
-            $this->db->like('folio',$folio);
-            $this->db->limit(15);
-        }
+        $this->db->order_by('id', 'desc');
+        $this->db->like('proveedor',$proveedor);
+        $this->db->limit(15);
         return $this->db->get('pagos')->result_array();        
     }
         
