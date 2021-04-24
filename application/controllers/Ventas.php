@@ -63,21 +63,24 @@ class Ventas extends REST_Controller {
             );
         }else{
             $saldo = $this->getSaldoNota($parametros['folio']);
-            if ($abono > $saldo) {                
+            if (number_format($abono,1,'.',',') >= number_format($saldo,1,'.',',')) {                
                 $cambio = ($abono) - ($saldo);
                 $abono = $saldo;
                 $respuesta = array(
                     'success' => true,
-                    'msg' => "Su Cambio $".$cambio
+                    'msg' => "Su Cambio $".number_format($cambio,1,'.',',')
                 );
+                $this->store_abono($parametros['folio'],$parametros['metodo'],$abono);
+                $this->eliminaVentaCredito($parametros['folio']);
             }else{
+                $this->store_abono($parametros['folio'],$parametros['metodo'],$abono);
                 $respuesta = array(
                     'success' => true,
                     'msg' => ""
                 );
             }
             
-            $this->store_abono($parametros['folio'],$parametros['metodo'],$abono);
+            
         }                
         $this->response($respuesta,200);
     }
@@ -96,14 +99,8 @@ class Ventas extends REST_Controller {
     private function creditos($limit,$offset){
         $data['client'] = $this->ventas_model->get_clientes_deben($limit,$offset);
         if ($data['client']) {
-            foreach ($data['client'] as $key) {
-                /**
-                 * revisa si saldo == 0
-                 * si : borra venta de tabla creditos
-                 */
-                if ($this->getSaldoNota($key['id_venta']) == 0) {
-                    $this->eliminaVentaCredito($key['id_venta']);
-                }
+            foreach ($data['client'] as $key) {                
+                $this->eliminaVentaCredito($key['id_venta']);
                 $iva = $this->getIva($key['id_venta']);
                 $totalNota = $this->getImporteNota($key['id_venta']);
                 $params[] = array(
@@ -146,7 +143,10 @@ class Ventas extends REST_Controller {
         return $this->ventas_model->ifFacturarNota($folio);
     }
     private function eliminaVentaCredito($id_venta){
-        $this->ventas_model->delete_venta_credito($id_venta);
+        $saldo = number_format($this->getSaldoNota($id_venta),1,'.',',');
+        if ( $saldo == 0){
+            $this->ventas_model->delete_venta_credito($id_venta);
+        }        
     }
 
 
@@ -154,14 +154,8 @@ class Ventas extends REST_Controller {
         $info = $this->input->post('params'); 
         $data['client'] = $this->searh_by_folio($info['tipo'],$info['param'],$info['seccion']);
         if ($data['client']) {
-            foreach ($data['client'] as $key) {
-                /**
-                 * revisa si saldo == 0
-                 * si : borra venta de tabla creditos
-                 */
-                if ($this->getSaldoNota($key['id_venta']) == 0) {
-                    $this->eliminaVentaCredito($key['id_venta']);
-                }
+            foreach ($data['client'] as $key) {                
+                $this->eliminaVentaCredito($key['id_venta']);
                 $iva = $this->getIva($key['id_venta']);
                 $totalNota = $this->getImporteNota($key['id_venta']);
                 $params[] = array(
@@ -194,6 +188,38 @@ class Ventas extends REST_Controller {
             return $this->ventas_model->get_all_ventas_search_by_cliente($seccion,$param);
         }
         
+    }
+
+    public function cancelar_post(){
+        $parametros = $this->input->post('params');
+        $update = $this->setStatusCancel($parametros['folio']);
+        $insert = $this->store_venta_cancelada($parametros['folio'],$parametros['motivo'],$this->auth_username);
+        if ($update && $insert) {
+            $respuesta = array(
+                'success' => true
+            );
+        }else{
+            $respuesta = array(
+                'success' => true,
+                'update' => $update,
+                'insert' => $insert
+            );
+        }
+        $this->response($respuesta,200);
+    }
+
+    private function setStatusCancel($folio){
+        //ventas::cancelada=1
+        $this->ventas_model->update_cancelar($folio);
+    }
+
+    private function store_venta_cancelada($folio,$motivo,$usuario){
+        $params = array(
+            'id_venta' => $folio,
+            'motivo' => $motivo,
+            'usuario' => $usuario
+        );
+        $this->ventas_model->insert_cancelar($params);
     }
 
     

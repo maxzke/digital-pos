@@ -654,9 +654,94 @@ async function guardarPagoPost(){
                    var txt = $("#" + elemId).val();
                    $("#" + elemId).val(txt.toUpperCase());
                 }
-
   /*
-  * SECCION VENTAS
+  *SECCION CANCELAR VENTA  ------------------------------------------------------------------------------------------------
+  */
+  function cancelarVenta(folio,cliente,total){
+    let cadena = `<div class="row mt-1">
+                    <div class="col-md-3 text-right">
+                        <strong>Folio</strong>
+                    </div>
+                    <div class="col-md-9"> 
+                    <span>${folio}</span>
+                    <input type="hidden" id="idVentaCancelarHide" value="${folio}">                    
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-md-3 text-right">
+                        <strong>Cliente</strong>
+                    </div>
+                    <div class="col-md-9"> 
+                    <span>${cliente}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 text-right">
+                        <strong>Total</strong>
+                    </div>
+                    <div class="col-md-9"> 
+                    <span>$ ${total}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 text-right">
+                        <strong>Motivo</strong>
+                    </div>
+                    <div class="col-md-9"> 
+                        <textarea name="motivo" id="motivoCancelaVenta" cols="30" rows="5"></textarea>
+                    </div>
+                </div> `;
+    $('#bodyModalCancelarVenta').html(cadena);
+    $('#cancelarVentaModal').modal('show');
+  }
+  async function store_cancelacion(){
+    let parametros = {
+      'folio':$('#idVentaCancelarHide').val(),
+      'motivo':$('#motivoCancelaVenta').val()
+    } 
+    const respAsyncDetalles = await postData(parametros,url+'/ventas/cancelar');
+    if (respAsyncDetalles.success) {
+      // --------------------------------------------
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+      })
+
+      swalWithBootstrapButtons.fire({
+        title: "Venta Cancelada !",
+        text: respAsyncDetalles.msg,
+        icon: 'success',
+        showCancelButton: false,
+        confirmButtonText: 'Aceptar!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true,
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          location.reload();
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire(
+            'Cancelled',
+            'Your imaginary file is safe :)',
+            'error'
+          )
+        }
+      })
+      // --------------------------------------------
+      $('#cancelarVentaModal').modal('hide')
+    }else{
+      alertify.error('Error al cancelar');
+      console.log(respAsyncDetalles);
+    }
+  }//end store_cancelacion
+  /*
+  * SECCION VENTAS ------------------------------------------------------------------------------------------------
   */              
   function abonar(id_venta,saldo){
     $('#tituloModalAbonar').text('Abonar Folio: '+id_venta);
@@ -673,7 +758,6 @@ async function guardarPagoPost(){
     
     const respAsyncDetalles = await postData(parametros,url+'/ventas/abonar');
     if (respAsyncDetalles.success) {
-      //alertify.success(respAsyncDetalles.msg);
       // --------------------------------------------
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {

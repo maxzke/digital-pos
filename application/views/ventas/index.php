@@ -44,7 +44,7 @@
                                     <div class="col-md-1 text-center"><strong>Abono</strong></div>
                                     <div class="col-md-1 text-center"><strong>Resta</strong></div>
                                     <div class="col-md-1"><strong>Fecha</strong></div>
-                                    <div class="col-md-1"><strong>Abonar</strong></div>
+                                    <div class="col-md-1"><strong>Opciones</strong></div>
                                 </div>
                                 <!-- content-row -->
                                 <div class="row cart bg-white">
@@ -74,6 +74,13 @@
                                                     </div>
                                                     <div class="col-md-1 text-center">
                                                         <i class="fas fa-plus-circle incrementa" onclick="abonar(<?php echo $cliente['folio']; ?>,'<?php echo number_format($cliente['resta'],1,'.',','); ?>');"></i> 
+                                                        <i class="fas fa-ban decrementa ml-2" 
+                                                            onclick="cancelarVenta(
+                                                                <?php echo $cliente['folio']; ?>,
+                                                                '<?php echo $cliente['cliente']; ?>',
+                                                                '<?php echo number_format($cliente['total'][0]['importe']+$cliente['iva'],1,'.',','); ?>'                                                                
+                                                            );">
+                                                        </i> 
                                                     </div>
                                                 </div>
                                                 <hr>
@@ -110,7 +117,7 @@
                                                     <strong>Metodo Pago</strong>
                                                 </div>
                                                 <div class="col-md-4"> 
-                                                    <select class="custom-select custom-select-sm" id="metodoPago">
+                                                    <select class="custom-select custom-select-sm" id="metodoPagoModal">
                                                         <option value="Efectivo" selected>Efectivo</option>
                                                         <option value="Transferencia">Transferencia</option>
                                                         <option value="Tarjeta">Tarjeta</option>
@@ -135,6 +142,27 @@
                                         </div>
                                     </div>
                                 </div><!-- /Modal Abonar -->
+                                <!-- Modal Cancelar Venta -->
+                                <div class="modal fade" id="cancelarVentaModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                        <div class="modal-header bg-danger">
+                                            <h5 class="modal-title text-white">Cancelar Venta</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" id="bodyModalCancelarVenta">
+                                            
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                                            <input type="hidden" id="idVentaHide" value="">
+                                            <button type="button" class="btn btn-success" onclick="store_cancelacion();">Guardar</button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div><!-- /Modal Cancelar Venta -->
                                 <!-- /content-row -->
                             </div>
                         </div>

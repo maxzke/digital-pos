@@ -50,6 +50,14 @@ class Ventas_model extends CI_Model
         $this->db->where('id',$id);
         return $this->db->update('ventas',$params);
     }
+
+    function update_cancelar($id){
+        $this->db->where('id',$id);
+        return $this->db->update('ventas',array('cancelada'=>1));
+    }
+    function insert_cancelar($params){
+        return $this->db->insert('ventas_canceladas',$params);
+    }
     
     /*
      * function to delete venta
@@ -71,6 +79,7 @@ class Ventas_model extends CI_Model
             $this->db->from('ventas_a_credito');
             $this->db->join('ventas', 'ventas.id = ventas_a_credito.id_venta');
             $this->db->where('ventas.cotizar', 0);
+            $this->db->where('ventas.cancelada', 0);
             $this->db->order_by('ventas_a_credito.id', 'desc');
             $this->db->limit($limit, $offset);
         }else{
@@ -78,6 +87,7 @@ class Ventas_model extends CI_Model
             $this->db->from('ventas_a_credito');
             $this->db->join('ventas', 'ventas.id = ventas_a_credito.id_venta');
             $this->db->where('ventas.cotizar', 0);
+            $this->db->where('ventas.cancelada', 0);
             $this->db->order_by('ventas_a_credito.id', 'desc');
             $this->db->limit($limit, 0);
         }
