@@ -116,6 +116,5 @@
     <!-- NOTA VENTA -->
     <script src="<?php echo base_url(); ?>assets/js/sisadmin_notas.js"></script>
 </body>
-
 </html>
 
