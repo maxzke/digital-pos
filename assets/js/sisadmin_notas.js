@@ -845,8 +845,27 @@ async function guardarPagoPost(){
     }, 500));
   $(document).on("keyup", "#clientePendiente", delay(function (e) {
     let f = $('#clientePendiente').val();
-    searchVentas('proveedor',f,'pendientes');
+    searchVentas('cliente',f,'pendientes');
   },500)); 
+  // ------------ SEARCH VENTAS PAGADOS--------------------------------------
+  $(document).on("keyup", "#folioPagados", delay(function (e) {
+      let f = $('#folioPagados').val();
+      searchVentas('folio',f,'pagados');
+    }, 500));
+  $(document).on("keyup", "#clientePagados", delay(function (e) {
+    let f = $('#clientePagados').val();
+    searchVentas('cliente',f,'pagados');
+  },500)); 
+  // ------------ SEARCH VENTAS CANCELADOS--------------------------------------
+  $(document).on("keyup", "#folioCancelados", delay(function (e) {
+      let f = $('#folioCancelados').val();
+      searchVentas('folio',f,'cancelados');
+    }, 500));
+  $(document).on("keyup", "#clienteCancelados", delay(function (e) {
+    let f = $('#clienteCancelados').val();
+    searchVentas('cliente',f,'cancelados');
+  },500)); 
+  // --------------------------------------------------------------------------
   async function searchVentas(tipo,parametro,section){
     let param = {
       'tipo':tipo,
@@ -855,13 +874,13 @@ async function guardarPagoPost(){
     }
     const respAsyncDetalles = await postData(param,url+'/ventas/search');
     if (respAsyncDetalles.success) {
-      pintaVentasHtml(respAsyncDetalles.params);
+      pintaVentasHtml(respAsyncDetalles.params,section);
       console.log(respAsyncDetalles);
     }else{
       alertify.error("No encontrado");          
     }
   }
-  function pintaVentasHtml(arrayDatos){
+  function pintaVentasHtml(arrayDatos,seccion){
     let cadena = "";
     arrayDatos.forEach(element => {
       let subt = element.total[0].importe;
@@ -875,21 +894,41 @@ async function guardarPagoPost(){
           <div class="col-md-5 text-capitalize">
           ${element.cliente}
           </div>
-          <div class="col-md-1">
+          <div class="col-md-1 text-right">
           ${formatMoney(totalItem,1,".",",")}
           </div>
-          <div class="col-md-1 text-center">
+          <div class="col-md-1 text-right">
           ${formatMoney(element.abonos[0].importe,1,".",",")}
           </div>
           <div class="col-md-1 text-right">
           ${ formatMoney(element.resta,1,".",",")}
           </div>
-          <div class="col-md-1 text-right">
+          <div class="col-md-1">
           ${element.fecha}
           </div>
-          <div class="col-md-1 text-right">
-          <i class="fas fa-plus-circle incrementa" onclick="abonar(${element.folio},'${formatMoney(element.resta,1,".",",")}');"></i> 
-          </div>
+          <div class="col-md-1 text-center">`;
+          if (seccion == 'pendientes') {
+            cadena += `<i class="fas fa-plus-circle incrementa" onclick="abonar(${element.folio},'${formatMoney(element.resta,1,".",",")}');"></i> 
+                      <i class="fas fa-ban decrementa ml-2" 
+                          onclick="cancelarVenta(
+                              '${element.folio}',
+                              '${element.cliente}',
+                              '${formatMoney(totalItem,1,".",",")}  '                                                              
+                          );">
+                      </i> `
+          }
+          if (seccion == 'pagados') {
+            cadena += `<i class="fas fa-ban decrementa ml-2" 
+                          onclick="cancelarVenta(
+                              '${element.folio}',
+                              '${element.cliente}',
+                              '${formatMoney(totalItem,1,".",",")}  '                                                              
+                          );">
+                      </i> `
+          }
+          
+
+          cadena += `</div>
       </div>
       <hr>`;
     });

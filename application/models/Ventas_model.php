@@ -15,6 +15,18 @@ class Ventas_model extends CI_Model
         $this->db->from('ventas_a_credito');
         return $this->db->count_all_results();
     }
+    function get_all_ventas_pagadas_count()
+    {
+        $this->db->from('ventas');
+        $this->db->where('pagada',1);
+        return $this->db->count_all_results();
+    }
+    function get_all_ventas_cancelada_count()
+    {
+        $this->db->from('ventas');
+        $this->db->where('cancelada',1);
+        return $this->db->count_all_results();
+    }
     
     /*
      * Get venta by id
@@ -40,6 +52,11 @@ class Ventas_model extends CI_Model
     {
         $this->db->insert('ventas',$params);
         return $this->db->insert_id();
+    }
+
+    function set_as_pagado($id){
+        $this->db->where('id',$id);
+        return $this->db->update('ventas',array('pagada'=>1));
     }
     
     /*
@@ -71,6 +88,7 @@ class Ventas_model extends CI_Model
         return $this->db->delete('ventas_a_credito',array('id_venta'=>$id));
     }
 
+    //PENDIENTES
     function get_clientes_deben($limit,$offset){
         
         if(isset($offset) && !empty($offset))
@@ -93,17 +111,53 @@ class Ventas_model extends CI_Model
         }
         $query = $this->db->get();
         return $query->result_array();
+    }
+    
+    //CANCELADOS
+    function get_clientes_cancelados($limit,$offset){
         
+        if(isset($offset) && !empty($offset))
+        {
+            $this->db->select('ventas.id, ventas.id AS id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+            $this->db->from('ventas');
+            $this->db->where('ventas.cotizar', 0);
+            $this->db->where('ventas.cancelada', 1);
+            $this->db->order_by('ventas.id', 'desc');
+            $this->db->limit($limit, $offset);
+        }else{
+            $this->db->select('ventas.id, ventas.id AS id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+            $this->db->from('ventas');
+            $this->db->where('ventas.cotizar', 0);
+            $this->db->where('ventas.cancelada', 1);
+            $this->db->order_by('ventas.id', 'desc');
+            $this->db->limit($limit, $offset);
+        }
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    //PAGADOS
+    function get_clientes_pagados($limit,$offset){
         
-        
-        //------------------
-        // $sql="SELECT ventas_a_credito.id,ventas_a_credito.id_venta,ventas.facturar,ventas.cliente as cliente,DATE_FORMAT(ventas.fecha,'%d/%m/%Y') AS fecha
-        //         FROM ventas_a_credito 
-        //         JOIN ventas
-        //         ON ventas.id = ventas_a_credito.id_venta
-        //         AND ventas.cotizar = false";
-        // $query = $this->db->query($sql);
-        // return $query->result_array();
+        if(isset($offset) && !empty($offset))
+        {
+            $this->db->select('ventas.id, ventas.id AS id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+            $this->db->from('ventas');
+            $this->db->where('ventas.cotizar', 0);
+            $this->db->where('ventas.cancelada', 0);
+            $this->db->where('ventas.pagada', 1);
+            $this->db->order_by('ventas.id', 'desc');
+            $this->db->limit($limit, $offset);
+        }else{
+            $this->db->select('ventas.id, ventas.id AS id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+            $this->db->from('ventas');
+            $this->db->where('ventas.cotizar', 0);
+            $this->db->where('ventas.cancelada', 0);
+            $this->db->where('ventas.pagada', 1);
+            $this->db->order_by('ventas.id', 'desc');
+            $this->db->limit($limit, $offset);
+        }
+        $query = $this->db->get();
+        return $query->result_array();
     }
     function get_ventas_clientes_deben($id_cliente){
         $sql="SELECT ventas_a_credito.id_venta, DATE_FORMAT(ventas.fecha,'%d/%m/%Y') AS niceDate
@@ -149,6 +203,29 @@ class Ventas_model extends CI_Model
                 $query = $this->db->get();
                 return $query->result_array();
                 break;
+            case 'pagados':
+                $this->db->select('ventas.id, ventas.id AS id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+                $this->db->from('ventas');
+                $this->db->where('ventas.cotizar', 0);
+                $this->db->where('ventas.cancelada', 0);
+                $this->db->where('ventas.pagada', 1);
+                $this->db->like('ventas.id',$folio);
+                $this->db->order_by('ventas.id', 'desc');
+                $this->db->limit(RECORDS_PER_PAGE);
+                $query = $this->db->get();
+                return $query->result_array();
+                break;
+            case 'cancelados':
+                $this->db->select('ventas.id, ventas.id AS id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+                $this->db->from('ventas');
+                $this->db->where('ventas.cotizar', 0);
+                $this->db->where('ventas.cancelada', 1);
+                $this->db->like('ventas.id',$folio);
+                $this->db->order_by('ventas.id', 'desc');
+                $this->db->limit(RECORDS_PER_PAGE);
+                $query = $this->db->get();
+                return $query->result_array();
+                break;
             
             default:
                 # code...
@@ -164,8 +241,32 @@ class Ventas_model extends CI_Model
                 $this->db->from('ventas_a_credito');
                 $this->db->join('ventas', 'ventas.id = ventas_a_credito.id_venta');
                 $this->db->where('ventas.cotizar', 0);
+                $this->db->where('ventas.cancelada', 0);
                 $this->db->like('ventas.cliente',$cliente);
                 $this->db->order_by('ventas_a_credito.id', 'desc');
+                $this->db->limit(RECORDS_PER_PAGE);
+                $query = $this->db->get();
+                return $query->result_array();
+                break;
+            case 'pagados':
+                $this->db->select('ventas.id, ventas.id AS id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+                $this->db->from('ventas');
+                $this->db->where('ventas.cotizar', 0);
+                $this->db->where('ventas.cancelada', 0);
+                $this->db->where('ventas.pagada', 1);
+                $this->db->like('ventas.cliente',$cliente);
+                $this->db->order_by('ventas.id', 'desc');
+                $this->db->limit(RECORDS_PER_PAGE);
+                $query = $this->db->get();
+                return $query->result_array();
+                break;
+            case 'cancelados':
+                $this->db->select('ventas.id, ventas.id AS id_venta, ventas.facturar, ventas.cliente AS cliente, DATE_FORMAT(ventas.fecha,\'%d/%m/%Y\') AS fecha');
+                $this->db->from('ventas');
+                $this->db->where('ventas.cotizar', 0);
+                $this->db->where('ventas.cancelada', 1);
+                $this->db->like('ventas.cliente',$cliente);
+                $this->db->order_by('ventas.id', 'desc');
                 $this->db->limit(RECORDS_PER_PAGE);
                 $query = $this->db->get();
                 return $query->result_array();

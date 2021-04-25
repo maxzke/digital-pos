@@ -27,13 +27,13 @@
                 
                 <div class="row">
                     <div class="col-md-12">
-                        <hr class="bg-warning mt-2 mb-2">
+                        <hr class="bg-danger mt-2 mb-2">
                         <div class="row fonde-header-card py-2 mt-1">                                    
                             <div class="col-md-2">
-                                <input type="text" name="folio" id="folioPendiente" class="form-control form-control-sm" placeholder="#Folio">
+                                <input type="text" name="folio" id="folioCancelados" class="form-control form-control-sm" placeholder="#Folio">
                             </div>
                             <div class="col-md-5">
-                                <input type="text" name="cliente" id="clientePendiente" class="form-control form-control-sm text-capitalize" placeholder="Nombre de cliente">
+                                <input type="text" name="cliente" id="clienteCancelados" class="form-control form-control-sm text-capitalize" placeholder="Nombre de cliente">
                             </div>
                             <div class="col-md-1 text-center"><strong>Total</strong></div>
                             <div class="col-md-1 text-center"><strong>Abono</strong></div>
@@ -45,8 +45,8 @@
                         <div class="row cart bg-white">
                             <div class="col-md-12 fondo-tables py-1" id="pintaVentas">
                                 <?php 
-                                if (isset($pendientes) && !empty($pendientes)) :                              
-                                    foreach ($pendientes as $key=>$cliente): ?>
+                                if (isset($cancelados) && !empty($cancelados)) :                              
+                                    foreach ($cancelados as $key=>$cliente): ?>
                                     
                                         <div class="row row-hover">
                                             <div class="col-md-2 text-right">
@@ -68,14 +68,7 @@
                                                 <?php echo $cliente['fecha']; ?>
                                             </div>
                                             <div class="col-md-1 text-center">
-                                                <i class="fas fa-plus-circle incrementa" onclick="abonar(<?php echo $cliente['folio']; ?>,'<?php echo number_format($cliente['resta'],1,'.',','); ?>');"></i> 
-                                                <i class="fas fa-ban decrementa ml-2" 
-                                                    onclick="cancelarVenta(
-                                                        <?php echo $cliente['folio']; ?>,
-                                                        '<?php echo $cliente['cliente']; ?>',
-                                                        '<?php echo number_format($cliente['total'][0]['importe']+$cliente['iva'],1,'.',','); ?>'                                                                
-                                                    );">
-                                                </i> 
+                                                
                                             </div>
                                         </div>
                                         <hr>

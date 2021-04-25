@@ -38,10 +38,38 @@ class Ventas extends REST_Controller {
         $config['total_rows'] = $this->ventas_model->get_all_ventas_a_credito_count();
         $this->pagination->initialize($config);
 
-        //$data['users'] = $this->User_model->get_all_users($params);
-        $temp = $this->creditos($limit,$offset);
-        $data['clientes'] = $temp;
+        $data['pendientes'] = $this->creditos($limit,$offset);
         $data['_view'] = 'ventas/index';
+        $data['active'] = 'ventas';
+        $this->load->view('layouts/main',$data);
+    }
+    public function pagados_get(){
+        $this->load->library('pagination');
+        $config['base_url'] = site_url('ventas?');
+        $limit = RECORDS_PER_PAGE;
+        $offset = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;        
+        $config = $this->config->item('pagination');
+        
+        $config['total_rows'] = $this->ventas_model->get_all_ventas_pagadas_count();
+        $this->pagination->initialize($config);
+
+        $data['pagados'] = $this->pagados($limit,$offset);
+        $data['_view'] = 'ventas/pagadas';
+        $data['active'] = 'ventas';
+        $this->load->view('layouts/main',$data);
+    }
+    public function cancelados_get(){
+        $this->load->library('pagination');
+        $config['base_url'] = site_url('ventas?');
+        $limit = RECORDS_PER_PAGE;
+        $offset = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;        
+        $config = $this->config->item('pagination');
+        
+        $config['total_rows'] = $this->ventas_model->get_all_ventas_cancelada_count();
+        $this->pagination->initialize($config);
+
+        $data['cancelados'] = $this->cancelados($limit,$offset);
+        $data['_view'] = 'ventas/canceladas';
         $data['active'] = 'ventas';
         $this->load->view('layouts/main',$data);
     }
@@ -98,6 +126,57 @@ class Ventas extends REST_Controller {
      */
     private function creditos($limit,$offset){
         $data['client'] = $this->ventas_model->get_clientes_deben($limit,$offset);
+        
+        if ($data['client']) {
+            foreach ($data['client'] as $key) {                
+                $this->eliminaVentaCredito($key['id_venta']);
+                $iva = $this->getIva($key['id_venta']);
+                $totalNota = $this->getImporteNota($key['id_venta']);
+                $params[] = array(
+                    'folio' => $key['id_venta'],
+                    'cliente' => $key['cliente'],
+                    'total' => $totalNota,
+                    'iva' => $iva,
+                    'abonos' => $this->getAbonosNota($key['id_venta']),
+                    'resta' => $this->getSaldoNota($key['id_venta']),
+                    'fecha' => $key['fecha']
+                );
+            }
+            return $params;
+        }
+        
+    }
+    /**
+     * CARGA LISTADO DE CLIENTES PAGADOS
+     */
+    private function pagados($limit,$offset){
+        $data['client'] = $this->ventas_model->get_clientes_pagados($limit,$offset);
+        
+        if ($data['client']) {
+            foreach ($data['client'] as $key) {                
+                $this->eliminaVentaCredito($key['id_venta']);
+                $iva = $this->getIva($key['id_venta']);
+                $totalNota = $this->getImporteNota($key['id_venta']);
+                $params[] = array(
+                    'folio' => $key['id_venta'],
+                    'cliente' => $key['cliente'],
+                    'total' => $totalNota,
+                    'iva' => $iva,
+                    'abonos' => $this->getAbonosNota($key['id_venta']),
+                    'resta' => $this->getSaldoNota($key['id_venta']),
+                    'fecha' => $key['fecha']
+                );
+            }
+            return $params;
+        }
+        
+    }
+    /**
+     * CARGA LISTADO DE VENTAS CANCELADAS   
+     */
+    private function cancelados($limit,$offset){
+        $data['client'] = $this->ventas_model->get_clientes_cancelados($limit,$offset);
+        
         if ($data['client']) {
             foreach ($data['client'] as $key) {                
                 $this->eliminaVentaCredito($key['id_venta']);
@@ -146,6 +225,8 @@ class Ventas extends REST_Controller {
         $saldo = number_format($this->getSaldoNota($id_venta),1,'.',',');
         if ( $saldo == 0){
             $this->ventas_model->delete_venta_credito($id_venta);
+            $this->load->model('ventas_model');
+            $this->ventas_model->set_as_pagado($id_venta);
         }        
     }
 
@@ -184,7 +265,7 @@ class Ventas extends REST_Controller {
         if ($tipo == 'folio') {
             return $this->ventas_model->get_all_ventas_search_by_folio($seccion,$param);
         }
-        if ($tipo == 'proveedor') {
+        if ($tipo == 'cliente') {
             return $this->ventas_model->get_all_ventas_search_by_cliente($seccion,$param);
         }
         

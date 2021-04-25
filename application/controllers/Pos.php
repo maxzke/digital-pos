@@ -80,8 +80,10 @@ class Pos extends REST_Controller{
         if (floatval($parametros['datos']['abono']) < floatval($parametros['datos']['total']) ) {
             $this->registrar_credito($id_venta);
             $rest = floatval($parametros['datos']['total']) - floatval($parametros['datos']['abono']);
-        }else{
+        }else{            
             $rest = floatval($parametros['datos']['abono']) - floatval($parametros['datos']['total']);
+            $this->load->model('ventas_model');
+            $this->ventas_model->set_as_pagado($id_venta);
         }
 
         $this->email(
