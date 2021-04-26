@@ -57,7 +57,7 @@
               <a class="nav-link" href="<?php echo site_url("pagos"); ?>"><i class="fas fa-hand-holding-usd"></i> Pagos</a>
             </li>
             <li class="nav-item <?php echo $active == "corte" ? "active" : "" ; ?>">
-              <a class="nav-link" href="#"><i class="fas fa-chart-line"></i> Corte</a>
+              <a class="nav-link" href="<?php echo site_url("corte"); ?>"><i class="fas fa-chart-line"></i> Corte</a>
             </li>
             <!-- <li class="nav-item">
                 <a class="nav-link" href="{{ url('configuracion') }}">Configuracion</a>
