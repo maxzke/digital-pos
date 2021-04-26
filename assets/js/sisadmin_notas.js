@@ -994,6 +994,75 @@ async function guardarPagoPost(){
   }
 // /Search Pagos----------------------------------------------------------------
 
+/**
+ * 
+ * CORTE
+ */
+ $("#switchDeposito").on( 'change', function() {
+  if( $(this).is(':checked') ) {
+    $('#btnEnviarDeposito').prop( "disabled", false);   
+                   
+  }else{
+    $('#btnEnviarDeposito').prop( "disabled", true);               
+  }
+});
+$("#switchAceptarCorte").on( 'change', function() {
+  if( $(this).is(':checked') ) {
+    $('#btnAceptarCorte').prop( "disabled", false);                  
+  }else{
+    $('#btnAceptarCorte').prop( "disabled", true);               
+  }
+});
+$('#btnDesglozarCorte').on('click',function(){   
+  $('#desglozarCorteDiv').css('display', 'block');
+});
+
+/**
+ * ENVIAR DEPOSITO A CUENTA
+ */
+ $('#btnEnviarDeposito').on('click',function(){ 
+   let importe = $('#txt_deposito_a_cuenta').val();
+   sendDeposito(importe);
+  });
+
+  async function sendDeposito(importe){    
+    const respAsyncDetalles = await postData(importe,url+'/corte/store');
+    if (respAsyncDetalles.success) {
+      $('#txt_deposito_a_cuenta').removeClass("is-invalid");   
+      console.log(respAsyncDetalles);
+      alertify.success(respAsyncDetalles.msg);     
+    }else{
+      alertify.error(respAsyncDetalles.msg);   
+      $('#txt_deposito_a_cuenta').addClass("is-invalid");       
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function formatMoney(number, decPlaces, decSep, thouSep) {
   decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
   decSep = typeof decSep === "undefined" ? "." : decSep;

@@ -20,10 +20,53 @@ class Corte extends REST_Controller{
     } 
 
     public function index_get(){
+        $data['caja'] = $this->get_total_importe('efectivo');
+        $data['cuenta_banco'] = $this->cuenta_banco();
         $data['_view'] = 'cortes/diseno';
         $data['active'] = 'corte';
         $this->load->view('layouts/main',$data);
     }
+
+    private function get_total_importe($metodo){
+        $data = $this->Cortes_model->suma_importe($metodo);
+        return number_format($data[0]['importe'],2,'.',',');
+    }
+
+    private function get_total_importe_sin_formato($metodo){
+        $data = $this->Cortes_model->suma_importe($metodo);
+        return floatval($data[0]['importe']);
+    }
+    private function get_total_cuenta(){
+        $data = $this->Cortes_model->suma_importes_cuenta();
+        return floatval($data[0]['importe']);
+    }
+
+    private function cuenta_banco(){
+        $cheque = $this->get_total_importe_sin_formato('cheque');
+        $transferencia = $this->get_total_importe_sin_formato('transferencia');
+        $tarjeta = $this->get_total_importe_sin_formato('tarjeta');
+        $cuenta = $this->get_total_cuenta();
+        $suma = $cheque + $transferencia + $tarjeta+$cuenta;
+        return number_format($suma,2,'.',',');
+    }
+
+    public function store_post(){
+        $importe = $this->input->post('params');
+        if (floatval($importe <=0)) {            
+            $respuesta = array(
+                'success' => false,
+                'msg' => 'Verificar importe'
+            );  
+        }else{
+            $this->Cortes_model->insert_deposito(floatval($importe),$this->auth_username);
+            $respuesta = array(
+                'success' => true,
+                'msg' => 'Depósito guardado!'
+            );
+        }             
+        $this->response($respuesta,200);
+    }
+
 
 
 
