@@ -88,6 +88,16 @@ class Ventas_model extends CI_Model
         return $this->db->delete('ventas_a_credito',array('id_venta'=>$id));
     }
 
+    function get_ingresos_corte(){
+        $this->db->select('id');
+        $this->db->from('ventas');
+        $this->db->where('cotizar', 0);
+        $this->db->where('cancelada', 0);
+        $this->db->order_by('id', 'desc');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     //PENDIENTES
     function get_clientes_deben($limit,$offset){
         

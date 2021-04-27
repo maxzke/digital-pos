@@ -10,9 +10,11 @@ class Cortes_model extends CI_Model
     /**
      * Tabla::abonos
     */
-    function suma_importe($metodo){
+    function total_cobrado_en($metodo,$fechaInicio,$fechaFin){
         $this->db->select_sum('importe');
-        $this->db->where('metodo',$metodo);
+        $this->db->like('metodo',$metodo);
+        $this->db->where('fecha >=',$fechaInicio);
+        $this->db->where('fecha <=',$fechaFin);
         return $this->db->get('abonos')->result_array();
     }
     /**

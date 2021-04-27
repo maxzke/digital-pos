@@ -1036,7 +1036,27 @@ $('#btnDesglozarCorte').on('click',function(){
       $('#txt_deposito_a_cuenta').addClass("is-invalid");       
     }
   }
-
+/**
+ * DESGLOZAR POR FECHA
+ */
+  
+  $('#btnDesglozar').on('click',function(){ 
+    let rango = {
+      'desde': $('#desde').val(),
+      'hasta':$('#hasta').val()
+    }
+    sendDesgloce(rango);
+   });
+ 
+   async function sendDesgloce(data){    
+     const respAsyncDetalles = await postData(data,url+'/corte/desgloce_por_fecha');
+     if (respAsyncDetalles.success) {   
+       console.log(respAsyncDetalles);
+       //alertify.success(msg);     
+     }else{
+       alertify.error('x');      
+     }
+   }
 
 
 
