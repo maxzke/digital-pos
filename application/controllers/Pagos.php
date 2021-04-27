@@ -86,6 +86,13 @@ class Pagos extends REST_Controller{
             'usuario' => $usuario
         ); 
         $folio = $this->pagos_model->insert_datos_pago($params);
+        if (strtolower($metodo) == 'efectivo') {
+            /**
+             * Cada que hay un ingreso en EFECTIVO
+             */
+            $this->load->model('Cortes_model');
+            $this->Cortes_model->subs_efectivo_caja($total);
+        }
         return $folio;
     }
 

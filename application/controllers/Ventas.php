@@ -119,6 +119,13 @@ class Ventas extends REST_Controller {
             'importe' => $importe
         );
         $this->ventas_model->insert_abono($params);
+        if (strtolower($metodo) == 'efectivo') {
+            /**
+             * Cada que hay un ingreso en EFECTIVO
+             */
+            $this->load->model('Cortes_model');
+            $this->Cortes_model->add_efectivo_caja($importe);
+        }
     }
 
     /**

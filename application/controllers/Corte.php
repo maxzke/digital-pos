@@ -20,11 +20,16 @@ class Corte extends REST_Controller{
     } 
 
     public function index_get(){
-        $data['caja'] = $this->get_total_importe('efectivo');
-        $data['cuenta_banco'] = $this->cuenta_banco();
+        $data['caja'] = $this->get_total('caja');
+        $data['cuenta_banco'] = $this->get_total('banco');
         $data['_view'] = 'cortes/diseno';
         $data['active'] = 'corte';
         $this->load->view('layouts/main',$data);
+    }
+
+    private function get_total($tipo){
+        $data = $this->Cortes_model->get_importe_caja($tipo);
+        return number_format($data[0][$tipo],2,'.',',');
     }
 
     private function get_total_importe($metodo){
@@ -59,6 +64,7 @@ class Corte extends REST_Controller{
             );  
         }else{
             $this->Cortes_model->insert_deposito(floatval($importe),$this->auth_username);
+            $this->Cortes_model->add_cuenta_banco($importe);
             $respuesta = array(
                 'success' => true,
                 'msg' => 'Depósito guardado!'
@@ -67,6 +73,8 @@ class Corte extends REST_Controller{
         $this->response($respuesta,200);
     }
 
+
+    
 
 
 
