@@ -20,6 +20,14 @@ class Corte extends REST_Controller{
         $this->load->model('Ventas_model');  
     } 
 
+    private $cajaEfectivo = 0;
+    private $cuentaBanco = 0;
+    private $x = 0;
+    private $a = 0;
+    private $y = 0;
+    private $z = 0;
+
+
     public function index_get(){
         $data['caja'] = $this->get_total('caja');
         $data['cuenta_banco'] = $this->get_total('banco');
@@ -56,29 +64,33 @@ class Corte extends REST_Controller{
                 'cobrado_en_transferencia' => $this->get_suma_ventas_por_metodo('transferencia',$fechaInicial,$fechaFinal),
                 'cobrado_en_tarjeta' => $this->get_suma_ventas_por_metodo('tarjeta',$fechaInicial,$fechaFinal),
                 'cobrado_en_cheque' => $this->get_suma_ventas_por_metodo('cheque',$fechaInicial,$fechaFinal),
-                'ventas' => $this->ventas()
+                'ventas' => $this->ventas($fechaInicial,$fechaFinal),
+                'pagos' => $this->pagos($fechaInicial,$fechaFinal),
+                'total_pagos' => $this->total_pagos($fechaInicial,$fechaFinal),
+                'depositos' => $this->depositos($fechaInicial,$fechaFinal),
+                'total_depositos' => $this->total_depositos($fechaInicial,$fechaFinal)
             );            
         }
         $this->response($respuesta,200);
     }
 
     private function get_suma_ventas_por_metodo($metodo,$fechaInicial,$fechaFinal){
-        $data = $this->Cortes_model->total_cobrado_en($metodo,$fechaInicial,$fechaFinal);       
+        $data = $this->Cortes_model->total_cobrado_en($metodo,$fechaInicial,$fechaFinal);     
         return number_format($data[0]['importe'],2,'.',',');
     }
 
     /**
      * LISTADO DE INGRESOS ( VENTAS )
      */
-    private function ventas(){
-        $data['client'] = $this->Ventas_model->get_ingresos_corte();        
+    private function ventas($desde,$hasta){
+        $data['client'] = $this->Ventas_model->get_ingresos_corte($desde,$hasta);        
         if ($data['client']) {
             foreach ($data['client'] as $key) {  
                 $abono = $this->getAbonosNota($key['id']); 
                 if ($abono[0]['importe'] > 0) {
                     $params[] = array(
                         'folio' => $key['id'],
-                        'abonos' => $abono[0]['importe']
+                        'abonos' => number_format($abono[0]['importe'],2,'.',',')
                     );
                 }           
                 
@@ -88,6 +100,48 @@ class Corte extends REST_Controller{
     }
     private function getAbonosNota($folio){
         return $this->Ventas_model->abonosNota($folio);
+    }
+    /**
+     * LISTADO DE EGRESOS ( PAGOS )
+     */
+    private function pagos($desde,$hasta){
+        $pagos = $this->Cortes_model->get_pagos_between($desde,$hasta);
+        if ($pagos) {
+            foreach ($pagos as $key) {   
+                    $params[] = array(
+                        'folio' => $key['id'],
+                        'total' => number_format($key['total'],2,'.',',')
+                    ); 
+            }
+            return $params;
+        } 
+    }
+    private function total_pagos($desde,$hasta){
+        $total = $this->Cortes_model->get_suma_pagos_between($desde,$hasta);
+        if ($total) {
+            return number_format($total[0]['total'],2,'.',',');
+        }
+    }
+    /**
+     * LISTADO DE DEPOSITOS A CUENTA
+     */
+    private function depositos($desde,$hasta){
+        $depositos = $this->Cortes_model->get_depositos_between($desde,$hasta);
+        if ($depositos) {
+            foreach ($depositos as $key) {   
+                    $params[] = array(
+                        'folio' => $key['id'],
+                        'total' => number_format($key['importe'],2,'.',',')
+                    ); 
+            }
+            return $params;
+        } 
+    }
+    private function total_depositos($desde,$hasta){
+        $total = $this->Cortes_model->get_suma_depositos_between($desde,$hasta);
+        if ($total) {
+            return number_format($total[0]['importe'],2,'.',',');
+        }
     }
 
     // private function get_total_importe_sin_formato($metodo){

@@ -73,6 +73,41 @@ class Cortes_model extends CI_Model
         $this->db->where('id', 1);
         $this->db->update('cuenta_caja', array('banco' =>$nuevo_importe));
     }
+
+    /**
+     * GET PAGOS BY RANGO FECHAS
+     * GET ID::TOTAL
+     */
+    function get_pagos_between($desde,$hasta){
+        $this->db->select('id,total');
+        $this->db->where('fecha >=',$desde);
+        $this->db->where('fecha <=',$hasta);
+        return $this->db->get('pagos')->result_array();
+    }
+    function get_suma_pagos_between($desde,$hasta){
+        $this->db->select_sum('total');
+        $this->db->like('metodo','efectivo');
+        $this->db->where('fecha >=',$desde);
+        $this->db->where('fecha <=',$hasta);
+        return $this->db->get('pagos')->result_array();
+    }
+
+     /**
+     * GET DEPOSITOS A CUENTA BY RANGO FECHAS
+     * GET ID::IMPORTE
+     */
+    function get_depositos_between($desde,$hasta){
+        $this->db->select('id,importe');
+        $this->db->where('fecha >=',$desde);
+        $this->db->where('fecha <=',$hasta);
+        return $this->db->get('cuenta_depositos')->result_array();
+    }
+    function get_suma_depositos_between($desde,$hasta){
+        $this->db->select_sum('importe');
+        $this->db->where('fecha >=',$desde);
+        $this->db->where('fecha <=',$hasta);
+        return $this->db->get('cuenta_depositos')->result_array();
+    }
     
 
 
