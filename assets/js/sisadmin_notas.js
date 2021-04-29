@@ -1030,7 +1030,11 @@ $('#btnDesglozarCorte').on('click',function(){
     if (respAsyncDetalles.success) {
       $('#txt_deposito_a_cuenta').removeClass("is-invalid");   
       console.log(respAsyncDetalles);
-      alertify.success(respAsyncDetalles.msg);     
+      alertify.success(respAsyncDetalles.msg);  
+      $('#txt_caja').val("$ "+respAsyncDetalles.saldo_efectivo); 
+      $('#txt_banco').val("$ "+respAsyncDetalles.saldo_banco);
+      $('#txt_deposito_a_cuenta').val("");
+      
     }else{
       alertify.error(respAsyncDetalles.msg);   
       $('#txt_deposito_a_cuenta').addClass("is-invalid");       

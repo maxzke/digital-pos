@@ -42,13 +42,13 @@
                             <div class="row mt-2">
                                 <div class="col-md-6 text-right"><strong>Caja / Efectivo </strong></div>
                                 <div class="col-md-4"> 
-                                    <input type="text" id="txt_subtotal" value="<?php echo "$ ".$caja; ?>" class="form-control form-control-sm bg-white" readonly>                                    
+                                    <input type="text" id="txt_caja" value="<?php echo "$ ".$caja; ?>" class="form-control form-control-sm bg-white" readonly>                                    
                                 </div>
                             </div>    
                             <div class="row mt-2">
                                 <div class="col-md-6 text-right"><strong>Cuenta / Banco </strong></div>
                                 <div class="col-md-4"> 
-                                    <input type="text" id="txt_iva" value="<?php echo "$ ".$cuenta_banco ?>" class="form-control form-control-sm" readonly>
+                                    <input type="text" id="txt_banco" value="<?php echo "$ ".$cuenta_banco ?>" class="form-control form-control-sm" readonly>
                                 </div>
                             </div>                  
                         </div>

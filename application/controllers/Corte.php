@@ -45,6 +45,10 @@ class Corte extends REST_Controller{
         $data = $this->Cortes_model->get_importe_caja($tipo);
         return number_format($data[0][$tipo],2,'.',',');
     }
+    private function get_total_sin_formato($tipo){
+        $data = $this->Cortes_model->get_importe_caja($tipo);
+        return $data[0][$tipo];
+    }
 
     public function desgloce_por_fecha_post(){
         $parametros = $this->input->post('params');
@@ -74,7 +78,7 @@ class Corte extends REST_Controller{
                 'total_depositos' => $this->total_depositos($fechaInicial,$fechaFinal),
 
                 'caja_efectivo' => number_format(($this->x) - ($this->y) - ($this->z),2,'.',','),
-                'cuenta_banco' =>  number_format($this->a,2,'.',',')
+                'cuenta_banco' =>  number_format(($this->a)+($this->z),2,'.',',')
             );            
         }
         $this->response($respuesta,200);
@@ -181,7 +185,11 @@ class Corte extends REST_Controller{
 
     public function store_post(){
         $importe = $this->input->post('params');
-        if (floatval($importe <=0)) {            
+        $maximo_importe =  $this->get_total_sin_formato('caja');
+        if ($maximo_importe === null) {
+            $maximo_importe = 0;
+        }
+        if (floatval($importe) <=0 || floatval($importe) > floatval($maximo_importe)) {            
             $respuesta = array(
                 'success' => false,
                 'msg' => 'Verificar importe'
@@ -189,9 +197,12 @@ class Corte extends REST_Controller{
         }else{
             $this->Cortes_model->insert_deposito(floatval($importe),$this->auth_username);
             $this->Cortes_model->add_cuenta_banco($importe);
+            $this->Cortes_model->subs_efectivo_caja($importe);
             $respuesta = array(
                 'success' => true,
-                'msg' => 'Depósito guardado!'
+                'msg' => 'Depósito guardado!',
+                'saldo_efectivo' => $this->get_total('caja'),
+                'saldo_banco' => $this->get_total('banco')
             );
         }             
         $this->response($respuesta,200);

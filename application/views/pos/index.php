@@ -44,14 +44,14 @@
                                     </div>
                                 </div>
                             </div>    
-                            <div class="row mt-3">
+                            <!-- <div class="row mt-3">
                                 <div class="col-md-12"> 
                                     <div class="custom-control custom-switch">
                                         <input type="checkbox" class="custom-control-input chkCotizacion" id="customSwitch2">
                                         <label class="custom-control-label" for="customSwitch2"><strong>Guardar Cotización</strong></label>
                                     </div>
                                 </div>
-                            </div>                   
+                            </div>                    -->
                             <div class="row mt-3">
                                 <div class="col-md-5"> 
                                     <select class="custom-select custom-select-sm" id="metodoPago">
