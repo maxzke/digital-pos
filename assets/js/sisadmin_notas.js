@@ -1052,11 +1052,100 @@ $('#btnDesglozarCorte').on('click',function(){
      const respAsyncDetalles = await postData(data,url+'/corte/desgloce_por_fecha');
      if (respAsyncDetalles.success) {   
        console.log(respAsyncDetalles);
-       //alertify.success(msg);     
+       pintaVentas(respAsyncDetalles.arrayventas);
+       pintaImportes('importe_total_ventas',respAsyncDetalles.importe_total_ventas);
+       pintaImportes('cobrado_en_efectivo',respAsyncDetalles.cobrado_en_efectivo);
+       pintaImportes('cobrado_en_transferencia',respAsyncDetalles.cobrado_en_transferencia);
+       pintaImportes('cobrado_en_tarjeta',respAsyncDetalles.cobrado_en_tarjeta);
+       pintaImportes('cobrado_en_cheque',respAsyncDetalles.cobrado_en_cheque);
+
+       pintaPagos(respAsyncDetalles.arraypagos);
+       pintaImportes('total_pagos',respAsyncDetalles.total_pagos);
+
+       pintadDepositos(respAsyncDetalles.arraydepositos);
+       pintaImportes('total_depositos',respAsyncDetalles.total_depositos);
+
+       pintaCajaCuenta('caja_efectivo',respAsyncDetalles.caja_efectivo);
+       pintaCajaCuenta('cuenta_banco',respAsyncDetalles.cuenta_banco);
+       
      }else{
-       alertify.error('x');      
+       alertify.error('Fecha no válida');      
      }
    }
+
+   /**
+    * PINTA INGRESOS ( VENTAS )
+    */
+   function pintaVentas(ventasArray){
+    if (ventasArray != null) {
+      let cadena = "";
+      ventasArray.forEach(element => {
+      cadena += `<div class="row row-hover">
+                  <div class="col-md-6 text-right">
+                      ${element.folio}
+                  </div>
+                  <div class="col-md-6 text-right">
+                  ${element.abonos}
+                  </div>
+                </div>
+                <hr>`;
+      });
+      $('#contentVentas').html(cadena);
+    }
+   }
+
+   function pintaImportes(campo,importe){
+     let cadena =`<strong>${importe}</strong>`
+    $('#'+campo).html(cadena);
+   }
+
+   function pintaCajaCuenta(campo,importe){
+    let cadena =`<h5>${importe}</h5>`
+   $('#'+campo).html(cadena);
+  }
+
+   /**
+    * PINTA PAGOS ( EGRESOS )
+    */
+    function pintaPagos(pagosArray){
+      if (pagosArray != null) {
+        let cadena = "";
+        pagosArray.forEach(element => {
+        cadena += `<div class="row row-hover">
+                      <div class="col-md-6 text-right">
+                          ${element.folio}
+                      </div>
+                      <div class="col-md-6 text-right">
+                      ${element.total}
+                      </div>
+                    </div>
+                    <hr>`;
+        });
+        $('#contentPagos').html(cadena);
+      }
+      
+    }
+
+    /**
+    * PINTA DEPOSITOS A CUENTA
+    */
+     function pintadDepositos(depositosArray){
+      if (depositosArray != null) {
+        let cadena = "";
+        depositosArray.forEach(element => {
+        cadena += `<div class="row row-hover">
+                    <div class="col-md-6 text-right">
+                        ${element.folio}
+                    </div>
+                    <div class="col-md-6 text-right">
+                    ${element.total}
+                    </div>
+                  </div>
+                  <hr>`;
+        });
+        $('#contentDepositos').html(cadena);
+      }
+    }
 
 
 

@@ -89,6 +89,7 @@ class Cortes_model extends CI_Model
         $this->db->like('metodo','efectivo');
         $this->db->where('fecha >=',$desde);
         $this->db->where('fecha <=',$hasta);
+        $this->db->like('metodo','efectivo');
         return $this->db->get('pagos')->result_array();
     }
 

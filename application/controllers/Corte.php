@@ -26,6 +26,7 @@ class Corte extends REST_Controller{
     private $a = 0;
     private $y = 0;
     private $z = 0;
+    private $totalVentas = 0;
 
 
     public function index_get(){
@@ -60,22 +61,33 @@ class Corte extends REST_Controller{
             $fechaFinal   = date("d-m-Y 23:59:59", strtotime($fechaFinal));
             $respuesta = array(
                 'success' => true,
+                'arrayventas' => $this->ventas($fechaInicial,$fechaFinal),
                 'cobrado_en_efectivo' => $this->get_suma_ventas_por_metodo('efectivo',$fechaInicial,$fechaFinal),
                 'cobrado_en_transferencia' => $this->get_suma_ventas_por_metodo('transferencia',$fechaInicial,$fechaFinal),
                 'cobrado_en_tarjeta' => $this->get_suma_ventas_por_metodo('tarjeta',$fechaInicial,$fechaFinal),
                 'cobrado_en_cheque' => $this->get_suma_ventas_por_metodo('cheque',$fechaInicial,$fechaFinal),
-                'ventas' => $this->ventas($fechaInicial,$fechaFinal),
-                'pagos' => $this->pagos($fechaInicial,$fechaFinal),
+                'importe_total_ventas' => number_format($this->totalVentas,2,'.',','),
+
+                'arraypagos' => $this->pagos($fechaInicial,$fechaFinal),
                 'total_pagos' => $this->total_pagos($fechaInicial,$fechaFinal),
-                'depositos' => $this->depositos($fechaInicial,$fechaFinal),
-                'total_depositos' => $this->total_depositos($fechaInicial,$fechaFinal)
+                'arraydepositos' => $this->depositos($fechaInicial,$fechaFinal),
+                'total_depositos' => $this->total_depositos($fechaInicial,$fechaFinal),
+
+                'caja_efectivo' => number_format(($this->x) - ($this->y) - ($this->z),2,'.',','),
+                'cuenta_banco' =>  number_format($this->a,2,'.',',')
             );            
         }
         $this->response($respuesta,200);
     }
 
     private function get_suma_ventas_por_metodo($metodo,$fechaInicial,$fechaFinal){
-        $data = $this->Cortes_model->total_cobrado_en($metodo,$fechaInicial,$fechaFinal);     
+        $data = $this->Cortes_model->total_cobrado_en($metodo,$fechaInicial,$fechaFinal);  
+        $this->totalVentas += $data[0]['importe'];    
+        if ($metodo == 'efectivo') {
+            $this->x = $data[0]['importe'];
+        }else{
+            $this->a += $data[0]['importe'];
+        }
         return number_format($data[0]['importe'],2,'.',',');
     }
 
@@ -119,6 +131,7 @@ class Corte extends REST_Controller{
     private function total_pagos($desde,$hasta){
         $total = $this->Cortes_model->get_suma_pagos_between($desde,$hasta);
         if ($total) {
+            $this->y = $total[0]['total'];
             return number_format($total[0]['total'],2,'.',',');
         }
     }
@@ -140,6 +153,7 @@ class Corte extends REST_Controller{
     private function total_depositos($desde,$hasta){
         $total = $this->Cortes_model->get_suma_depositos_between($desde,$hasta);
         if ($total) {
+            $this->z = $total[0]['importe'];
             return number_format($total[0]['importe'],2,'.',',');
         }
     }

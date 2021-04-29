@@ -91,22 +91,8 @@
                                             <div class="col-md-6 text-center"><strong>Total</strong></div>
                                         </div>
                                         <div class="row cart bg-white">
-                                            <div class="col-md-12 fondo-tables py-1" id="pintaPagos">
-                                                <?php 
-                                                // if (isset($pagos) && !empty($pagos)) :                              
-                                                //     foreach ($pagos as $key=>$pago): ?>
-                                                    
-                                                        <div class="row row-hover">
-                                                            <div class="col-md-6 text-right">
-                                                                001
-                                                            </div>
-                                                            <div class="col-md-6 text-right">
-                                                                3,245.00
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                    <?php //endforeach; 
-                                                //endif;?>                         
+                                            <div class="col-md-12 fondo-tables py-1" id="contentVentas">
+                                                <!-- content dinamico -->
                                             </div>
                                         </div>  
                                         <!-- /tabla ingresos -->
@@ -114,23 +100,23 @@
                                 </div>
                                 <div class="row mt-1">
                                     <div class="col-md-5 offset-2 text-right border-bottom"><strong>Total</strong></div>
-                                    <div class="col-md-2 text-right border-bottom"><strong>723,548.15</strong></div>
+                                    <div class="col-md-2 text-right border-bottom" id="importe_total_ventas"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-7 text-right"><strong>Total cobrado en efectivo</strong></div>
-                                    <div class="col-md-2 text-right"><strong>548.15</strong></div>
+                                    <div class="col-md-2 text-right" id="cobrado_en_efectivo"></div>
                                 </div>
                                 <div class="row mt-2">
                                     <div class="col-md-7 text-right"><strong>Total cobrado en transferencia</strong></div>
-                                    <div class="col-md-2 text-right"><strong>2,548.15</strong></div>
+                                    <div class="col-md-2 text-right" id="cobrado_en_transferencia"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-7 text-right"><strong>Total cobrado en tarjeta</strong></div>
-                                    <div class="col-md-2 text-right"><strong>2,548.15</strong></div>
+                                    <div class="col-md-2 text-right" id="cobrado_en_tarjeta"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-7 text-right"><strong>Total cobrado en cheque</strong></div>
-                                    <div class="col-md-2 text-right"><strong>2,548.15</strong></div>
+                                    <div class="col-md-2 text-right" id="cobrado_en_cheque"></div>
                                 </div>
                             </div>
                             <div class="col-md-6 border-left border-secondary">
@@ -147,22 +133,8 @@
                                             <div class="col-md-6 text-center"><strong>Total</strong></div>
                                         </div>
                                         <div class="row cart bg-white">
-                                            <div class="col-md-12 fondo-tables py-1" id="pintaPagos">
-                                                <?php 
-                                                // if (isset($pagos) && !empty($pagos)) :                              
-                                                //     foreach ($pagos as $key=>$pago): ?>
-                                                    
-                                                        <div class="row row-hover">
-                                                            <div class="col-md-6 text-right">
-                                                                001
-                                                            </div>
-                                                            <div class="col-md-6 text-right">
-                                                                3,245.00
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                    <?php //endforeach; 
-                                                //endif;?>                         
+                                            <div class="col-md-12 fondo-tables py-1" id="contentPagos">
+                                                                           
                                             </div>
                                         </div>  
                                         <!-- /tabla ingresos -->
@@ -170,7 +142,7 @@
                                 </div>
                                 <div class="row mt-1">
                                     <div class="col-md-5 offset-2 text-right border-bottom"><strong>Total pagado en efectivo</strong></div>
-                                    <div class="col-md-2 text-right border-bottom"><strong>723,548.15</strong></div>
+                                    <div class="col-md-2 text-right border-bottom" id="total_pagos"></div>
                                 </div>
                             </div>                        
                         </div>
@@ -185,46 +157,30 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 offset-3">
-                                        <!-- tabla ingresos -->
                                         <div class="row fonde-header-card py-2 mt-2">
                                             <div class="col-md-6 text-right"><strong>Folio</strong></div>
                                             <div class="col-md-6 text-center"><strong>Total</strong></div>
                                         </div>
                                         <div class="row cart bg-white">
-                                            <div class="col-md-12 fondo-tables py-1" id="pintaPagos">
-                                                <?php 
-                                                // if (isset($pagos) && !empty($pagos)) :                              
-                                                //     foreach ($pagos as $key=>$pago): ?>
-                                                    
-                                                        <div class="row row-hover">
-                                                            <div class="col-md-6 text-right">
-                                                                001
-                                                            </div>
-                                                            <div class="col-md-6 text-right">
-                                                                3,245.00
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                    <?php //endforeach; 
-                                                //endif;?>                         
+                                            <div class="col-md-12 fondo-tables py-1" id="contentDepositos">
+                                                                         
                                             </div>
                                         </div>  
-                                        <!-- /tabla ingresos -->
                                     </div>
                                 </div>
                                 <div class="row mt-1">
                                     <div class="col-md-5 offset-2 text-right"><strong>Total</strong></div>
-                                    <div class="col-md-2 text-right"><strong>723,548.15</strong></div>
+                                    <div class="col-md-2 text-right" id="total_depositos"></div>
                                 </div>
                             </div>
                             <div class="col-md-6">                            
                                 <div class="row mt-5">
                                     <div class="col-md-5 text-right"><h5>Caja / Efectivo</h5></div>
-                                    <div class="col-md-2 text-right"><h5>723,548.15</h5></div>
+                                    <div class="col-md-2 text-right" id="caja_efectivo"><h5>723,548.15</h5></div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-5 text-right"><h5>Cuenta / Banco</h5></div>
-                                    <div class="col-md-2 text-right"><h5>723,548.15</h5></div>
+                                    <div class="col-md-2 text-right" id="cuenta_banco"><h5>723,548.15</h5></div>
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col-md-2 offset-2">
