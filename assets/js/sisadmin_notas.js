@@ -657,7 +657,7 @@ async function guardarPagoPost(){
   /*
   *SECCION CANCELAR VENTA  ------------------------------------------------------------------------------------------------
   */
-  function cancelarVenta(folio,cliente,total){
+  function cancelarVenta(folio,cliente,total,abonado){
     let cadena = `<div class="row mt-1">
                     <div class="col-md-3 text-right">
                         <strong>Folio</strong>
@@ -685,6 +685,23 @@ async function guardarPagoPost(){
                 </div>
                 <div class="row">
                     <div class="col-md-3 text-right">
+                        <strong>Abonado</strong>
+                    </div>
+                    <div class="col-md-9"> 
+                    <span>$ ${formatMoney(abonado,1,".",",")}</span>
+                    <input type="hidden" id="importeDevolucionAbonado" value="${abonado}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 text-right">
+                        <strong>Devolver</strong>
+                    </div>
+                    <div class="col-md-9"> 
+                    <input type="number" id="importeDevolucion" placeholder="importe">
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-3 text-right">
                         <strong>Motivo</strong>
                     </div>
                     <div class="col-md-9"> 
@@ -694,13 +711,35 @@ async function guardarPagoPost(){
     $('#bodyModalCancelarVenta').html(cadena);
     $('#cancelarVentaModal').modal('show');
   }
+
+    //uso DOCUMENT porque son generado dinamicamente
+    $(document).on("keyup", "#importeDevolucion", function() {  
+      let imp = parseFloat($('#importeDevolucion').val());
+      let abonado = parseFloat($('#importeDevolucionAbonado').val());
+      if ( imp > abonado ) {
+        $('#importeDevolucion').val('');
+        alertify.error("Importe no puede ser mayor a total")    ;
+      }
+    });
+    $(document).on("click", "#importeDevolucion", function() {  
+      let imp = parseFloat($('#importeDevolucion').val());
+      let abonado = parseFloat($('#importeDevolucionAbonado').val());
+      if ( imp > abonado ) {
+        $('#importeDevolucion').val('');
+        alertify.error("Importe no puede ser mayor a total")    ;
+      }
+    });
+
+
   async function store_cancelacion(){
     let parametros = {
       'folio':$('#idVentaCancelarHide').val(),
-      'motivo':$('#motivoCancelaVenta').val()
+      'motivo':$('#motivoCancelaVenta').val(),
+      'importe':$('#importeDevolucion').val()
     } 
     const respAsyncDetalles = await postData(parametros,url+'/ventas/cancelar');
     if (respAsyncDetalles.success) {
+      const registrarComoPago = await postData(parametros,url+'/pagos/devolucion');
       // --------------------------------------------
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -748,6 +787,8 @@ async function guardarPagoPost(){
     $('#saldor_restante').text('$ '+saldo);
     $('#abonarModal').modal('show');
     $('#idVentaHide').val(id_venta);
+    $('#saldoRestante').val(saldo);
+    
   }
   async function store_abono(){
     let parametros = {
@@ -805,6 +846,11 @@ async function guardarPagoPost(){
           alertify.error("Abono Debe ser Número");
         return                           
       }
+      if ($('#importeAbono').val() > $('#saldoRestante').val()) {
+        $('#importeAbono').val('0');
+        alertify.error("Importe no puede ser mayor a total")    ;
+      }
+
   })
 
   

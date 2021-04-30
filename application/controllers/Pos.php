@@ -40,6 +40,7 @@ class Pos extends REST_Controller{
         parent::__construct();
         $this->require_min_level(1);  
         $this->load->model('pos_model');      
+        $this->load->model('Cortes_model');
     } 
 
     function index_get(){   
@@ -150,8 +151,9 @@ class Pos extends REST_Controller{
             /**
              * Cada que hay un ingreso en EFECTIVO
              */
-            $this->load->model('Cortes_model');
             $this->Cortes_model->add_efectivo_caja($importe);
+        }else{
+            $this->Cortes_model->add_cuenta_banco($importe);
         }
     }
 

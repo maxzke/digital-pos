@@ -92,7 +92,12 @@ class Ventas_model extends CI_Model
         $this->db->select('id');
         $this->db->from('ventas');
         $this->db->where('cotizar', 0);
-        $this->db->where('cancelada', 0);
+        /**
+         * Se implementa devoluciones totales o parciales al cancelar venta
+         * se sigue contando y la devolucion pasa a ser un pago
+         * //$this->db->where('cancelada', 0);
+         */
+        
         $this->db->where('fecha >=',$fechaInicio);
         $this->db->where('fecha <=',$fechaFin);
         $this->db->order_by('id', 'desc');

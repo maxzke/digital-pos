@@ -26,6 +26,7 @@ class Ventas extends REST_Controller {
         parent::__construct();              
         $this->require_min_level(1);
         $this->load->model('ventas_model');
+        $this->load->model('Cortes_model');
     }
 
     public function index_get(){
@@ -91,8 +92,8 @@ class Ventas extends REST_Controller {
             );
         }else{
             $saldo = $this->getSaldoNota($parametros['folio']);
-            if (number_format($abono,1,'.',',') >= number_format($saldo,1,'.',',')) {                
-                $cambio = ($abono) - ($saldo);
+            if ($abono > $saldo) {                
+                $cambio = $abono - $saldo;
                 $abono = $saldo;
                 $respuesta = array(
                     'success' => true,
@@ -123,8 +124,9 @@ class Ventas extends REST_Controller {
             /**
              * Cada que hay un ingreso en EFECTIVO
              */
-            $this->load->model('Cortes_model');
             $this->Cortes_model->add_efectivo_caja($importe);
+        }else{
+            $this->Cortes_model->add_cuenta_banco($importe);
         }
     }
 

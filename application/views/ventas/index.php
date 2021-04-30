@@ -73,9 +73,10 @@
                                                     onclick="cancelarVenta(
                                                         <?php echo $cliente['folio']; ?>,
                                                         '<?php echo $cliente['cliente']; ?>',
-                                                        '<?php echo number_format($cliente['total'][0]['importe']+$cliente['iva'],1,'.',','); ?>'                                                                
+                                                        '<?php echo number_format($cliente['total'][0]['importe']+$cliente['iva'],1,'.',','); ?>',
+                                                        '<?php echo $cliente['abonos'][0]['importe']; ?>'                                                                
                                                     );">
-                                                </i> 
+                                                </i>                                                 
                                             </div>
                                         </div>
                                         <hr>
@@ -132,6 +133,7 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                                     <input type="hidden" id="idVentaHide" value="">
+                                    <input type="hidden" id="saldoRestante" value="">
                                     <button type="button" class="btn btn-success" onclick="store_abono();">Guardar</button>
                                 </div>
                                 </div>

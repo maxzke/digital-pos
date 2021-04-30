@@ -17,6 +17,7 @@ class Pagos extends REST_Controller{
         parent::__construct();
         $this->require_min_level(1);  
         $this->load->model('pagos_model');      
+        $this->load->model('Cortes_model');
     } 
 
     function index_get(){   
@@ -53,7 +54,7 @@ class Pagos extends REST_Controller{
             $parametros['datos']['subtotal'],
             $parametros['datos']['iva'],
             $parametros['datos']['total'],
-            $parametros['datos']['usuario']
+            $this->auth_username
         );
 
         $this->registrar_detalle($id_pago,$parametros['carrito']);        
@@ -66,6 +67,44 @@ class Pagos extends REST_Controller{
             $parametros['datos']['total'],
             $parametros['datos']['metodo'],
             $parametros['carrito']
+        );
+                
+        $this->response($respuesta,200);
+    }
+
+    /**
+     * CANCELACION DE NOTA DE VENTA
+     * SE HACE UNA DEVOLUCION Y SE 
+     * REFLEJA COMO PAGO        
+     */
+    public function devolucion_post(){
+        $parametros = $this->input->post('params');
+        $respuesta = array(
+            'success' => true,
+            'params' => $parametros,
+        );
+
+        $id_pago = $this->registrar_pago(
+            "devolucion",
+            "Nota: ".$parametros['folio'],
+            "Efectivo",
+            "1",
+            0,
+            0,
+            $parametros['importe'],
+            $this->auth_username
+        );
+
+        //$this->registrar_detalle($id_pago,$parametros['carrito']);        
+        $this->email(
+            "Nota: ".$parametros['folio'],
+            "devolucion",
+            0,
+            0,
+            0,
+            $parametros['importe'],
+            "Efectivo",
+            false
         );
                 
         $this->response($respuesta,200);
@@ -88,9 +127,8 @@ class Pagos extends REST_Controller{
         $folio = $this->pagos_model->insert_datos_pago($params);
         if (strtolower($metodo) == 'efectivo') {
             /**
-             * Cada que hay un ingreso en EFECTIVO
-             */
-            $this->load->model('Cortes_model');
+             * Cada que hay un engreso en EFECTIVO
+             */            
             $this->Cortes_model->subs_efectivo_caja($total);
         }
         return $folio;
@@ -156,14 +194,16 @@ class Pagos extends REST_Controller{
                     </tr>
                 </thead>
                 <tbody>";
-                foreach ($cart as $key=>$item): 
-                    $message .= "<tr>
-                        <td>".$item['cantidad']."</td>
-                        <td>".$item['producto']."</td>
-                        <td>".$item['precio']."</td>
-                        <td>".$item['importe']."</td>
-                    </tr>";
-                endforeach; 
+                if ($cart) {
+                    foreach ($cart as $key=>$item): 
+                        $message .= "<tr>
+                            <td>".$item['cantidad']."</td>
+                            <td>".$item['producto']."</td>
+                            <td>".$item['precio']."</td>
+                            <td>".$item['importe']."</td>
+                        </tr>";
+                    endforeach;
+                } 
                 $message .= "</tbody>
             </table>
             </body>
