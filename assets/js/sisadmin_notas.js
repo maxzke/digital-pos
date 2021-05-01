@@ -68,7 +68,7 @@
                   var Ffolio=$("#txt_folio").val();
 
                   if(confirmaNota==1 && cotizacion==0){
-                    alertify.confirm("Guardar Venta", function (e) {
+                    alertify.confirm("Guardar Pago", function (e) {
                         if (e) {
                             // user clicked "ok"
                             //se guarda la nota   
@@ -304,12 +304,12 @@ async function guardarPagoPost(){
   const respAsyncDetalles = await postData(parametros,url+'/pagos/store');
   if (respAsyncDetalles.success) {
     console.log(respAsyncDetalles);
-    alertify.success("Pago success !");
+    alertify.success("Pago Guardado !");
     $('#guardarPago').prop( "disabled", false );
     $('#spinner_loading').css('display', 'none'); 
     $('#formPago')[0].reset();    
   }else{
-    alertify.error("Hubo un error, intente de nuevo.");
+    alertify.error(respAsyncDetalles.msg);
     $('#guardarPago').prop( "disabled", false );
     $('#spinner_loading').css('display', 'none');
   }

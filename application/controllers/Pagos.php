@@ -35,40 +35,53 @@ class Pagos extends REST_Controller{
         $data['active'] = 'pagos';
         $this->load->view('layouts/main',$data);
     }
+    private function get_total_con_formato($tipo){
+        $data = $this->Cortes_model->get_importe_caja($tipo);
+        return number_format($data[0][$tipo],2,'.',',');
+    }
 
     /**
      * Guarda Pago a Proveedores / Gastos
      */
     public function store_post(){
         $parametros = $this->input->post('params');
-        $respuesta = array(
-            'success' => true,
-            'params' => $parametros,
-        );
 
-        $id_pago = $this->registrar_pago(
-            $parametros['datos']['proveedor'],
-            $parametros['datos']['folio'],
-            $parametros['datos']['metodo'],
-            $parametros['datos']['facturado'],
-            $parametros['datos']['subtotal'],
-            $parametros['datos']['iva'],
-            $parametros['datos']['total'],
-            $this->auth_username
-        );
+        $maximo_importe =  $this->get_total_con_formato('caja');
+        if (floatval($parametros['datos']['total']) > floatval($maximo_importe)) {            
+            $respuesta = array(
+                'success' => false,
+                'msg' => 'Pago no puede ser mayor a $ '.$maximo_importe
+            );  
+        }else{
+            $respuesta = array(
+                'success' => true,
+                'params' => $parametros,
+            );
 
-        $this->registrar_detalle($id_pago,$parametros['carrito']);        
-        $this->email(
-            $parametros['datos']['folio'],
-            $parametros['datos']['proveedor'],
-            $parametros['datos']['facturado'],
-            $parametros['datos']['subtotal'],
-            $parametros['datos']['iva'],
-            $parametros['datos']['total'],
-            $parametros['datos']['metodo'],
-            $parametros['carrito']
-        );
-                
+
+            $id_pago = $this->registrar_pago(
+                $parametros['datos']['proveedor'],
+                $parametros['datos']['folio'],
+                $parametros['datos']['metodo'],
+                $parametros['datos']['facturado'],
+                $parametros['datos']['subtotal'],
+                $parametros['datos']['iva'],
+                $parametros['datos']['total'],
+                $this->auth_username
+            );
+
+            $this->registrar_detalle($id_pago,$parametros['carrito']);        
+            $this->email(
+                $parametros['datos']['folio'],
+                $parametros['datos']['proveedor'],
+                $parametros['datos']['facturado'],
+                $parametros['datos']['subtotal'],
+                $parametros['datos']['iva'],
+                $parametros['datos']['total'],
+                $parametros['datos']['metodo'],
+                $parametros['carrito']
+            );                    
+        }
         $this->response($respuesta,200);
     }
 
@@ -109,6 +122,8 @@ class Pagos extends REST_Controller{
                 
         $this->response($respuesta,200);
     }
+
+    
 
     /**
      * Guarda pago table:pagos
