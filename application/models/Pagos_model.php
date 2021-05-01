@@ -28,10 +28,12 @@ class Pagos_model extends CI_Model
         if(isset($offset) && !empty($offset))
         {
             $this->db->order_by('id', 'desc');
+            $this->db->where('usuario', $this->auth_username);
             $this->db->limit($limit, $offset);            
         }else{
             
             $this->db->order_by('id', 'desc');
+            $this->db->where('usuario', $this->auth_username);
             $this->db->limit($limit, 0);
         }
         $query = $this->db->get('pagos');

@@ -28,10 +28,10 @@ class User extends MY_Controller{
             $this->pagination->initialize($config);
 
             $data['users'] = $this->User_model->get_all_users($params);
-            $data['page']="usuarios";
-            $data['alertas'] = $this->check_min_stock();
+            $data['active']="usuarios";
+            //$data['alertas'] = $this->check_min_stock();
             $data['_view'] = 'user/index';
-            $this->load->view('layouts/admin',$data);
+            $this->load->view('layouts/main',$data);
     }
 
     /**
@@ -74,10 +74,10 @@ class User extends MY_Controller{
         }
         else
         {            
-            $data['page']="usuarios";
-            $data['alertas'] = $this->check_min_stock();
+            $data['active']="usuarios";
+            //$data['alertas'] = $this->check_min_stock();
             $data['_view'] = 'user/add';
-            $this->load->view('layouts/admin',$data);
+            $this->load->view('layouts/main',$data);
         }
         
     }  

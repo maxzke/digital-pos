@@ -15,6 +15,7 @@ class Cortes_model extends CI_Model
         $this->db->like('metodo',$metodo);
         $this->db->where('fecha >=',$fechaInicio);
         $this->db->where('fecha <=',$fechaFin);
+        $this->db->where('usuario', $this->auth_username);
         return $this->db->get('abonos')->result_array();
     }
     /**
@@ -22,6 +23,7 @@ class Cortes_model extends CI_Model
      */
     function suma_importes_cuenta(){
         $this->db->select_sum('importe');
+        $this->db->where('usuario', $this->auth_username);
         return $this->db->get('cuenta_depositos')->result_array();
     }
     function insert_deposito($importe,$usuario){
@@ -33,6 +35,7 @@ class Cortes_model extends CI_Model
      */
     function get_importe_caja($tipo){
         $this->db->select($tipo);
+        $this->db->where('usuario', $this->auth_username);
         return $this->db->get('cuenta_caja')->result_array();
     }
     /**
@@ -40,11 +43,11 @@ class Cortes_model extends CI_Model
      */
     function add_efectivo_caja($importe){
         $this->db->select('caja');
-        $this->db->where('id',1);
+        $this->db->where('usuario', $this->auth_username);
         $caja = $this->db->get('cuenta_caja')->result_array();
         $nuevo_importe = floatval($caja[0]['caja']) + floatval($importe);
         
-        $this->db->where('id', 1);
+        $this->db->where('usuario', $this->auth_username);
         $this->db->update('cuenta_caja', array('caja' =>$nuevo_importe));
     
     }
@@ -53,11 +56,11 @@ class Cortes_model extends CI_Model
      */
     function subs_efectivo_caja($importe){
         $this->db->select('caja');
-        $this->db->where('id',1);
+        $this->db->where('usuario', $this->auth_username);
         $caja = $this->db->get('cuenta_caja')->result_array();
         $nuevo_importe = floatval($caja[0]['caja']) - floatval($importe);
         
-        $this->db->where('id', 1);
+        $this->db->where('usuario', $this->auth_username);
         $this->db->update('cuenta_caja', array('caja' =>$nuevo_importe));
     
     }
@@ -66,11 +69,11 @@ class Cortes_model extends CI_Model
      */
     function add_cuenta_banco($importe){
         $this->db->select('banco');
-        $this->db->where('id',1);
+        $this->db->where('usuario', $this->auth_username);
         $caja = $this->db->get('cuenta_caja')->result_array();
         $nuevo_importe = floatval($caja[0]['banco']) + floatval($importe);
         
-        $this->db->where('id', 1);
+        $this->db->where('usuario', $this->auth_username);
         $this->db->update('cuenta_caja', array('banco' =>$nuevo_importe));
     }
 
@@ -82,6 +85,7 @@ class Cortes_model extends CI_Model
         $this->db->select('id,total');
         $this->db->where('fecha >=',$desde);
         $this->db->where('fecha <=',$hasta);
+        $this->db->where('usuario', $this->auth_username);
         return $this->db->get('pagos')->result_array();
     }
     function get_suma_pagos_between($desde,$hasta){
@@ -89,6 +93,7 @@ class Cortes_model extends CI_Model
         $this->db->like('metodo','efectivo');
         $this->db->where('fecha >=',$desde);
         $this->db->where('fecha <=',$hasta);
+        $this->db->where('usuario', $this->auth_username);
         $this->db->like('metodo','efectivo');
         return $this->db->get('pagos')->result_array();
     }
@@ -101,13 +106,24 @@ class Cortes_model extends CI_Model
         $this->db->select('id,importe');
         $this->db->where('fecha >=',$desde);
         $this->db->where('fecha <=',$hasta);
+        $this->db->where('usuario', $this->auth_username);
         return $this->db->get('cuenta_depositos')->result_array();
     }
     function get_suma_depositos_between($desde,$hasta){
         $this->db->select_sum('importe');
         $this->db->where('fecha >=',$desde);
         $this->db->where('fecha <=',$hasta);
+        $this->db->where('usuario', $this->auth_username);
         return $this->db->get('cuenta_depositos')->result_array();
+    }
+
+    /**
+     * CADA QUE SE CREA UN NUEVO USUARIO
+     * SE INICIALIZA SU CAJA EN LA TABLA
+     * CUENTA_CAJA
+     */
+    function create_cuenta_caja($params){        
+        $this->db->insert('cuenta_caja',$params);
     }
     
 

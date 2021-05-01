@@ -99,7 +99,8 @@ class Ventas_model extends CI_Model
          */
         
         $this->db->where('fecha >=',$fechaInicio);
-        $this->db->where('fecha <=',$fechaFin);
+        $this->db->where('fecha <=',$fechaFin);        
+        $this->db->where('usuario', $this->auth_username);
         $this->db->order_by('id', 'desc');
         $query = $this->db->get();
         return $query->result_array();
@@ -115,6 +116,7 @@ class Ventas_model extends CI_Model
             $this->db->join('ventas', 'ventas.id = ventas_a_credito.id_venta');
             $this->db->where('ventas.cotizar', 0);
             $this->db->where('ventas.cancelada', 0);
+            $this->db->where('ventas.usuario', $this->auth_username);
             $this->db->order_by('ventas_a_credito.id', 'desc');
             $this->db->limit($limit, $offset);
         }else{
@@ -123,6 +125,7 @@ class Ventas_model extends CI_Model
             $this->db->join('ventas', 'ventas.id = ventas_a_credito.id_venta');
             $this->db->where('ventas.cotizar', 0);
             $this->db->where('ventas.cancelada', 0);
+            $this->db->where('ventas.usuario', $this->auth_username);
             $this->db->order_by('ventas_a_credito.id', 'desc');
             $this->db->limit($limit, 0);
         }
@@ -139,6 +142,7 @@ class Ventas_model extends CI_Model
             $this->db->from('ventas');
             $this->db->where('ventas.cotizar', 0);
             $this->db->where('ventas.cancelada', 1);
+            $this->db->where('ventas.usuario', $this->auth_username);
             $this->db->order_by('ventas.id', 'desc');
             $this->db->limit($limit, $offset);
         }else{
@@ -146,6 +150,7 @@ class Ventas_model extends CI_Model
             $this->db->from('ventas');
             $this->db->where('ventas.cotizar', 0);
             $this->db->where('ventas.cancelada', 1);
+            $this->db->where('ventas.usuario', $this->auth_username);
             $this->db->order_by('ventas.id', 'desc');
             $this->db->limit($limit, $offset);
         }
@@ -162,6 +167,7 @@ class Ventas_model extends CI_Model
             $this->db->where('ventas.cotizar', 0);
             $this->db->where('ventas.cancelada', 0);
             $this->db->where('ventas.pagada', 1);
+            $this->db->where('ventas.usuario', $this->auth_username);
             $this->db->order_by('ventas.id', 'desc');
             $this->db->limit($limit, $offset);
         }else{
@@ -170,6 +176,7 @@ class Ventas_model extends CI_Model
             $this->db->where('ventas.cotizar', 0);
             $this->db->where('ventas.cancelada', 0);
             $this->db->where('ventas.pagada', 1);
+            $this->db->where('ventas.usuario', $this->auth_username);
             $this->db->order_by('ventas.id', 'desc');
             $this->db->limit($limit, $offset);
         }
@@ -214,6 +221,7 @@ class Ventas_model extends CI_Model
                 $this->db->from('ventas_a_credito');
                 $this->db->join('ventas', 'ventas.id = ventas_a_credito.id_venta');
                 $this->db->where('ventas.cotizar', 0);
+                $this->db->where('ventas.usuario', $this->auth_username);
                 $this->db->like('ventas.id',$folio);
                 $this->db->order_by('ventas_a_credito.id', 'desc');
                 $this->db->limit(RECORDS_PER_PAGE);
@@ -226,6 +234,7 @@ class Ventas_model extends CI_Model
                 $this->db->where('ventas.cotizar', 0);
                 $this->db->where('ventas.cancelada', 0);
                 $this->db->where('ventas.pagada', 1);
+                $this->db->where('ventas.usuario', $this->auth_username);
                 $this->db->like('ventas.id',$folio);
                 $this->db->order_by('ventas.id', 'desc');
                 $this->db->limit(RECORDS_PER_PAGE);
@@ -237,6 +246,7 @@ class Ventas_model extends CI_Model
                 $this->db->from('ventas');
                 $this->db->where('ventas.cotizar', 0);
                 $this->db->where('ventas.cancelada', 1);
+                $this->db->where('ventas.usuario', $this->auth_username);
                 $this->db->like('ventas.id',$folio);
                 $this->db->order_by('ventas.id', 'desc');
                 $this->db->limit(RECORDS_PER_PAGE);
@@ -259,6 +269,7 @@ class Ventas_model extends CI_Model
                 $this->db->join('ventas', 'ventas.id = ventas_a_credito.id_venta');
                 $this->db->where('ventas.cotizar', 0);
                 $this->db->where('ventas.cancelada', 0);
+                $this->db->where('ventas.usuario', $this->auth_username);
                 $this->db->like('ventas.cliente',$cliente);
                 $this->db->order_by('ventas_a_credito.id', 'desc');
                 $this->db->limit(RECORDS_PER_PAGE);
@@ -271,6 +282,7 @@ class Ventas_model extends CI_Model
                 $this->db->where('ventas.cotizar', 0);
                 $this->db->where('ventas.cancelada', 0);
                 $this->db->where('ventas.pagada', 1);
+                $this->db->where('ventas.usuario', $this->auth_username);
                 $this->db->like('ventas.cliente',$cliente);
                 $this->db->order_by('ventas.id', 'desc');
                 $this->db->limit(RECORDS_PER_PAGE);
@@ -282,6 +294,7 @@ class Ventas_model extends CI_Model
                 $this->db->from('ventas');
                 $this->db->where('ventas.cotizar', 0);
                 $this->db->where('ventas.cancelada', 1);
+                $this->db->where('ventas.usuario', $this->auth_username);
                 $this->db->like('ventas.cliente',$cliente);
                 $this->db->order_by('ventas.id', 'desc');
                 $this->db->limit(RECORDS_PER_PAGE);

@@ -124,7 +124,7 @@ class Login extends MY_Controller{
 					[
 						'field' => 'auth_level',
 						'label' => 'auth_level',
-						'rules' => 'required|integer|in_list[1,6,9]'
+						'rules' => 'required|integer|in_list[1,3,5,7,9]'
 					]
 				];
 
@@ -148,6 +148,9 @@ class Login extends MY_Controller{
 					if( $this->db->affected_rows() == 1 ){
 						$msg =$user_data['username'];
 						$this->session->set_flashdata('usuario_creado', $msg);
+						$params = array('usuario'=>$user_data['username']);
+						$this->load->model('cortes_model');
+						$this->cortes_model->create_cuenta_caja($params);
 						redirect('user/index');
 					}
 						

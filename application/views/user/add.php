@@ -31,9 +31,10 @@
 										<option value="">Seleccionar</option>
 										<?php 
 										$auth_level_values = array(
-											'1'=>'Cocina',
-											'6'=>'Mesero',
-											'9'=>'Administrador',
+											'1' => 'diseño',
+											'3' => 'prensa',
+											'5' => 'administracion',
+											'7' => 'general',
 										);
 
 										foreach($auth_level_values as $value => $display_text)

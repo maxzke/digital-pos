@@ -23,8 +23,8 @@
 						<?php
 						}
 					?>
-					<table id="content-table" class="table table-sm table-striped table-bordered">
-						<thead>
+					<table id="content-table" class="table table-sm table-striped">
+						<thead class="text-dark">
 							<tr>
 								<th></th>
 								<th>Nivel</th>
@@ -32,7 +32,7 @@
 								<th>Actions</th>
 							</tr>
 						</thead>
-						<tbody>						
+						<tbody class="text-dark">						
 						<?php 
 						$id=1;
 						foreach($users as $u): ?>

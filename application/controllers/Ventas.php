@@ -117,7 +117,8 @@ class Ventas extends REST_Controller {
         $params = array(
             'id_venta' => $id_venta,
             'metodo' => $metodo,
-            'importe' => $importe
+            'importe' => $importe,
+            'usuario' =>$this->auth_username
         );
         $this->ventas_model->insert_abono($params);
         if (strtolower($metodo) == 'efectivo') {

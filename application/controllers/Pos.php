@@ -144,7 +144,8 @@ class Pos extends REST_Controller{
         $params = array(
             'id_venta' => $id_venta,
             'metodo' => $metodo,
-            'importe' => $importe
+            'importe' => $importe,
+            'usuario' =>$this->auth_username
         );
         $this->pos_model->insert_abono($params);
         if (strtolower($metodo) === 'efectivo') {
@@ -162,7 +163,8 @@ class Pos extends REST_Controller{
      */
     private function registrar_credito($id_venta){
         $params = array(
-            'id_venta' => $id_venta
+            'id_venta' => $id_venta,            
+            'usuario' =>$this->auth_username
         );
         $this->pos_model->insert_credito($params);
     }

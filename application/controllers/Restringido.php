@@ -9,12 +9,13 @@ class Restringido extends MY_Controller{
     } 
 
     function index(){
+        $data['active'] = 'null';
         $data['_view'] = 'errors/custom_404';
         $this->load->view('layouts/main',$data);
     }
 
     function sin_permiso(){
-        $data['page']="inicio";
+        $data['active']="null";
         $data['_view'] = 'errors/custom_401';
         $this->load->view('layouts/main',$data);
     }
