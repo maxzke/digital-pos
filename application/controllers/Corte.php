@@ -62,7 +62,7 @@ class Corte extends REST_Controller{
             ); 
         }else{
             $fechaInicial = date("Y-m-d 00:00:00", strtotime($fechaInicial));
-            $fechaFinal   = date("d-m-Y 23:59:59", strtotime($fechaFinal));
+            $fechaFinal   = date("Y-m-d 23:59:59", strtotime($fechaFinal));
             $respuesta = array(
                 'success' => true,
                 'arrayventas' => $this->ventas($fechaInicial,$fechaFinal),

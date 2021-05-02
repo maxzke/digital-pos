@@ -283,19 +283,34 @@ class Ventas extends REST_Controller {
 
     public function cancelar_post(){
         $parametros = $this->input->post('params');
-        $update = $this->setStatusCancel($parametros['folio']);
-        $insert = $this->store_venta_cancelada($parametros['folio'],$parametros['motivo'],$this->auth_username);
-        if ($update && $insert) {
-            $respuesta = array(
-                'success' => true
-            );
+        if ($parametros['motivo']=="" || $parametros['importe']=="") {
+            if ($parametros['motivo']=="") {
+                $respuesta = array(
+                    'success' => false,
+                    'msg' => 'Agregar Motivo'
+                );
+            }
+            if ($parametros['importe']=="") {
+                $respuesta = array(
+                    'success' => false,
+                    'msg' => 'Agregar Importe'
+                );
+            }
         }else{
-            $respuesta = array(
-                'success' => true,
-                'update' => $update,
-                'insert' => $insert
-            );
-        }
+            $update = $this->setStatusCancel($parametros['folio']);
+            $insert = $this->store_venta_cancelada($parametros['folio'],$parametros['motivo'],$this->auth_username);
+            if ($update && $insert) {
+                $respuesta = array(
+                    'success' => true
+                );
+            }else{
+                $respuesta = array(
+                    'success' => true,
+                    'update' => $update,
+                    'insert' => $insert
+                );
+            }
+        }        
         $this->response($respuesta,200);
     }
 

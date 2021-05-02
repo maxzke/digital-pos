@@ -13,18 +13,21 @@ class Ventas_model extends CI_Model
     function get_all_ventas_a_credito_count()
     {
         $this->db->from('ventas_a_credito');
+        $this->db->where('usuario', $this->auth_username);
         return $this->db->count_all_results();
     }
     function get_all_ventas_pagadas_count()
     {
         $this->db->from('ventas');
         $this->db->where('pagada',1);
+        $this->db->where('usuario', $this->auth_username);
         return $this->db->count_all_results();
     }
     function get_all_ventas_cancelada_count()
     {
         $this->db->from('ventas');
         $this->db->where('cancelada',1);
+        $this->db->where('usuario', $this->auth_username);
         return $this->db->count_all_results();
     }
     
@@ -201,6 +204,11 @@ class Ventas_model extends CI_Model
     }
     function abonosNota($folio){
         $this->db->select_sum('importe');
+        $this->db->where('id_venta',$folio);
+        return $this->db->get('abonos')->result_array();
+    }
+    function listadoAbonosNota($folio){
+        $this->db->select('metodo,importe,fecha');
         $this->db->where('id_venta',$folio);
         return $this->db->get('abonos')->result_array();
     }

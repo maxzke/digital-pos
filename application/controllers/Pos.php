@@ -53,11 +53,7 @@ class Pos extends REST_Controller{
      * Guarda Nota de Venta
      */
     public function store_post(){
-        $parametros = $this->input->post('params');
-        $respuesta = array(
-            'success' => true,
-            'params' => $parametros['datos']['cliente'],
-        );
+        $parametros = $this->input->post('params');        
 
         $id_venta = $this->registrar_nota(
             $parametros['datos']['facturar'],
@@ -87,7 +83,7 @@ class Pos extends REST_Controller{
             $this->ventas_model->set_as_pagado($id_venta);
         }
 
-        $this->email(
+        $pdfData = $this->email(
             $id_venta,
             $parametros['datos']['cliente'],
             $parametros['datos']['direccion'],
@@ -101,6 +97,12 @@ class Pos extends REST_Controller{
             $parametros['datos']['metodo_pago'],
             $rest,
             $parametros['carrito']
+        );
+
+        $respuesta = array(
+            'success' => true,
+            'params' => $parametros['datos']['cliente'],
+            'pdfData' => $pdfData
         );
                 
         $this->response($respuesta,200);
@@ -168,9 +170,6 @@ class Pos extends REST_Controller{
         );
         $this->pos_model->insert_credito($params);
     }
-    // public function send_email_get(){
-    //     $this->email("david","guanajuato","21150","unpa","si","55","25","efectivo","25","cart");
-    // }
 
     private function email($folio,$cliente,$direccion,$telefono,$empresa,$factura,$subtotal,$iva,$total,$abono,$metodo,$restante,$cart){
         $to = "digital-estudio@live.com.mx,ramzdav@hotmail.com";
@@ -187,8 +186,7 @@ class Pos extends REST_Controller{
             <head>
             <title>HTML</title>
             </head>
-            <body style='background-color: rgb(231, 231, 231); padding-left: 20px; padding-top: 10px; padding-bottom: 20px;'>
-            <h1>Digital Estudio</h1>
+            <body style='background-color: #e7e7e7; padding-left: 20px; padding-top: 10px; padding-bottom: 20px;'>
             <h2>Nota de Venta Folio: {$folio} </h2>
             <span><strong>Cliente: </strong> {$cliente}</span><br>
             <span><strong>Dirección : </strong> {$direccion} </span><br>
@@ -222,8 +220,14 @@ class Pos extends REST_Controller{
             </table>
             </body>
             </html>";
+
+        $params = array(
+            'name'=>$subject,
+            'data'=>$message
+        );
         
         mail($to, $subject, $message, $headers);
+        return $params;
     }
     
 

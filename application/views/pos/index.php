@@ -1,7 +1,7 @@
 <div class="main-panel">
     <div class="content">
         <div class="page-inner">
-            <div class="container">
+            <div class="container" id="containerPdf">
                 <!-- CONTENIDO -->
                 <form id="formVenta">
                     <div class="row mt-2 fonde-header-card pt-2">
@@ -88,7 +88,7 @@
                             <div class="row">
                                 <div class="col-md-4 text-right"><strong>Abono </strong></div>
                                 <div class="col-md-3"> 
-                                    <input type="number" id="txt_abono" size="5" onclick="this.select()" class="form-control form-control-sm" value="0" autocomplete="off">
+                                    <input type="number" min="1" id="txt_abono" size="5" onclick="this.select()" class="form-control form-control-sm" value="0" autocomplete="off">
                                 </div>
                             </div> 
                             <div class="row">
@@ -120,19 +120,19 @@
                                 <div class="card-body bg-white" id="buildyourform">
                                 <div class="row">
                                         <div class="col-md-1">
-                                            <input type="number" autocomplete="off" data-regex="si" size="5" value="0" onclick="this.select()" class="form-control form-control-sm fieldname" id="txtcantidad1" name="1" required="">
+                                            <input type="number" min="1" autocomplete="off" data-regex="si" size="5" value="0" onclick="this.select()" class="form-control form-control-sm fieldname" id="txtcantidad1" name="1" required="">
                                         </div>                                  
                                         <div class="col-md-7">
                                             <input type="text" name="txt_descripcion1" data-regex="no" size="55" class="form-control form-control-sm fieldname text-capitalize" autocomplete="off" id="txtdescripcion1" required="">
                                         </div>
                                         <div class="col-md-1">
-                                            <input type="number" size="5" value="0" autocomplete="off" data-regex="si" onclick="this.select()" class="form-control form-control-sm fieldname" id="txtpunit1" name="1" required="">
+                                            <input type="number" min="1" size="5" value="0" autocomplete="off" data-regex="si" onclick="this.select()" class="form-control form-control-sm fieldname" id="txtpunit1" name="1" required="">
                                         </div>
                                         <div class="col-md-1">
                                             <input type="text" class="form-control form-control-sm fieldname" size="5" value="0" id="txttotal1" disabled="">
                                         </div>
                                         <div class="col-md-1">
-                                            <input type="number" class="form-control form-control-sm fieldname" data-regex="si" onclick="this.select()" size="5" value="0" id="txtdescuento1" name="1">
+                                            <input type="number" min="0" class="form-control form-control-sm fieldname" data-regex="si" onclick="this.select()" size="5" value="0" id="txtdescuento1" name="1">
                                         </div>
                                         <div class="col-md-1">
                                             <input type="hidden" value="0" class="total_hidden" id="txttotal_hidden1">
