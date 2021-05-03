@@ -36,7 +36,7 @@ class Ventas_model extends CI_Model
      */
     function get_venta($id)
     {
-        return $this->db->get_where('ventas',array('id'=>$id))->row_array();
+        return $this->db->get_where('ventas',array('id'=>$id))->result_array();
     }
         
     /*
@@ -46,6 +46,13 @@ class Ventas_model extends CI_Model
     {
         $this->db->order_by('id', 'desc');
         return $this->db->get('ventas')->result_array();
+    }
+
+    function get_detalles_venta($id)
+    {
+        $this->db->order_by('id', 'desc');
+        $this->db->where('id',$id);
+        return $this->db->get('detalles')->result_array();
     }
         
     /*
@@ -210,6 +217,7 @@ class Ventas_model extends CI_Model
     function listadoAbonosNota($folio){
         $this->db->select('metodo,importe,fecha');
         $this->db->where('id_venta',$folio);
+        $this->db->where('importe >',0);
         return $this->db->get('abonos')->result_array();
     }
     function insert_abono($params){

@@ -734,7 +734,7 @@ async function guardarPagoPost(){
      $('#importeAbono').on('keyup',function(){
     const floatRegex = '[-+]?([0-9]*.[0-9]+|[0-9]+)';                            
       if (!$('#importeAbono').val().match(floatRegex)) {
-        $(this).val(0);
+        $(this).val('');
           alertify.error("Abono Debe ser Número");
         return                           
       }
@@ -808,10 +808,11 @@ async function guardarPagoPost(){
     
   }
   async function store_abono(){
+    let idFolio = $('#idVentaHide').val();
     let parametros = {
       'metodo': $('#metodoPagoModal').val(),
       'importe': $('#importeAbono').val(),
-      'folio': $('#idVentaHide').val()
+      'folio': idFolio
     }
     
     const respAsyncDetalles = await postData(parametros,url+'/ventas/abonar');
@@ -837,6 +838,7 @@ async function guardarPagoPost(){
       }).then((result) => {
         if (result.isConfirmed) {
           location.reload();
+          //getDetallesNota(idFolio);
         } else if (
           /* Read more about handling dismissals below */
           result.dismiss === Swal.DismissReason.cancel
@@ -1102,7 +1104,24 @@ $('#btnDesglozarCorte').on('click',function(){
     }
     sendDesgloce(rango);
    });
+
+    $(document).on("click", "#btnDetalles", function() {
+      getDetallesNota();
+    });
  
+    async function getDetallesNota(folio){
+      let data = {
+        'id':folio
+      }
+      const responseAwait = await postData(data,url+'/ventas/detalles');
+      if (responseAwait.success) {   
+          console.log(responseAwait);
+          generarPdf(responseAwait.cachar.data,responseAwait.cachar.name);
+          
+      }else{
+        console.log(responseAwait);
+      }
+    }
    async function sendDesgloce(data){    
      const respAsyncDetalles = await postData(data,url+'/corte/desgloce_por_fecha');
      if (respAsyncDetalles.success) {   

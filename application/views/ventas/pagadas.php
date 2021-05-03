@@ -75,6 +75,9 @@
                                                         '<?php echo number_format($cliente['total'][0]['importe']+$cliente['iva'],1,'.',','); ?>'                                                                
                                                     );">
                                                 </i> 
+                                                <i class="fas fa-download incrementa ml-2"
+                                                <?php $titulo = "Abono ".$cliente['folio']; ?> 
+                                                    onclick="getDetallesNota('<?php echo $cliente['folio']; ?>')"></i>
                                             </div>
                                         </div>
                                         <hr>

@@ -229,6 +229,8 @@ class Pos extends REST_Controller{
         mail($to, $subject, $message, $headers);
         return $params;
     }
+
+    
     
 
 

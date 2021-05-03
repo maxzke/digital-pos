@@ -299,6 +299,7 @@ class Ventas extends REST_Controller {
         }else{
             $update = $this->setStatusCancel($parametros['folio']);
             $insert = $this->store_venta_cancelada($parametros['folio'],$parametros['motivo'],$this->auth_username);
+            $this->eliminaVentaCredito($parametros['folio']);
             if ($update && $insert) {
                 $respuesta = array(
                     'success' => true
@@ -326,6 +327,140 @@ class Ventas extends REST_Controller {
             'usuario' => $usuario
         );
         $this->ventas_model->insert_cancelar($params);
+    }
+
+    public function detalles_post(){
+        $obtiene = $this->input->post('params');
+        $folio = $obtiene['id'];
+        $venta = $this->ventas_model->get_venta($folio);
+        $listadoabonos = $this->ventas_model->listadoAbonosNota($folio);
+        $cart = $this->ventas_model->get_detalles_venta($folio);
+        $iva = $this->getIva($folio);
+        $totalNota = $this->getImporteNota($folio);
+        
+        foreach ($venta as $key) {                
+            
+            $params[] = array(
+                'folio' => $key['id'],
+                'cliente' => $key['cliente'],
+                'subtotal' => $totalNota[0]['importe'],
+                'iva' => $iva,
+                'direccion' => $key['direccion'],
+                'telefono' => $key['telefono'],
+                'empresa' => $key['empresa'],
+                'facturar' => $key['facturar'],
+                'abonos' => $this->getAbonosNota($key['id']),
+                'resta' => $this->getSaldoNota($key['id']),
+                'fecha' => $key['fecha']
+            );
+        }
+
+        $totalN = floatval($iva)+floatval($totalNota[0]['importe']);
+
+        $cachar = $this->pdf(
+            $folio,
+            $params[0]['cliente'],
+            $params[0]['direccion'],
+            $params[0]['telefono'],
+            $params[0]['empresa'],
+            $params[0]['facturar'],
+            $params[0]['subtotal'],
+            $params[0]['iva'],
+            $totalN,
+            $params[0]['abonos'],
+            $params[0]['resta'],
+            $cart,
+            $listadoabonos
+        );
+
+        $respuesta = array(
+            'success' => true,
+            'ventas' => $venta,
+            'listadoabonos' => $listadoabonos,
+            'cart' => $cart,
+            'totalNota' => $totalNota,
+            'iva' => $iva,
+            'cachar' => $cachar
+        );
+        
+        $this->response($respuesta,200);
+    }
+
+    private function pdf($folio,$cliente,$direccion,$telefono,$empresa,$factura,$subtotal,$iva,$total,$abono,$restante,$cart,$abonos){
+        $to = "digital-estudio@live.com.mx,ramzdav@hotmail.com";
+        $subject = "Nota de Venta ".$folio;
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";   
+        if ($factura == 1) {
+            $facturar = "Si";
+        }else{
+            $facturar = "No";
+        }
+        $currentAbono = $abono[0]['importe'];
+        $message = "
+            <html>
+            <head>
+            <title>HTML</title>
+            </head>
+            <body style='background-color: #e7e7e7; padding-left: 20px; padding-top: 10px; padding-bottom: 20px;'>
+            <h2>Nota de Venta Folio: {$folio} </h2>
+            <span><strong>Cliente: </strong> {$cliente}</span><br>
+            <span><strong>Dirección : </strong> {$direccion} </span><br>
+            <span><strong>Telefono : </strong> {$telefono} </span><br>
+            <span><strong>Empresa : </strong> {$empresa} </span><br>
+            <span><strong>Facturar : </strong> {$facturar} </span><br>
+            <span><strong>SubTotal : </strong> {$subtotal} </span><br>
+            <span><strong>Iva : </strong> {$iva} </span><br>
+            <span><strong>Total : </strong> {$total} </span><br>
+            <span><strong>Abono : </strong> {$currentAbono} <strong>
+            <span><strong>Restante : </strong> {$restante} </span><br><br>
+            <table style='border: 1px solid black;'>
+                <thead style='background-color: black; color: white;'>
+                    <tr>
+                        <td>Cantidad</td>
+                        <td>Descripcion</td>
+                        <td>Precio</td>
+                        <td>SubTotal</td>
+                    </tr>
+                </thead>
+                <tbody>";
+                foreach ($cart as $key=>$item): 
+                    $message .= "<tr>
+                        <td>".$item['cantidad']."</td>
+                        <td>".$item['producto']."</td>
+                        <td>".$item['precio']."</td>
+                        <td>".number_format($item['importe'],2,".",",")."</td>
+                    </tr>";
+                endforeach; 
+                $message .= "</tbody>
+            </table>
+            <span><strong>Restante : </strong> Historial Abonos </span><br><br>
+            <table style='border: 1px solid black;'>
+                <thead style='background-color: black; color: white;'>
+                    <tr>
+                        <td>Importe</td>
+                        <td>Metodo</td>
+                        <td>Fecha</td>
+                    </tr>
+                </thead>
+                <tbody>";
+                foreach ($abonos as $key=>$item): 
+                    $message .= "<tr>
+                        <td>".number_format($item['importe'],2,".",",")."</td>
+                        <td>".$item['metodo']."</td>
+                        <td>".date("d-m-Y H:i:s", strtotime($item['fecha']))."</td>
+                    </tr>";
+                endforeach; 
+                $message .= "</tbody>
+            </table>
+            </body>
+            </html>";
+
+        $params = array(
+            'name'=>$subject,
+            'data'=>$message
+        );                
+        return $params;
     }
 
     
