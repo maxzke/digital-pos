@@ -125,7 +125,14 @@ class Cortes_model extends CI_Model
     function create_cuenta_caja($params){        
         $this->db->insert('cuenta_caja',$params);
     }
+    function create_cuenta_cortes($params){        
+        $this->db->insert('cortes',$params);
+    }
     
+    function get_desde(){
+        $this->db->select('desde');
+        return $this->db->get('cortes')->result_array();
+    }
 
 
 

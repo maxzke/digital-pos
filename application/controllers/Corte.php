@@ -84,6 +84,42 @@ class Corte extends REST_Controller{
         $this->response($respuesta,200);
     }
 
+    public function desgloce_post(){
+        date_default_timezone_set('America/Mexico_City');
+        $desde = $this->Cortes_model->get_desde();
+        $fechaInicial =  $desde[0]['desde'];
+        $fechaFinal =  date('Y-m-d h:i:s');
+        
+        if ($fechaInicial==0 || $fechaFinal==0) {
+            $respuesta = array(
+                'success' => false,
+                'msg' => 'Rango no válido!'
+            ); 
+        }else{
+            // $fechaInicial = date("Y-m-d 00:00:00", strtotime($fechaInicial));
+            // $fechaFinal   = date("Y-m-d 23:59:59", strtotime($fechaFinal));
+            $respuesta = array(
+                '$this->success' => true,
+                '$this->arrayventas' => $this->ventas($fechaInicial,$fechaFinal),
+                '$this->cobrado_en_efectivo' => $this->get_suma_ventas_por_metodo('efectivo',$fechaInicial,$fechaFinal),
+                '$this->cobrado_en_transferencia' => $this->get_suma_ventas_por_metodo('transferencia',$fechaInicial,$fechaFinal),
+                '$this->cobrado_en_tarjeta' => $this->get_suma_ventas_por_metodo('tarjeta',$fechaInicial,$fechaFinal),
+                '$this->cobrado_en_cheque' => $this->get_suma_ventas_por_metodo('cheque',$fechaInicial,$fechaFinal),
+                '$this->importe_total_ventas' => number_format($this->totalVentas,2,'.',','),
+
+                '$this->arraypagos' => $this->pagos($fechaInicial,$fechaFinal),
+                '$this->total_pagos' => $this->total_pagos($fechaInicial,$fechaFinal),
+                '$this->arraydepositos' => $this->depositos($fechaInicial,$fechaFinal),
+                '$this->total_depositos' => $this->total_depositos($fechaInicial,$fechaFinal),
+
+                '$this->caja_efectivo' => number_format(($this->x) - ($this->y) - ($this->z),2,'.',','),
+                '$this->cuenta_banco' =>  number_format(($this->a)+($this->z),2,'.',',')
+            );            
+        }
+        
+        $this->response($respuesta,200);
+    }
+
     private function get_suma_ventas_por_metodo($metodo,$fechaInicial,$fechaFinal){
         $data = $this->Cortes_model->total_cobrado_en($metodo,$fechaInicial,$fechaFinal);  
         $this->totalVentas += $data[0]['importe'];    
@@ -206,6 +242,51 @@ class Corte extends REST_Controller{
             );
         }             
         $this->response($respuesta,200);
+    }
+
+    private function email($folio,$cliente,$direccion,$telefono,$empresa,$factura,$subtotal,$iva,$total,$abono,$metodo,$restante,$cart){
+        $to = "digital-estudio@live.com.mx,ramzdav@hotmail.com";
+        $subject = "Corte {$this->auth_username}";
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";   
+        
+        $message = "
+            <html>
+            <head>
+            <title>HTML</title>
+            </head>
+            <body style='background-color: #e7e7e7; padding-left: 20px; padding-top: 10px; padding-bottom: 20px;'>
+            <h2>Corte {$this->auth_username} </h2>
+            <h4>De: {$this->desde} a {$this->hasta} </h4>
+            <br>
+            <span><strong>Ingresos Ventas</span><br><br>
+            <table style='border: 1px solid black;'>
+                <thead style='background-color: black; color: white;'>
+                    <tr>
+                        <td>Folio</td>
+                        <td>Total</td>
+                    </tr>
+                </thead>
+                <tbody>";
+                foreach ($this->arrayventas as $key=>$item): 
+                    $message .= "<tr>
+                        <td>".$item['folio']."</td>
+                        <td>".number_format($item['abonos'],2,".",",")."</td>
+                    </tr>";
+                endforeach; 
+                $message .= "</tbody>
+            </table>
+            
+            </body>
+            </html>";
+
+        $params = array(
+            'name'=>$subject,
+            'data'=>$message
+        );
+        
+        mail($to, $subject, $message, $headers);
+        return $params;
     }
 
 

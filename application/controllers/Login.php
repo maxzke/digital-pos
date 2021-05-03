@@ -148,9 +148,12 @@ class Login extends MY_Controller{
 					if( $this->db->affected_rows() == 1 ){
 						$msg =$user_data['username'];
 						$this->session->set_flashdata('usuario_creado', $msg);
+						
 						$params = array('usuario'=>$user_data['username']);
 						$this->load->model('cortes_model');
 						$this->cortes_model->create_cuenta_caja($params);
+						$this->cortes_model->create_cuenta_cortes($params);
+						
 						redirect('user/index');
 					}
 						

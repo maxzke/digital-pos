@@ -1078,6 +1078,9 @@ $('#btnDesglozarCorte').on('click',function(){
    sendDeposito(importe);
   });
 
+  
+  
+
   async function sendDeposito(importe){    
     const respAsyncDetalles = await postData(importe,url+'/corte/store');
     if (respAsyncDetalles.success) {
@@ -1091,6 +1094,20 @@ $('#btnDesglozarCorte').on('click',function(){
     }else{
       alertify.error(respAsyncDetalles.msg);   
       $('#txt_deposito_a_cuenta').addClass("is-invalid");       
+    }
+  }
+
+  $('#btnAceptarCorte').on('click',function(){ 
+    sendCorte();
+   });
+   async function sendCorte(){    
+     let algo = 'null';
+    const respAsyncDetalles = await postData(algo,url+'/corte/desgloce');
+    if (respAsyncDetalles.success) {      
+      console.log(respAsyncDetalles);      
+      
+    }else{
+      alertify.error(respAsyncDetalles.msg);          
     }
   }
 /**
