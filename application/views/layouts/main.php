@@ -115,7 +115,6 @@
     <script src="<?php echo base_url(); ?>assets/js/sweetalert2.all.min.js"></script>    
     <!-- NOTA VENTA -->
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/html2pdf.bundle.js"></script>
-    <!-- <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script> -->
     <script src="<?php echo base_url(); ?>assets/js/sisadmin_notas.js"></script>
 </body>
 </html>

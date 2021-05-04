@@ -5,17 +5,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
 *   AHORA POSEE LOS METODOS DE COMUNITY AUTH
 *   Y METODOS PROPIOS REST
 */
-require_once(APPPATH.'libraries/REST_Controller.php');
+require_once(APPPATH . 'libraries/REST_Controller.php');
+
 use Restserver\libraries\REST_Controller;
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 
-class Pos extends REST_Controller{
+class Pos extends REST_Controller
+{
 
-     /**
+    /**
      * Params para Nota
      */
-    private $folio;//id de la venta
+    private $folio; //id de la venta
     private $id_cliente;
     private $id_usuario;
     private $id_mesa;
@@ -33,39 +36,41 @@ class Pos extends REST_Controller{
      */
     private $pagos;
     //Saldo total cliente debe
-    private $saldo=0;
+    private $saldo = 0;
 
     function __construct()
     {
         parent::__construct();
-        $this->require_min_level(1);  
-        $this->load->model('pos_model');      
+        $this->require_min_level(1);
+        $this->load->model('pos_model');
         $this->load->model('Cortes_model');
-    } 
+    }
 
-    function index_get(){   
+    function index_get()
+    {
         $data['_view'] = 'pos/index';
         $data['active'] = 'pos';
-        $this->load->view('layouts/main',$data);
+        $this->load->view('layouts/main', $data);
     }
 
     /**
      * Guarda Nota de Venta
      */
-    public function store_post(){
-        $parametros = $this->input->post('params');        
+    public function store_post()
+    {
+        $parametros = $this->input->post('params');
 
         $id_venta = $this->registrar_nota(
             $parametros['datos']['facturar'],
             $parametros['datos']['cotizar'],
-            $parametros['datos']['cliente'],
-            $parametros['datos']['direccion'],
+            strtolower($parametros['datos']['cliente']),
+            strtolower($parametros['datos']['direccion']),
             $parametros['datos']['telefono'],
-            $parametros['datos']['empresa'],
-            $parametros['datos']['user']
+            strtolower($parametros['datos']['empresa']),
+            $this->auth_username
         );
 
-        $this->registrar_detalle($id_venta,$parametros['carrito']);        
+        $this->registrar_detalle($id_venta, $parametros['carrito']);
 
         $this->registrar_abono(
             $id_venta,
@@ -74,10 +79,10 @@ class Pos extends REST_Controller{
         );
 
         $rest = 0;
-        if (floatval($parametros['datos']['abono']) < floatval($parametros['datos']['total']) ) {
+        if (floatval($parametros['datos']['abono']) < floatval($parametros['datos']['total'])) {
             $this->registrar_credito($id_venta);
             $rest = floatval($parametros['datos']['total']) - floatval($parametros['datos']['abono']);
-        }else{            
+        } else {
             $rest = floatval($parametros['datos']['abono']) - floatval($parametros['datos']['total']);
             $this->load->model('ventas_model');
             $this->ventas_model->set_as_pagado($id_venta);
@@ -85,10 +90,10 @@ class Pos extends REST_Controller{
 
         $pdfData = $this->email(
             $id_venta,
-            $parametros['datos']['cliente'],
-            $parametros['datos']['direccion'],
+            strtolower($parametros['datos']['cliente']),
+            strtolower($parametros['datos']['direccion']),
             $parametros['datos']['telefono'],
-            $parametros['datos']['empresa'],
+            strtolower($parametros['datos']['empresa']),
             $parametros['datos']['facturar'],
             $parametros['datos']['subtotal'],
             $parametros['datos']['iva'],
@@ -101,16 +106,17 @@ class Pos extends REST_Controller{
 
         $respuesta = array(
             'success' => true,
-            'params' => $parametros['datos']['cliente'],
+            'params' => strtolower($parametros['datos']['cliente']),
             'pdfData' => $pdfData
         );
-                
-        $this->response($respuesta,200);
+
+        $this->response($respuesta, 200);
     }
     /**
      * Guarda datos ventas:table
      */
-    private function registrar_nota($facturar,$cotizar,$cliente,$direccion,$telefono,$empresa,$usuario){
+    private function registrar_nota($facturar, $cotizar, $cliente, $direccion, $telefono, $empresa, $usuario)
+    {
         $params = array(
             'facturar' => $facturar,
             'cotizar' => $cotizar,
@@ -118,8 +124,8 @@ class Pos extends REST_Controller{
             'direccion' => $direccion,
             'telefono' => $telefono,
             'empresa' => $empresa,
-            'usuario' => $usuario,
-        ); 
+            'usuario'=>$this->auth_username
+        );
         $folio = $this->pos_model->insert_datos_nota($params);
         return $folio;
     }
@@ -127,27 +133,29 @@ class Pos extends REST_Controller{
      * Guarda detalles cart
      * detalles:table
      */
-    private function registrar_detalle($id_venta,$carrito){
+    private function registrar_detalle($id_venta, $carrito)
+    {
         foreach ($carrito as $key => $value) {
             $params[] = array(
                 'id_venta' => $id_venta,
-                'producto' => $value['producto'],
+                'producto' => strtolower($value['producto']),
                 'cantidad'  => $value['cantidad'],
                 'precio'   => $value['precio'],
                 'importe'  => $value['importe']
-            );            
-        }         
+            );
+        }
         $this->pos_model->insert_datos_detalle($params);
     }
     /**
      * Guarda Abono
      */
-    private function registrar_abono($id_venta,$metodo,$importe){
+    private function registrar_abono($id_venta, $metodo, $importe)
+    {
         $params = array(
             'id_venta' => $id_venta,
             'metodo' => $metodo,
             'importe' => $importe,
-            'usuario' =>$this->auth_username
+            'usuario' => $this->auth_username
         );
         $this->pos_model->insert_abono($params);
         if (strtolower($metodo) === 'efectivo') {
@@ -155,7 +163,7 @@ class Pos extends REST_Controller{
              * Cada que hay un ingreso en EFECTIVO
              */
             $this->Cortes_model->add_efectivo_caja($importe);
-        }else{
+        } else {
             $this->Cortes_model->add_cuenta_banco($importe);
         }
     }
@@ -163,22 +171,24 @@ class Pos extends REST_Controller{
     /**
      * Guarda Venta a Credito
      */
-    private function registrar_credito($id_venta){
+    private function registrar_credito($id_venta)
+    {
         $params = array(
-            'id_venta' => $id_venta,            
-            'usuario' =>$this->auth_username
+            'id_venta' => $id_venta,
+            'usuario' => $this->auth_username
         );
         $this->pos_model->insert_credito($params);
     }
 
-    private function email($folio,$cliente,$direccion,$telefono,$empresa,$factura,$subtotal,$iva,$total,$abono,$metodo,$restante,$cart){
+    private function email($folio, $cliente, $direccion, $telefono, $empresa, $factura, $subtotal, $iva, $total, $abono, $metodo, $restante, $cart)
+    {
         $to = "digital-estudio@live.com.mx,ramzdav@hotmail.com";
-        $subject = "Nota de Venta ".$folio;
+        $subject = "Nota de Venta " . $folio;
         $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";   
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         if ($factura == 1) {
             $facturar = "Si";
-        }else{
+        } else {
             $facturar = "No";
         }
         $message = "
@@ -208,35 +218,25 @@ class Pos extends REST_Controller{
                     </tr>
                 </thead>
                 <tbody>";
-                foreach ($cart as $key=>$item): 
-                    $message .= "<tr>
-                        <td>".$item['cantidad']."</td>
-                        <td>".$item['producto']."</td>
-                        <td>".$item['precio']."</td>
-                        <td>".number_format($item['importe'],2,".",",")."</td>
+        foreach ($cart as $key => $item) :
+            $message .= "<tr>
+                        <td>" . $item['cantidad'] . "</td>
+                        <td>" . $item['producto'] . "</td>
+                        <td>" . $item['precio'] . "</td>
+                        <td>" . number_format($item['importe'], 2, ".", ",") . "</td>
                     </tr>";
-                endforeach; 
-                $message .= "</tbody>
+        endforeach;
+        $message .= "</tbody>
             </table>
             </body>
             </html>";
 
         $params = array(
-            'name'=>$subject,
-            'data'=>$message
+            'name' => $subject,
+            'data' => $message
         );
-        
+
         mail($to, $subject, $message, $headers);
         return $params;
     }
-
-    
-    
-
-
-    
 }
-
-
-
-

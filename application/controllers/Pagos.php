@@ -39,6 +39,10 @@ class Pagos extends REST_Controller{
         $data = $this->Cortes_model->get_importe_caja($tipo);
         return number_format($data[0][$tipo],2,'.',',');
     }
+    private function get_total_sin_formato($tipo){
+        $data = $this->Cortes_model->get_importe_caja($tipo);
+        return $data[0][$tipo];
+    }
 
     /**
      * Guarda Pago a Proveedores / Gastos
@@ -46,11 +50,12 @@ class Pagos extends REST_Controller{
     public function store_post(){
         $parametros = $this->input->post('params');
 
-        $maximo_importe =  $this->get_total_con_formato('caja');
+        $maximo_importe =  $this->get_total_sin_formato('caja');
+        $importMsg = $this->get_total_con_formato('caja');
         if (floatval($parametros['datos']['total']) > floatval($maximo_importe)) {            
             $respuesta = array(
                 'success' => false,
-                'msg' => 'Pago no puede ser mayor a $ '.$maximo_importe
+                'msg' => 'Pago no puede ser mayor a $ '.$importMsg
             );  
         }else{
             $respuesta = array(
@@ -60,7 +65,7 @@ class Pagos extends REST_Controller{
 
 
             $id_pago = $this->registrar_pago(
-                $parametros['datos']['proveedor'],
+                strtolower($parametros['datos']['proveedor']),
                 $parametros['datos']['folio'],
                 $parametros['datos']['metodo'],
                 $parametros['datos']['facturado'],
@@ -153,7 +158,7 @@ class Pagos extends REST_Controller{
         foreach ($carrito as $key => $value) {
             $params[] = array(
                 'id_pago' => $id_pago,
-                'producto' => $value['producto'],
+                'producto' => strtolower($value['producto']),
                 'cantidad'  => $value['cantidad'],
                 'precio'   => $value['precio'],
                 'importe'  => $value['importe']

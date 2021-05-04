@@ -21,7 +21,7 @@
                             <div class="row mt-2">
                                 <div class="col-md-6 text-right"><strong>Desglozar corte </strong><i class="fas fa-random"></i></div>
                                 <div class="col-md-6"> 
-                                    <button type="button" id="btnDesglozarCorte" class="btn btn-sm btn-success">Enviar <i class="fas fa-random"></i></button>
+                                    <button type="button" id="btnDesglozarCorte" class="btn btn-sm btn-success">Mostrar <i class="fas fa-random"></i></button>
                                 </div>
                             </div>                                          
                         </div>
@@ -62,13 +62,15 @@
                             <div class="col-md-3">
                                 <div class="form-row">
                                     <label for="desde" class="col-md-6 text-right mt-1">Inicio</label>
-                                    <input id="desde" class="form-control form-control-sm col-md-6" type="date">
+                                    <label for="desde" class="col-md-6 text-right mt-1"><?php echo date("d-m-Y h:i:s", strtotime($desde)) ?></label>                                    
+                                    <!-- <input id="desde" class="form-control form-control-sm col-md-6" type="date"> -->
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-row">
                                     <label for="hasta" class="col-md-3 text-right mt-1">Final</label>
-                                    <input id="hasta" class="form-control form-control-sm col-md-6" type="date">
+                                    <label for="desde" class="col-md-6 text-right mt-1"><?php echo date("d-m-Y h:i:s", strtotime($hasta)) ?></label>                                    
+                                    <!-- <input id="hasta" class="form-control form-control-sm col-md-6" type="date"> -->
                                 </div>
                             </div>
                             <div class="col-md-3">
