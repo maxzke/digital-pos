@@ -51,7 +51,7 @@ class Ventas_model extends CI_Model
     function get_detalles_venta($id)
     {
         $this->db->order_by('id', 'desc');
-        $this->db->where('id',$id);
+        $this->db->where('id_venta',$id);
         return $this->db->get('detalles')->result_array();
     }
         
