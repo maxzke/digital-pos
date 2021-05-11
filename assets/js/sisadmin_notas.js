@@ -740,10 +740,11 @@ $('#importeAbono').on('keyup', function () {
     return
   }
   let abon = parseFloat($('#importeAbono').val());
-  let testnt = parseFloat($('#saldoRestante').val());
-  if (abon > testnt) {
+  let testnt = $('#saldoRestante').val();
+  let sin_coma = parseFloat(testnt.replace(',', ""));
+  if (abon > sin_coma) {
     $('#importeAbono').val('');
-    alertify.error("Importe no puede ser mayor a total");
+    alertify.error("Importe no puede ser mayor Saldo Restante");
   }
 
 })

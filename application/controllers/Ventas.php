@@ -105,7 +105,7 @@ class Ventas extends REST_Controller {
                 $this->store_abono($parametros['folio'],$parametros['metodo'],$abono);
                 $respuesta = array(
                     'success' => true,
-                    'msg' => ""
+                    'msg' => "Abono guardado !"
                 );
             }
             
