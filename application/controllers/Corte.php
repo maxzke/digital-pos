@@ -141,6 +141,7 @@ class Corte extends REST_Controller
 
                 $this->caja_efectivo = number_format(($this->x) - ($this->y) - ($this->z), 2, '.', ',');
                 $this->cuenta_banco =  number_format(($this->a) + ($this->z), 2, '.', ',');
+                $this->updateFechaDesde($fechaFinal);
                 $respuesta = array(
                     'success' => TRUE,
                     'msg' => $this->email(),
@@ -150,9 +151,13 @@ class Corte extends REST_Controller
         $this->response($respuesta, 200);
     }
 
+    private function updateFechaDesde($desde){
+        $this->Cortes_model->actualizaFecha($desde);
+    }
+
     private function email()
     {
-        $to = "digital-estudio@live.com.mx,ramzdav@hotmail.com";
+        $to = "digital-estudio@live.com.mx";
         $subject = "Corte {$this->auth_username}";
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";

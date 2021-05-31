@@ -131,7 +131,16 @@ class Cortes_model extends CI_Model
     
     function get_desde(){
         $this->db->select('desde');
+        $this->db->where('usuario', $this->auth_username);
         return $this->db->get('cortes')->result_array();
+    }
+
+    function actualizaFecha($desde){
+        $this->db->where('usuario', $this->auth_username);
+        $this->db->update('cortes', array('desde' =>$desde));
+
+        $this->db->where('usuario', $this->auth_username);
+        $this->db->update('cuenta_caja', array('banco' =>0));
     }
 
 
