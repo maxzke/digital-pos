@@ -178,7 +178,7 @@
                             <div class="col-md-6">                            
                                 <div class="row mt-5">
                                     <div class="col-md-5 text-right"><h5>Caja / Efectivo</h5></div>
-                                    <div class="col-md-2 text-right" id="caja_efectivo"><h5>723,548.15</h5></div>
+                                    <div class="col-md-2 text-right" id="caja_efectivo"><h5></h5></div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-5 text-right"><h5>Cuenta / Banco</h5></div>

@@ -82,6 +82,7 @@ class Corte extends REST_Controller
     public function desgloce_por_fecha_post()
     {
         $parametros = $this->input->post('params');
+        $this->desde = $this->Cortes_model->get_desde();
         $fechaInicial =  $this->desde[0]['desde'];
         $fechaFinal =  $this->hasta;
 
